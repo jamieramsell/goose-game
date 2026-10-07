@@ -1,5 +1,4 @@
 # goose-game
-# goose-game
 
 ## Requirements
 
@@ -14,4 +13,4 @@
 ## Game Executable
 
 ## GitHub Repository
-https://github.com/jamieramsell/goose-game
+[https://github.com/jamieramsell/goose-game](https://github.com/jamieramsell/goose-game)
