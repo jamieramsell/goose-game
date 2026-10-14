@@ -5,7 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player extends Entity {
+public class Player extends Node {
   private Vector2 velocity;
   private final float speed;
   public Player(float x, float y, float width, float height, Texture texture, float speed) {
