@@ -21,13 +21,15 @@ public class GameScreen extends ScreenAdapter {
   private final OrthographicCamera camera = new OrthographicCamera();
   private final Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private final Texture playerTexture = new Texture(Gdx.files.internal("player_test.png"));
+  private final Texture gooseTexture = new Texture(Gdx.files.internal("goose.png"));
   private final Node root = new Node(0,0,0,0);
   Node player;
 
   public GameScreen(Main game) {
     this.game = game;
     this.batch = game.getBatch();
-    this.root.add_child("player", new Player(0,0, 32, 32, playerTexture, 64));
+    this.root.add_child("player", new Player(0,0, 32, 32, playerTexture, 64, 200));
+    this.root.add_child("goose", new Enemy(320F, 320F, 32F, 32F, gooseTexture, (Player) this.root.get_child("player"), 64, 20));
     viewport.setCamera(camera);
 
     background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);

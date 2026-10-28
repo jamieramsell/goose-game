@@ -8,9 +8,11 @@ import com.badlogic.gdx.math.Vector2;
 public class Player extends Node {
   private Vector2 velocity;
   private final float speed;
-  public Player(float x, float y, float width, float height, Texture texture, float speed) {
+  private float health;
+  public Player(float x, float y, float width, float height, Texture texture, float speed, float health) {
     super(x, y, width, height, texture);
     this.speed = speed;
+    this.health = health;
     this.velocity = new Vector2();
   }
 
@@ -24,6 +26,8 @@ public class Player extends Node {
 
      position.x += velocity.x * delta;
      position.y += velocity.y * delta;
+
+     super.update(delta);
   }
 
   private Vector2 get_input() {
@@ -43,5 +47,10 @@ public class Player extends Node {
     dir = dir.nor();
 
     return dir;
+  }
+
+  public void damage(float damage) {
+    health -= damage;
+    System.out.println(health);
   }
 }
