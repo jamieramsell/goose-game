@@ -1,6 +1,7 @@
 package io.github.goose_game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +30,7 @@ public class GameScreen extends ScreenAdapter {
     this.game = game;
     this.batch = game.getBatch();
     this.root.add_child("player", new Player(0,0, 32, 32, playerTexture, 64, 200));
-    this.root.add_child("goose", new Enemy(320F, 320F, 32F, 32F, gooseTexture, (Player) this.root.get_child("player"), 64, 20));
+    this.root.add_child("goose", new Enemy(320F, 320F, 32F, 32F, gooseTexture, (Player) this.root.get_child("player"), 64, 20, 60));
     viewport.setCamera(camera);
 
     background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -62,6 +63,9 @@ public class GameScreen extends ScreenAdapter {
   private void update(float delta) {
     root.update(delta);
     Node player = root.get_child("player");
+    if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+      ((Enemy) root.get_child("goose")).disperse();
+    }
     camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
   }
 }

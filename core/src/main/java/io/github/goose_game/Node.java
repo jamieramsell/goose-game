@@ -15,7 +15,8 @@ public class Node {
   public Vector2 position = new Vector2();
   public int zIndex = 0;
   private Node parent = null;
-  private final Map<String, Node> children = new HashMap<>();
+  private Map<String, Node> children = new HashMap<>();
+  public String key = "";
 
 
   public Node(float x, float y, float width, float height) {
@@ -58,7 +59,12 @@ public class Node {
 
   public void add_child(String id, Node entity) {
     entity.parent = this;
+    entity.key = id;
     children.put(id, entity);
+  }
+
+  public void delete_self() {
+    getParent().children.remove(key, this);
   }
 
   public Node get_child(String id) {
