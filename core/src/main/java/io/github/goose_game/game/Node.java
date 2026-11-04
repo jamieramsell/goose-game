@@ -1,11 +1,9 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

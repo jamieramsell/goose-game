@@ -1,4 +1,4 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
