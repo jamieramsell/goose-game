@@ -15,7 +15,7 @@ public class Node {
   public Vector2 position = new Vector2();
   public int zIndex = 0;
   private Node parent = null;
-  private Map<String, Node> children = new HashMap<>();
+  protected Map<String, Node> children = new HashMap<>();
   public String key = "";
 
 
@@ -29,6 +29,12 @@ public class Node {
     this.bounds = new Rectangle(x, y, width, height);
     this.position.set(x, y);
     this.texture = texture;
+  }
+
+  public Node() {
+    this.bounds = new Rectangle(0,0,0,0);
+    this.position.set(0,0);
+    this.texture = null;
   }
 
   public void draw(Batch batch) {

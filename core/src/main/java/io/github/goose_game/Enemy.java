@@ -8,6 +8,7 @@ public class Enemy extends Node {
   Player target;
   float speed;
   Vector2 target_pos;
+  Vector2 velocity = new Vector2(0,0);
   float damage;
   int attackCounter;
   int attackDelay;
@@ -45,8 +46,27 @@ public class Enemy extends Node {
         position.y = target.position.y + new int[]{-1, 1}[MathUtils.random(0,1)] * 320;
       }
     }
-    position.x += dir.x * speed * delta;
-    position.y += dir.y * speed * delta;
+    velocity.x *= 0.65F;
+    velocity.y *= 0.65F;
+
+    velocity.x += dir.x * speed * delta;
+    velocity.y += dir.y * speed * delta;
+
+    for (Node node: getParent().children.values()) {
+      if (node instanceof Enemy) {
+        if (position.dst(node.position) <= 32 && position.dst(node.position) != 0 && node != this) {
+          Vector2 dirToNode = new Vector2(position.x - node.position.x, position.y - node.position.y);
+          velocity.x += 2F * dirToNode.nor().x * speed * delta;
+          velocity.y += 2F * dirToNode.nor().y * speed * delta;
+        }
+      }
+    }
+
+
+    velocity.clamp(0,1);
+
+    position.x += velocity.x;
+    position.y += velocity.y;
     super.update(delta);
 
 
