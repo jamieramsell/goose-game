@@ -15,7 +15,6 @@ public class Node {
   private Node parent = null;
   private final Map<String, Node> children = new HashMap<>();
 
-
   public Node(float x, float y, float width, float height) {
     this.bounds = new Rectangle(x, y, width, height);
     this.texture = null;
@@ -27,7 +26,7 @@ public class Node {
   }
 
   public void draw(Batch batch) {
-    for (Node child: children.values()) {
+    for (Node child : children.values()) {
       child.draw(batch);
     }
     if (texture == null) return;
@@ -36,7 +35,7 @@ public class Node {
   }
 
   public void update(float delta) {
-    for (Node child: children.values()) {
+    for (Node child : children.values()) {
       child.update(delta);
     }
   }
