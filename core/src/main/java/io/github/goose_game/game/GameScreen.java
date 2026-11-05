@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
+import io.github.goose_game.utils.Node;
 
 public class GameScreen extends ScreenAdapter {
   private static final float WORLD_WIDTH = 320f;
