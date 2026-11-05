@@ -17,7 +17,7 @@ import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.utils.DefaultSkin;
 
 public class MainMenu extends ScreenAdapter {
-  
+
   private final Main game;
   private final Stage stage = new Stage(new ScreenViewport());
   private final Skin skin;
@@ -27,29 +27,29 @@ public class MainMenu extends ScreenAdapter {
     this.skin = DefaultSkin.getSkin();
 
     // Game title
-    Label title = new Label(
-        "Goose Game",
-        new Label.LabelStyle(skin.getFont("default"), Color.WHITE)
-    );
+    Label title =
+        new Label("Goose Game", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
 
     // Play button
     TextButton play = new TextButton("Play", skin);
-    play.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent event, Actor actor) {
-        game.setScreen(new GameScreen(game));
-        dispose();
-      }
-    });
+    play.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            game.setScreen(new GameScreen(game));
+            dispose();
+          }
+        });
 
     // Quit button
     TextButton quit = new TextButton("Quit", skin);
-    quit.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent event, Actor actor) {
-        Gdx.app.exit();
-      }
-    });
+    quit.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            Gdx.app.exit();
+          }
+        });
 
     // Menu layout
     Table table = new Table();
@@ -89,5 +89,4 @@ public class MainMenu extends ScreenAdapter {
     stage.dispose();
     skin.dispose();
   }
-
 }
