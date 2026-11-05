@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import io.github.goose_game.game.GameScreen;
+import io.github.goose_game.menu.MainMenu;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends Game {
@@ -16,7 +16,7 @@ public class Main extends Game {
     batch = new SpriteBatch();
     font = new BitmapFont();
 
-    setScreen(new GameScreen(this));
+    setScreen(new MainMenu(this));
   }
 
   @Override
