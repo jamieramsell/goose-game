@@ -18,12 +18,10 @@ import io.github.goose_game.utils.DefaultSkin;
 
 public class MainMenu extends ScreenAdapter {
 
-  private final Main game;
   private final Stage stage = new Stage(new ScreenViewport());
   private final Skin skin;
 
   public MainMenu(Main game) {
-    this.game = game;
     this.skin = DefaultSkin.getSkin();
 
     // Game title
