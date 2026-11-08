@@ -1,27 +1,41 @@
 package io.github.goose_game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class Enemy extends Node {
   Player target;
   float speed;
   Vector2 target_pos;
   Vector2 velocity = new Vector2(0,0);
+  private Array<Animation<Sprite>> walking;
   float damage;
   int attackCounter;
   int attackDelay;
+  private float frame;
   boolean fleeing = false;
-  public Enemy(float x, float y, float width, float height, Sprite texture, Player target, float speed, float damage, int attackDelay) {
-    super(x, y, width, height, texture);
+  private int i = 0;
+  public Enemy(float x, float y, float width, float height, TextureAtlas atlas, Player target, float speed, float damage, int attackDelay) {
+    super(x, y, width, height);
     this.target = target;
     this.speed = speed;
     this.damage = damage;
     this.attackCounter = 0;
     this.attackDelay = attackDelay;
     this.target_pos = target.position;
+
+    this.walking = new Array<>();
+
+    String[] directions = {"Left", "Right"};
+    for(int i = 0; i < 2; i++){
+      this.walking.add(new Animation<>(0.16f, atlas.createSprites("GooseWalk" + directions[i]), Animation.PlayMode.LOOP));
+    }
   }
 
   @Override
@@ -53,6 +67,8 @@ public class Enemy extends Node {
     velocity.x += dir.x * speed;
     velocity.y += dir.y * speed;
 
+
+
     for (Node node: getParent().children.values()) {
       if (node instanceof Enemy) {
         if (position.dst(node.position) <= 32 && position.dst(node.position) != 0 && node != this) {
@@ -64,6 +80,10 @@ public class Enemy extends Node {
     }
 
 
+    if (overlaps(target) && !fleeing) {
+      velocity = new Vector2(0,0);
+    }
+
     velocity.clamp(0,speed);
 
     position.x += velocity.x * delta;
@@ -71,13 +91,26 @@ public class Enemy extends Node {
     super.update(delta);
 
 
+
   }
 
   @Override
   public void draw(Batch batch) {
-    if (texture != null) {
-      batch.draw(texture, position.x, position.y, bounds.width, bounds.height);
+    frame += 2 * Gdx.graphics.getDeltaTime();
+    if (target.position.x > position.x) {
+      i = 1;
     }
+    if (target.position.x < position.x) {
+      i = 0;
+    }
+
+    if (fleeing) {
+      i = (i == 0) ? 1 : 0;
+    }
+
+    Sprite currentFrame = walking.get(i).getKeyFrame(frame);
+    currentFrame.setPosition(position.x, position.y);
+    currentFrame.draw(batch);
     for (Node child : children.values()) {
       child.draw(batch);
     }

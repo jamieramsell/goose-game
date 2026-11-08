@@ -106,7 +106,7 @@ public class Player extends Node {
   }
   public void damage(float damage) {
     health -= damage;
-    //System.out.println(health);
+    System.out.println(health);
   }
 
   public Camera getCamera() {

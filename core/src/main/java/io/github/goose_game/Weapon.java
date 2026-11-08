@@ -55,7 +55,7 @@ public class Weapon extends Node {
       //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
       //shapeRenderer.setColor(Color.RED);
       //shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-      //shapeRenderer.end();
+      //shapeRenderer.end();DAWD
 
     }
 

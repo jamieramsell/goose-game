@@ -3,6 +3,7 @@ package io.github.goose_game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -11,12 +12,12 @@ import java.util.ArrayList;
 public class EnemyManager extends Node {
   int wave_timer;
   int waves = 0;
-  private final Sprite gooseTexture;
+  private final TextureAtlas atlas;
   private final Player player;
   int enemyCounter = 0;
 
-  public EnemyManager(Sprite gooseTexture, Player player) {
-    this.gooseTexture = gooseTexture;
+  public EnemyManager(TextureAtlas atlas, Player player) {
+    this.atlas = atlas;
     this.player = player;
     spawnWave();
   }
@@ -32,8 +33,8 @@ public class EnemyManager extends Node {
   public void spawnEnemy() {
     Enemy enemy = new Enemy(
       1000, 1000,
-      gooseTexture.getWidth(), gooseTexture.getHeight(),
-      gooseTexture,
+      32, 32,
+      atlas,
       player,
       32,
       20,
