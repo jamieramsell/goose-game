@@ -1,6 +1,6 @@
 package io.github.goose_game;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -13,7 +13,7 @@ public class Enemy extends Node {
   int attackCounter;
   int attackDelay;
   boolean fleeing = false;
-  public Enemy(float x, float y, float width, float height, Texture texture, Player target,  float speed, float damage, int attackDelay) {
+  public Enemy(float x, float y, float width, float height, Sprite texture, Player target, float speed, float damage, int attackDelay) {
     super(x, y, width, height, texture);
     this.target = target;
     this.speed = speed;
@@ -49,24 +49,24 @@ public class Enemy extends Node {
     velocity.x *= 0.65F;
     velocity.y *= 0.65F;
 
-    velocity.x += dir.x * speed * delta;
-    velocity.y += dir.y * speed * delta;
+    velocity.x += dir.x * speed;
+    velocity.y += dir.y * speed;
 
     for (Node node: getParent().children.values()) {
       if (node instanceof Enemy) {
         if (position.dst(node.position) <= 32 && position.dst(node.position) != 0 && node != this) {
           Vector2 dirToNode = new Vector2(position.x - node.position.x, position.y - node.position.y);
-          velocity.x += 2F * dirToNode.nor().x * speed * delta;
-          velocity.y += 2F * dirToNode.nor().y * speed * delta;
+          velocity.x += 1F * dirToNode.nor().x * speed;
+          velocity.y += 1F * dirToNode.nor().y * speed;
         }
       }
     }
 
 
-    velocity.clamp(0,1);
+    velocity.clamp(0,speed);
 
-    position.x += velocity.x;
-    position.y += velocity.y;
+    position.x += velocity.x * delta;
+    position.y += velocity.y * delta;
     super.update(delta);
 
 

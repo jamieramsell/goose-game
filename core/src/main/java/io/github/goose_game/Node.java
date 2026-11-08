@@ -1,17 +1,16 @@
 package io.github.goose_game;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Node {
-  protected final Rectangle bounds;
-  protected Texture texture;
+  protected Rectangle bounds;
+  protected Sprite texture;
   public Vector2 position = new Vector2();
   public int zIndex = 0;
   private Node parent = null;
@@ -25,7 +24,7 @@ public class Node {
     this.texture = null;
   }
 
-  public Node(float x, float y, float width, float height, Texture texture) {
+  public Node(float x, float y, float width, float height, Sprite texture) {
     this.bounds = new Rectangle(x, y, width, height);
     this.position.set(x, y);
     this.texture = texture;

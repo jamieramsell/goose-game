@@ -2,18 +2,39 @@ package io.github.goose_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 
 public class Player extends Node {
   private Vector2 velocity;
   private final float speed;
   private float health;
-  public Player(float x, float y, float width, float height, Texture texture, float speed, float health) {
-    super(x, y, width, height, texture);
+  private Array<Animation<Sprite>> running;
+  private Array<Animation<Sprite>> idle;
+  private float frame;
+  int i = 0;
+  Camera camera;
+  public Player(float x, float y, float width, float height, TextureAtlas atlas, float speed, float health, Camera camera) {
+    super(x, y, width, height);
     this.speed = speed;
     this.health = health;
     this.velocity = new Vector2();
+    this.camera = camera;
+
+    this.running = new Array<>();
+    this.idle = new Array<>();
+    String[] directions = {"Left", "Right", "Back", "Front"};
+
+    for(int i = 0; i < 4; i++){
+      this.idle.add(new Animation<>(0.16f, atlas.createSprites(directions[i] + "Idle"), Animation.PlayMode.LOOP));
+      this.running.add(new Animation<>(0.16f, atlas.createSprites(directions[i] + "Run"), Animation.PlayMode.LOOP));
+    }
   }
 
   @Override
@@ -44,13 +65,51 @@ public class Player extends Node {
     if(Gdx.input.isKeyPressed(Input.Keys.W)) {
       dir.y += 1;
     }
+    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+      ((Weapon) get_child("weapon_test")).attack();
+    }
     dir = dir.nor();
 
     return dir;
   }
 
+  @Override
+  public void draw(Batch batch) {
+    for (Node child : children.values()) {
+      child.draw(batch);
+    }
+
+    frame += 2 * Gdx.graphics.getDeltaTime();
+    if (velocity.x > 0.02f) {
+      i = 1;
+    }
+    else if (velocity.x < -0.02f) {
+      i = 0;
+    }
+    else if (velocity.y > 0.02f) {
+      i = 2;
+    }
+    else if (velocity.y < -0.02f) {
+      i = 3;
+    }
+
+    if (velocity.len() <= 0.02f) {
+      Sprite currentFrame = idle.get(i).getKeyFrame(frame);
+      currentFrame.setPosition(position.x, position.y);
+      currentFrame.draw(batch);
+    }
+    else {
+      Sprite currentFrame = running.get(i).getKeyFrame(frame);
+      currentFrame.setPosition(position.x, position.y);
+      currentFrame.draw(batch);
+    }
+  }
   public void damage(float damage) {
     health -= damage;
-    System.out.println(health);
+    //System.out.println(health);
+  }
+
+  public Camera getCamera() {
+    return camera;
   }
 }

@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -17,18 +17,29 @@ public class GameScreen extends ScreenAdapter {
 
   private final Main game;
   private final Batch batch;
+  private final TextureAtlas atlas;
   private final Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT);
   private final OrthographicCamera camera = new OrthographicCamera();
   private final Texture background = new Texture(Gdx.files.internal("floor_test.png"));
-  private final Texture playerTexture = new Texture(Gdx.files.internal("player_test.png"));
+  private Sprite playerTexture;
+  private final Animation<Sprite> stickAttackTexture;
+  private final Sprite gooseTexture;
   private final Node root = new Node(0,0,0,0);
   Node player;
 
   public GameScreen(Main game) {
     this.game = game;
     this.batch = game.getBatch();
-    this.root.add_child("player", new Player(0,0, 32, 32, playerTexture, 64, 200));
-    this.root.add_child("enemyManager", new EnemyManager((Player) this.root.get_child("player")));
+    this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
+    for (Texture texture: atlas.getTextures()) {
+      texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    }
+    playerTexture = atlas.createSprite("player_test");
+    this.stickAttackTexture = new Animation<>(1, atlas.createSprites("sheet_6_katana_slash"), Animation.PlayMode.NORMAL);
+    gooseTexture = atlas.createSprite("goose");
+    this.root.add_child("player", new Player(0,0, 32, 32, atlas, 64, 200, camera));
+    this.root.add_child("enemyManager", new EnemyManager(gooseTexture,(Player) this.root.get_child("player")));
+    this.root.get_child("player").add_child("weapon_test",  new Weapon(0, 0, 100, 100, stickAttackTexture, 1, 20, 1, 120));
     viewport.setCamera(camera);
 
     background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -48,11 +59,7 @@ public class GameScreen extends ScreenAdapter {
     batch.setProjectionMatrix(viewport.getCamera().combined);
     batch.begin();
 
-    batch.draw(background,0 , 0, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,128 , 0, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,-128 , 0, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,0 , 128, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,0 , -128, 0, 0, 32 * 4, 32 * 4);
+    batch.draw(background,-32 * 64 , -32 * 64, 0, 0, 32 * 128, 32 * 128);
     root.draw(batch);
 
     batch.end();

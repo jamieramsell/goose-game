@@ -2,20 +2,21 @@ package io.github.goose_game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class EnemyManager extends Node {
   int wave_timer;
   int waves = 0;
-  private final Texture gooseTexture = new Texture(Gdx.files.internal("goose.png"));
+  private final Sprite gooseTexture;
   private final Player player;
   int enemyCounter = 0;
 
-  public EnemyManager(Player player) {
+  public EnemyManager(Sprite gooseTexture, Player player) {
+    this.gooseTexture = gooseTexture;
     this.player = player;
     spawnWave();
   }
@@ -31,10 +32,10 @@ public class EnemyManager extends Node {
   public void spawnEnemy() {
     Enemy enemy = new Enemy(
       1000, 1000,
-      32, 32,
+      gooseTexture.getWidth(), gooseTexture.getHeight(),
       gooseTexture,
       player,
-      64,
+      32,
       20,
       60
     );
@@ -42,7 +43,6 @@ public class EnemyManager extends Node {
     int rndDist = MathUtils.random(360, 370);
     Vector2 randomRotatedVector = new Vector2(1, 0).rotateDeg(rndDir);
     randomRotatedVector.scl(rndDist);
-    System.out.println(randomRotatedVector);
     enemy.position.x = player.position.x + randomRotatedVector.x;
     enemy.position.y = player.position.y + randomRotatedVector.y;
 

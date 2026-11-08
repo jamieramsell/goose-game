@@ -1,0 +1,92 @@
+package io.github.goose_game;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+
+public class Weapon extends Node {
+  private int range;
+  private int damage;
+  float stateTime = 0;
+  Animation<Sprite> animation;
+  int attackTime;
+  int attackCounter;
+  float attackAngle;
+  private float knockback;
+  ShapeRenderer shapeRenderer = new ShapeRenderer();
+  private Vector2 dv = new Vector2();
+
+  public Weapon(float x, float y, float width, float height, Animation<Sprite> texture, int range, int damage, float knockback, int attackTime) {
+    this.bounds = new Rectangle(x, y, width, height);
+    this.position.set(x, y);
+    this.animation = texture;
+    this.attackTime = attackTime;
+    this.attackCounter = attackTime;
+    this.range = range;
+    this.damage = damage;
+    this.knockback = knockback;
+  }
+
+  @Override
+  public void draw(Batch batch) {
+    for (Node child : children.values()) {
+      child.draw(batch);
+    }
+    if (attackCounter != attackTime) {
+      int i = (int) (attackCounter / (attackTime / animation.getAnimationDuration()));
+      Sprite currentFrame = animation.getKeyFrame(i);
+      currentFrame.setPosition(position.x, position.y);
+      currentFrame.setRotation(MathUtils.radiansToDegrees * attackAngle);
+      currentFrame.draw(batch);
+      bounds = currentFrame.getBoundingRectangle();
+      //shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
+
+      //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+      //shapeRenderer.setColor(Color.RED);
+      //shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+      //shapeRenderer.end();
+
+    }
+
+  }
+
+  public void update(float delta) {
+    super.update(delta);
+
+    if (attackTime != attackCounter) {
+      attackCounter += 1;
+    }
+    Vector2 playerPosition = getParent().position;
+    position.set(playerPosition.x + dv.x * 30, playerPosition.y + dv.y * 30);
+
+    if (attackCounter == (int) attackTime / 2) {
+      for (Node child : ((EnemyManager) getParent().getParent().get_child("enemyManager")).children.values()) {
+        if (this.overlaps(child)) {
+          if (child instanceof Enemy) {
+            ((Enemy) child).disperse();
+          }
+        }
+      }
+    }
+  }
+
+  public void attack() {
+    if (attackTime == attackCounter) {
+      attackCounter = 0;
+      animation.setPlayMode(Animation.PlayMode.NORMAL);
+      Vector3 temp = ((Player) getParent()).getCamera().unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
+      Vector2 mousePosition = new Vector2(temp.x, temp.y);
+      Vector2 playerPosition = getParent().position;
+      dv = mousePosition.cpy().sub(playerPosition).nor();
+      attackAngle = MathUtils.atan2(dv.y, dv.x) - 1.5f;
+      position.set(playerPosition.x + dv.x * 30, playerPosition.y + dv.y * 30);
+    }
+  }
+}
