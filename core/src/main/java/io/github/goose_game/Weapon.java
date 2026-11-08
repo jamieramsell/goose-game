@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -20,13 +21,16 @@ public class Weapon extends Node {
   int attackCounter;
   float attackAngle;
   private float knockback;
+  private final TextureAtlas atlas;
+  private int effectCounter;
   ShapeRenderer shapeRenderer = new ShapeRenderer();
   private Vector2 dv = new Vector2();
 
-  public Weapon(float x, float y, float width, float height, Animation<Sprite> texture, int range, int damage, float knockback, int attackTime) {
+  public Weapon(float x, float y, float width, float height, Animation<Sprite> texture, TextureAtlas atlas, int range, int damage, float knockback, int attackTime) {
     this.bounds = new Rectangle(x, y, width, height);
     this.position.set(x, y);
     this.animation = texture;
+    this.atlas = atlas;
     this.attackTime = attackTime;
     this.attackCounter = attackTime;
     this.range = range;
@@ -70,7 +74,11 @@ public class Weapon extends Node {
       for (Node child : ((EnemyManager) getParent().getParent().get_child("enemyManager")).children.values()) {
         if (this.overlaps(child)) {
           if (child instanceof Enemy) {
-            ((Enemy) child).disperse();
+            Enemy enemy = (Enemy) child;
+            enemy.disperse();
+            effectCounter += 1;
+            enemy.add_child("hit_effect_" + effectCounter,
+              new Effect(enemy.position.x, enemy.position.y, atlas, "hit_effect", 4, 0.06f));
           }
         }
       }

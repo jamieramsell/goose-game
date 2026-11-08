@@ -1,6 +1,7 @@
 package io.github.goose_game;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
@@ -70,6 +71,16 @@ public class Enemy extends Node {
     super.update(delta);
 
 
+  }
+
+  @Override
+  public void draw(Batch batch) {
+    if (texture != null) {
+      batch.draw(texture, position.x, position.y, bounds.width, bounds.height);
+    }
+    for (Node child : children.values()) {
+      child.draw(batch);
+    }
   }
 
   public void disperse() {

@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ public class Node {
   public void update(float delta) {
     this.bounds.x = this.position.x;
     this.bounds.y = this.position.y;
-    for (Node child: children.values()) {
+    for (Node child: new ArrayList<>(children.values())) {
       child.update(delta);
     }
   }
