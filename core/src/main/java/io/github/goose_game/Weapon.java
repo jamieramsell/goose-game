@@ -55,7 +55,7 @@ public class Weapon extends Node {
       //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
       //shapeRenderer.setColor(Color.RED);
       //shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-      //shapeRenderer.end();DAWD
+      //shapeRenderer.end();
 
     }
 
@@ -75,10 +75,12 @@ public class Weapon extends Node {
         if (this.overlaps(child)) {
           if (child instanceof Enemy) {
             Enemy enemy = (Enemy) child;
-            enemy.disperse();
+            enemy.damage(damage);
             effectCounter += 1;
             enemy.add_child("hit_effect_" + effectCounter,
               new Effect(enemy.position.x, enemy.position.y, atlas, "hit_effect", 4, 0.06f));
+            enemy.velocity.y = -enemy.velocity.y * knockback;
+            enemy.velocity.x = -enemy.velocity.x * knockback;
           }
         }
       }

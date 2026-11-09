@@ -36,9 +36,10 @@ public class EnemyManager extends Node {
       32, 32,
       atlas,
       player,
-      32,
       20,
-      60
+      20,
+      270,
+        100
     );
     int rndDir = MathUtils.random(0,360);
     int rndDist = MathUtils.random(360, 370);
@@ -49,18 +50,5 @@ public class EnemyManager extends Node {
 
     enemyCounter += 1;
     add_child(String.valueOf(enemyCounter), enemy);
-  }
-
-  @Override
-  public void update(float delta) {
-    super.update(delta);
-    ArrayList<Enemy> killList = new ArrayList<Enemy>();
-    for (Node child: children.values()) {
-      if (child instanceof Enemy) {
-        if (((Enemy) child).fleeing) {
-          killList.add((Enemy) child);
-        }
-      };
-    }
   }
 }

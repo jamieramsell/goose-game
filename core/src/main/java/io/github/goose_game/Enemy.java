@@ -14,14 +14,16 @@ public class Enemy extends Node {
   float speed;
   Vector2 target_pos;
   Vector2 velocity = new Vector2(0,0);
-  private Array<Animation<Sprite>> walking;
+  private Array<Animation<Sprite>> animations;
   float damage;
   int attackCounter;
   int attackDelay;
   private float frame;
   boolean fleeing = false;
+  private int health;
+  private int maxHealth;
   private int i = 0;
-  public Enemy(float x, float y, float width, float height, TextureAtlas atlas, Player target, float speed, float damage, int attackDelay) {
+  public Enemy(float x, float y, float width, float height, TextureAtlas atlas, Player target, float speed, float damage, int attackDelay, int health) {
     super(x, y, width, height);
     this.target = target;
     this.speed = speed;
@@ -29,12 +31,17 @@ public class Enemy extends Node {
     this.attackCounter = 0;
     this.attackDelay = attackDelay;
     this.target_pos = target.position;
-
-    this.walking = new Array<>();
+    this.health = health;
+    this.maxHealth = health;
+    this.animations = new Array<>();
 
     String[] directions = {"Left", "Right"};
-    for(int i = 0; i < 2; i++){
-      this.walking.add(new Animation<>(0.16f, atlas.createSprites("GooseWalk" + directions[i]), Animation.PlayMode.LOOP));
+    for(int i = 0; i < 4; i++){
+      if (i < 2) {
+        this.animations.add(new Animation<>(0.16f, atlas.createSprites("GooseWalk" + directions[i]), Animation.PlayMode.LOOP));
+      } else {
+        this.animations.add(new Animation<>(0.16f, atlas.createSprites("GooseAttack" + directions[i - 2]), Animation.PlayMode.LOOP));
+      }
     }
   }
 
@@ -48,6 +55,7 @@ public class Enemy extends Node {
     }
     else if (overlaps(target)) {
       target.damage(damage);
+      System.out.println("Quack!");
       this.attackCounter += 1;
     }
     Vector2 dir = new Vector2(target_pos.x - position.x, target_pos.y - position.y);
@@ -59,6 +67,7 @@ public class Enemy extends Node {
         fleeing = false;
         position.x = target.position.x + new int[]{-1, 1}[MathUtils.random(0,1)] * 320;
         position.y = target.position.y + new int[]{-1, 1}[MathUtils.random(0,1)] * 320;
+        health = maxHealth;
       }
     }
     velocity.x *= 0.65F;
@@ -83,8 +92,10 @@ public class Enemy extends Node {
     if (overlaps(target) && !fleeing) {
       velocity = new Vector2(0,0);
     }
-
-    velocity.clamp(0,speed);
+    if (fleeing) {
+        velocity.x *= 1.1F;
+        velocity.y *= 1.1F;
+    }
 
     position.x += velocity.x * delta;
     position.y += velocity.y * delta;
@@ -103,12 +114,15 @@ public class Enemy extends Node {
     if (target.position.x < position.x) {
       i = 0;
     }
+    if (!fleeing && attackCounter != 0) {
+      i += 2;
+    }
 
     if (fleeing) {
       i = (i == 0) ? 1 : 0;
     }
 
-    Sprite currentFrame = walking.get(i).getKeyFrame(frame);
+    Sprite currentFrame = animations.get(i).getKeyFrame(frame);
     currentFrame.setPosition(position.x, position.y);
     currentFrame.draw(batch);
     for (Node child : children.values()) {
@@ -118,5 +132,12 @@ public class Enemy extends Node {
 
   public void disperse() {
     fleeing = true;
+  }
+
+  public void damage(int damage) {
+    health -= damage;
+    if (health <= 0) {
+      fleeing = true;
+    }
   }
 }

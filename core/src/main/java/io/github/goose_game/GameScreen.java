@@ -37,7 +37,7 @@ public class GameScreen extends ScreenAdapter {
     this.stickAttackTexture = new Animation<>(1, atlas.createSprites("sheet_6_katana_slash"), Animation.PlayMode.NORMAL);
     this.root.add_child("player", new Player(0,0, 32, 32, atlas, 64, 200, camera));
     this.root.add_child("enemyManager", new EnemyManager(atlas,(Player) this.root.get_child("player")));
-    this.root.get_child("player").add_child("weapon_test",  new Weapon(0, 0, 100, 100, stickAttackTexture, atlas, 1, 20, 1, 120));
+    this.root.get_child("player").add_child("weapon_test",  new Weapon(0, 0, 100, 100, stickAttackTexture, atlas, 1, 20, 5, 120));
     viewport.setCamera(camera);
 
     background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
