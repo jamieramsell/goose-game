@@ -1,11 +1,9 @@
-package io.github.goose_game;
+package io.github.goose_game.utils;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +15,6 @@ public class Node {
   private Node parent = null;
   protected Map<String, Node> children = new HashMap<>();
   public String key = "";
-
 
   public Node(float x, float y, float width, float height) {
     this.bounds = new Rectangle(x, y, width, height);
@@ -38,7 +35,7 @@ public class Node {
   }
 
   public void draw(Batch batch) {
-    for (Node child: children.values()) {
+    for (Node child : children.values()) {
       child.draw(batch);
     }
     if (texture == null) return;
@@ -75,5 +72,9 @@ public class Node {
 
   public Node get_child(String id) {
     return children.get(id);
+  }
+
+  public Map<String, Node> getChildren() {
+    return children;
   }
 }

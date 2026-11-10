@@ -1,8 +1,10 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+
+import io.github.goose_game.utils.Node;
 
 public class Enemy extends Node {
   Player target;
@@ -52,7 +54,7 @@ public class Enemy extends Node {
     velocity.x += dir.x * speed * delta;
     velocity.y += dir.y * speed * delta;
 
-    for (Node node: getParent().children.values()) {
+    for (Node node: getParent().getChildren().values()) {
       if (node instanceof Enemy) {
         if (position.dst(node.position) <= 32 && position.dst(node.position) != 0 && node != this) {
           Vector2 dirToNode = new Vector2(position.x - node.position.x, position.y - node.position.y);

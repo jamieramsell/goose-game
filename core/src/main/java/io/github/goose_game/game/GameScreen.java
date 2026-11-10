@@ -1,4 +1,4 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
@@ -10,10 +10,12 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import io.github.goose_game.Main;
+import io.github.goose_game.utils.Node;
+
 public class GameScreen extends ScreenAdapter {
   private static final float WORLD_WIDTH = 320f;
   private static final float WORLD_HEIGHT = 320f;
-
 
   private final Main game;
   private final Batch batch;
@@ -21,7 +23,8 @@ public class GameScreen extends ScreenAdapter {
   private final OrthographicCamera camera = new OrthographicCamera();
   private final Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private final Texture playerTexture = new Texture(Gdx.files.internal("player_test.png"));
-  private final Node root = new Node(0,0,0,0);
+  private final Node root = new Node(0, 0, 0, 0);
+
   Node player;
 
   public GameScreen(Main game) {
@@ -48,11 +51,11 @@ public class GameScreen extends ScreenAdapter {
     batch.setProjectionMatrix(viewport.getCamera().combined);
     batch.begin();
 
-    batch.draw(background,0 , 0, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,128 , 0, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,-128 , 0, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,0 , 128, 0, 0, 32 * 4, 32 * 4);
-    batch.draw(background,0 , -128, 0, 0, 32 * 4, 32 * 4);
+    batch.draw(background, 0, 0, 0, 0, 32 * 4, 32 * 4);
+    batch.draw(background, 128, 0, 0, 0, 32 * 4, 32 * 4);
+    batch.draw(background, -128, 0, 0, 0, 32 * 4, 32 * 4);
+    batch.draw(background, 0, 128, 0, 0, 32 * 4, 32 * 4);
+    batch.draw(background, 0, -128, 0, 0, 32 * 4, 32 * 4);
     root.draw(batch);
 
     batch.end();

@@ -1,11 +1,12 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-import java.lang.reflect.Array;
+import io.github.goose_game.utils.Node;
+
 import java.util.ArrayList;
 
 public class EnemyManager extends Node {
