@@ -2,6 +2,7 @@ package io.github.goose_game;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
@@ -43,12 +44,20 @@ public class Node {
     }
     if (texture == null) return;
 
-    batch.draw(texture, position.x, position.y, bounds.width, bounds.height);
+    batch.draw(texture, position.x - texture.getWidth() / 2, position.y - texture.getHeight() / 2, texture.getWidth(), texture.getHeight());
+  }
+
+  public void drawDebugBounds(ShapeRenderer shapeRenderer) {
+    if (bounds.width > 0 && bounds.height > 0) {
+      shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+    for (Node child : children.values()) {
+      child.drawDebugBounds(shapeRenderer);
+    }
   }
 
   public void update(float delta) {
-    this.bounds.x = this.position.x;
-    this.bounds.y = this.position.y;
+    bounds.setCenter(position.x , position.y);
     for (Node child: new ArrayList<>(children.values())) {
       child.update(delta);
     }

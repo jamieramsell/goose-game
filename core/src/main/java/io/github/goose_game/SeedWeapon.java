@@ -1,4 +1,4 @@
 package io.github.goose_game;
 
-public class SeedWeapon {
+public class SeedWeapon extends Node{
 }

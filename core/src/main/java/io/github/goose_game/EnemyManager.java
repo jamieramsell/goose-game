@@ -33,7 +33,7 @@ public class EnemyManager extends Node {
   public void spawnEnemy() {
     Enemy enemy = new Enemy(
       1000, 1000,
-      32, 32,
+      20, 20,
       atlas,
       player,
       20,

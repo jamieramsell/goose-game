@@ -185,71 +185,91 @@
             <key type="filename">../../../Downloads/32x32 simple sfx-Sheet-Sheet/hit_effect_7.png</key>
             <key type="filename">../../../Downloads/32x32 simple sfx-Sheet-Sheet/hit_effect_8.png</key>
             <key type="filename">../../../Downloads/32x32 simple sfx-Sheet-Sheet/hit_effect_9.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_7.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_0.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_1.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_2.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_3.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_4.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_5.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_6.png</key>
-            <key type="filename">../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_7.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_0.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_1.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_2.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_3.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_4.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_5.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_6.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_7.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_8.png</key>
+            <key type="filename">GooseAttackLeft/GooseAttackLeft_9.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_0.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_1.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_2.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_3.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_4.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_5.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_6.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_7.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_8.png</key>
+            <key type="filename">GooseAttackRight/GooseAttackRight_9.png</key>
             <key type="filename">PALLETE.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_0.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_1.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_2.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_3.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_4.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_5.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_6.png</key>
+            <key type="filename">Player/Idle/BackIdle/BackIdle_7.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_0.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_1.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_2.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_3.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_4.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_5.png</key>
+            <key type="filename">Player/Idle/Front-Idle/FrontIdle_6.png</key>
+            <key type="filename">Player/Idle/Front-Idle/frontIdle_7.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_0.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_1.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_2.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_3.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_4.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_5.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_6.png</key>
+            <key type="filename">Player/Idle/Left-Idle/LeftIdle_7.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_0.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_1.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_2.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_3.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_4.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_5.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_6.png</key>
+            <key type="filename">Player/Idle/Right-Idle/RightIdle_7.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_0.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_1.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_2.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_3.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_4.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_5.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_6.png</key>
+            <key type="filename">Player/Run/Back-Run/BackRun_7.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_0.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_1.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_2.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_3.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_4.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_5.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_6.png</key>
+            <key type="filename">Player/Run/Front-Run/FrontRun_7.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_0.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_1.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_2.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_3.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_4.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_5.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_6.png</key>
+            <key type="filename">Player/Run/Left-Run/LeftRun_7.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_0.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_1.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_2.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_3.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_4.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_5.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_6.png</key>
+            <key type="filename">Player/Run/Right-Run/RightRun_7.png</key>
             <key type="filename">floor_test.png</key>
             <key type="filename">goose.png</key>
             <key type="filename">goose_left/GooseWalkLeft_0.png</key>
@@ -311,70 +331,6 @@
                     <filename>sheet_6_katana_slash/sheet_6_katana_slash_04.png</filename>
                     <filename>sheet_6_katana_slash/sheet_6_katana_slash_05.png</filename>
                     <filename>sheet_6_katana_slash/sheet_6_katana_slash_06.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Back-Run/BackRun_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Front-Run/FrontRun_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Left-Run/LeftRun_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Run/Right-Run/RightRun_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Right-Idle/RightIdle_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Left-Idle/LeftIdle_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/BackIdle/BackIdle_7.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_0.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_1.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_2.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_3.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_4.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_5.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_6.png</filename>
-                    <filename>../../../Downloads/Top-Down movement template v0/Player/Idle/Front-Idle/FrontIdle_7.png</filename>
                     <filename>../../../Downloads/32x32 simple sfx-Sheet-Sheet/hit_effect_0.png</filename>
                     <filename>../../../Downloads/32x32 simple sfx-Sheet-Sheet/hit_effect_1.png</filename>
                     <filename>../../../Downloads/32x32 simple sfx-Sheet-Sheet/hit_effect_2.png</filename>
@@ -394,6 +350,90 @@
                     <filename>goose_right/GooseWalkRight_2.png</filename>
                     <filename>goose_right/GooseWalkRight_3.png</filename>
                     <filename>PALLETE.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_0.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_1.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_2.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_3.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_4.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_5.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_6.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_7.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_8.png</filename>
+                    <filename>GooseAttackLeft/GooseAttackLeft_9.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_0.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_1.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_2.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_3.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_4.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_5.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_6.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_7.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_8.png</filename>
+                    <filename>GooseAttackRight/GooseAttackRight_9.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_0.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_1.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_2.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_3.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_4.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_5.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_6.png</filename>
+                    <filename>Player/Idle/BackIdle/BackIdle_7.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_0.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_1.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_2.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_3.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_4.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_5.png</filename>
+                    <filename>Player/Idle/Front-Idle/FrontIdle_6.png</filename>
+                    <filename>Player/Idle/Front-Idle/frontIdle_7.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_0.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_1.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_2.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_3.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_4.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_5.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_6.png</filename>
+                    <filename>Player/Idle/Left-Idle/LeftIdle_7.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_0.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_1.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_2.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_3.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_4.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_5.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_6.png</filename>
+                    <filename>Player/Idle/Right-Idle/RightIdle_7.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_0.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_1.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_2.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_3.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_4.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_5.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_6.png</filename>
+                    <filename>Player/Run/Back-Run/BackRun_7.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_0.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_1.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_2.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_3.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_4.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_5.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_6.png</filename>
+                    <filename>Player/Run/Front-Run/FrontRun_7.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_0.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_1.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_2.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_3.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_4.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_5.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_6.png</filename>
+                    <filename>Player/Run/Left-Run/LeftRun_7.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_0.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_1.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_2.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_3.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_4.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_5.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_6.png</filename>
+                    <filename>Player/Run/Right-Run/RightRun_7.png</filename>
                 </array>
             </struct>
         </map>

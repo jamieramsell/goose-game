@@ -47,7 +47,7 @@ public class Effect extends Node {
   @Override
   public void draw(Batch batch) {
     Sprite frame = animation.getKeyFrame(stateTime);
-    frame.setPosition(position.x, position.y);
+    frame.setPosition(position.x - frame.getWidth() / 2, position.y - frame.getHeight() / 2);
     frame.draw(batch);
     super.draw(batch);
   }

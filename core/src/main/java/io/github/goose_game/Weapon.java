@@ -23,7 +23,7 @@ public class Weapon extends Node {
   private float knockback;
   private final TextureAtlas atlas;
   private int effectCounter;
-  ShapeRenderer shapeRenderer = new ShapeRenderer();
+
   private Vector2 dv = new Vector2();
 
   public Weapon(float x, float y, float width, float height, Animation<Sprite> texture, TextureAtlas atlas, int range, int damage, float knockback, int attackTime) {
@@ -46,7 +46,7 @@ public class Weapon extends Node {
     if (attackCounter != attackTime) {
       int i = (int) (attackCounter / (attackTime / animation.getAnimationDuration()));
       Sprite currentFrame = animation.getKeyFrame(i);
-      currentFrame.setPosition(position.x, position.y);
+      currentFrame.setPosition(position.x - currentFrame.getWidth() / 2, position.y - currentFrame.getHeight() / 2);
       currentFrame.setRotation(MathUtils.radiansToDegrees * attackAngle);
       currentFrame.draw(batch);
       bounds = currentFrame.getBoundingRectangle();

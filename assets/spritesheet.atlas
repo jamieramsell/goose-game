@@ -75,7 +75,7 @@ FrontIdle
 FrontIdle
   bounds: 0, 400, 32, 32
   index: 6
-FrontIdle
+frontIdle
   bounds: 32, 336, 32, 32
   index: 7
 FrontRun

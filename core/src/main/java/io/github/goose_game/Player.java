@@ -95,12 +95,12 @@ public class Player extends Node {
 
     if (velocity.len() <= 0.02f) {
       Sprite currentFrame = idle.get(i).getKeyFrame(frame);
-      currentFrame.setPosition(position.x, position.y);
+      currentFrame.setPosition(position.x - currentFrame.getWidth() / 2, position.y - currentFrame.getHeight() / 2);
       currentFrame.draw(batch);
     }
     else {
       Sprite currentFrame = running.get(i).getKeyFrame(frame);
-      currentFrame.setPosition(position.x, position.y);
+      currentFrame.setPosition(position.x - currentFrame.getWidth() / 2, position.y - currentFrame.getHeight() / 2);
       currentFrame.draw(batch);
     }
   }

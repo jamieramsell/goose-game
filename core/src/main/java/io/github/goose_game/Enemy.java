@@ -123,7 +123,7 @@ public class Enemy extends Node {
     }
 
     Sprite currentFrame = animations.get(i).getKeyFrame(frame);
-    currentFrame.setPosition(position.x, position.y);
+    currentFrame.setPosition(position.x - currentFrame.getWidth() / 2, position.y - currentFrame.getHeight() / 2);
     currentFrame.draw(batch);
     for (Node child : children.values()) {
       child.draw(batch);
