@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import io.github.goose_game.Main;
 import io.github.goose_game.utils.Node;
 
@@ -30,7 +29,7 @@ public class GameScreen extends ScreenAdapter {
   public GameScreen(Main game) {
     this.game = game;
     this.batch = game.getBatch();
-    this.root.add_child("player", new Player(0,0, 32, 32, playerTexture, 64, 200));
+    this.root.add_child("player", new Player(0, 0, 32, 32, playerTexture, 64, 200));
     this.root.add_child("enemyManager", new EnemyManager((Player) this.root.get_child("player")));
     viewport.setCamera(camera);
 

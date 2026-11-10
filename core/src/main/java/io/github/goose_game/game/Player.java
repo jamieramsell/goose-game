@@ -10,7 +10,9 @@ public class Player extends Node {
   private Vector2 velocity;
   private final float speed;
   private float health;
-  public Player(float x, float y, float width, float height, Texture texture, float speed, float health) {
+
+  public Player(
+      float x, float y, float width, float height, Texture texture, float speed, float health) {
     super(x, y, width, height, texture);
     this.speed = speed;
     this.health = health;
@@ -25,10 +27,10 @@ public class Player extends Node {
 
     velocity.scl(0.65f);
 
-     position.x += velocity.x * delta;
-     position.y += velocity.y * delta;
+    position.x += velocity.x * delta;
+    position.y += velocity.y * delta;
 
-     super.update(delta);
+    super.update(delta);
   }
 
   private Vector2 get_input() {

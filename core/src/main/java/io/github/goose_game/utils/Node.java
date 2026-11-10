@@ -29,8 +29,8 @@ public class Node {
   }
 
   public Node() {
-    this.bounds = new Rectangle(0,0,0,0);
-    this.position.set(0,0);
+    this.bounds = new Rectangle(0, 0, 0, 0);
+    this.position.set(0, 0);
     this.texture = null;
   }
 
@@ -46,7 +46,7 @@ public class Node {
   public void update(float delta) {
     this.bounds.x = this.position.x;
     this.bounds.y = this.position.y;
-    for (Node child: children.values()) {
+    for (Node child : children.values()) {
       child.update(delta);
     }
   }
