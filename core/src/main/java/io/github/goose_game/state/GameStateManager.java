@@ -1,11 +1,11 @@
 package io.github.goose_game.state;
 
 import com.badlogic.gdx.utils.Disposable;
-
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.menu.CreditsPage;
 import io.github.goose_game.menu.MainMenu;
+import io.github.goose_game.menu.PauseMenu;
 
 /**
  * Owns the game's current {@link GameState} and performs transitions between states.
@@ -22,6 +22,7 @@ public class GameStateManager {
 
   private GameState gameState;
   private final Main game;
+  private GameScreen pausedGame = null;
 
   /**
    * Creates the manager, enters {@link GameState#MAIN_MENU} and shows the main menu.
@@ -32,7 +33,7 @@ public class GameStateManager {
    */
   public GameStateManager(Main game) {
     this.game = game;
-    
+
     gameState = GameState.MAIN_MENU;
     game.setScreen(new MainMenu(game, this));
   }
@@ -45,29 +46,42 @@ public class GameStateManager {
    */
   public void mainMenu(Disposable currentScreen) {
     if (!GameStateGraph.canTransition(gameState, GameState.MAIN_MENU)) {
-      throw new IllegalArgumentException("Illegal transition: GameState.MAIN_MENU is not currently"
-          + " accessible");
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.MAIN_MENU is not currently" + " accessible");
     }
 
     gameState = GameState.MAIN_MENU;
     game.setScreen(new MainMenu(game, this));
     currentScreen.dispose();
+
+    if (pausedGame != null) {
+      pausedGame.dispose();
+    }
   }
 
   /**
-   * Transitions to {@link GameState#GAME}, starting a new {@link GameScreen}.
+   * Transitions to {@link GameState#GAME}, either starting a new {@link GameScreen}, or resuming
+   * from where the game left off.
    *
    * @param currentScreen the screen being left; disposed after the new screen is set
    * @throws IllegalArgumentException if the game cannot be started from the current state
    */
   public void play(Disposable currentScreen) {
     if (!GameStateGraph.canTransition(gameState, GameState.GAME)) {
-      throw new IllegalArgumentException("Illegal transition: GameState.GAME is not currently"
-          + " accessible");
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.GAME is not currently" + " accessible");
+    }
+
+    switch (gameState) { // Resume existing game if the game is currently paused
+      case PAUSED:
+        game.setScreen(pausedGame);
+        pausedGame.dispose();
+        break;
+      default:
+        game.setScreen(new GameScreen(game, this));
     }
 
     gameState = GameState.GAME;
-    game.setScreen(new GameScreen(game, this));
     currentScreen.dispose();
   }
 
@@ -79,13 +93,30 @@ public class GameStateManager {
    */
   public void credits(Disposable currentScreen) {
     if (!GameStateGraph.canTransition(gameState, GameState.CREDITS)) {
-      throw new IllegalArgumentException("Illegal transition: GameState.CREDITS is not currently"
-          + " accessible");
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.CREDITS is not currently" + " accessible");
     }
 
     gameState = GameState.CREDITS;
     game.setScreen(new CreditsPage(game, this));
     currentScreen.dispose();
+
+    if (pausedGame != null) {
+      pausedGame.dispose();
+    }
   }
 
+  public void pause(GameScreen gameScreen) {
+    if (!GameStateGraph.canTransition(gameState, GameState.PAUSED)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.PAUSED is not currently" + " accessible");
+    }
+    gameState = GameState.PAUSED;
+    pausedGame = gameScreen;
+    game.setScreen(new PauseMenu(game, this, gameScreen));
+  }
+
+  public GameState getGameState() {
+    return gameState;
+  }
 }

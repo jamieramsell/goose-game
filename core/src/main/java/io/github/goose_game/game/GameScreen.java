@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
+import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.Node;
 
@@ -62,7 +63,7 @@ public class GameScreen extends ScreenAdapter {
         .get_child("player")
         .add_child(
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
-            
+
     viewport.setCamera(camera);
 
     background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
@@ -100,6 +101,12 @@ public class GameScreen extends ScreenAdapter {
     if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
       showEntityBounds = !showEntityBounds;
     }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
+        && stateManager.getGameState() == GameState.GAME) {
+      stateManager.pause(this);
+    }
+
     root.update(delta);
     Node player = root.get_child("player");
     camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
