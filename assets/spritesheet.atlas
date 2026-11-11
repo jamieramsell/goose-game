@@ -1,0 +1,338 @@
+spritesheet.png
+size: 64, 1552
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+BackIdle
+  bounds: 0, 144, 32, 32
+  index: 0
+BackIdle
+  bounds: 0, 144, 32, 32
+  index: 1
+BackIdle
+  bounds: 32, 144, 32, 32
+  index: 2
+BackIdle
+  bounds: 0, 176, 32, 32
+  index: 3
+BackIdle
+  bounds: 0, 176, 32, 32
+  index: 4
+BackIdle
+  bounds: 0, 176, 32, 32
+  index: 5
+BackIdle
+  bounds: 32, 176, 32, 32
+  index: 6
+BackIdle
+  bounds: 0, 144, 32, 32
+  index: 7
+BackRun
+  bounds: 0, 208, 32, 32
+  index: 0
+BackRun
+  bounds: 32, 208, 32, 32
+  index: 1
+BackRun
+  bounds: 0, 240, 32, 32
+  index: 2
+BackRun
+  bounds: 32, 240, 32, 32
+  index: 3
+BackRun
+  bounds: 0, 272, 32, 32
+  index: 4
+BackRun
+  bounds: 32, 272, 32, 32
+  index: 5
+BackRun
+  bounds: 0, 304, 32, 32
+  index: 6
+BackRun
+  bounds: 32, 304, 32, 32
+  index: 7
+floor_test
+  bounds: 0, 336, 32, 32
+FrontIdle
+  bounds: 32, 336, 32, 32
+  index: 0
+FrontIdle
+  bounds: 32, 336, 32, 32
+  index: 1
+FrontIdle
+  bounds: 0, 368, 32, 32
+  index: 2
+FrontIdle
+  bounds: 32, 368, 32, 32
+  index: 3
+FrontIdle
+  bounds: 32, 368, 32, 32
+  index: 4
+FrontIdle
+  bounds: 32, 368, 32, 32
+  index: 5
+FrontIdle
+  bounds: 0, 400, 32, 32
+  index: 6
+frontIdle
+  bounds: 32, 336, 32, 32
+  index: 7
+FrontRun
+  bounds: 32, 400, 32, 32
+  index: 0
+FrontRun
+  bounds: 0, 432, 32, 32
+  index: 1
+FrontRun
+  bounds: 32, 432, 32, 32
+  index: 2
+FrontRun
+  bounds: 0, 464, 32, 32
+  index: 3
+FrontRun
+  bounds: 32, 464, 32, 32
+  index: 4
+FrontRun
+  bounds: 0, 496, 32, 32
+  index: 5
+FrontRun
+  bounds: 32, 496, 32, 32
+  index: 6
+FrontRun
+  bounds: 0, 528, 32, 32
+  index: 7
+goose
+  bounds: 32, 528, 32, 32
+GooseAttackLeft
+  bounds: 0, 560, 32, 32
+  index: 0
+GooseAttackLeft
+  bounds: 32, 560, 32, 32
+  index: 1
+GooseAttackLeft
+  bounds: 0, 592, 32, 32
+  index: 2
+GooseAttackLeft
+  bounds: 32, 592, 32, 32
+  index: 3
+GooseAttackLeft
+  bounds: 0, 624, 32, 32
+  index: 4
+GooseAttackLeft
+  bounds: 32, 624, 32, 32
+  index: 5
+GooseAttackLeft
+  bounds: 0, 656, 32, 32
+  index: 6
+GooseAttackLeft
+  bounds: 32, 656, 32, 32
+  index: 7
+GooseAttackLeft
+  bounds: 0, 688, 32, 32
+  index: 8
+GooseAttackLeft
+  bounds: 32, 688, 32, 32
+  index: 9
+GooseAttackRight
+  bounds: 0, 720, 32, 32
+  index: 0
+GooseAttackRight
+  bounds: 32, 720, 32, 32
+  index: 1
+GooseAttackRight
+  bounds: 0, 752, 32, 32
+  index: 2
+GooseAttackRight
+  bounds: 32, 752, 32, 32
+  index: 3
+GooseAttackRight
+  bounds: 0, 784, 32, 32
+  index: 4
+GooseAttackRight
+  bounds: 32, 784, 32, 32
+  index: 5
+GooseAttackRight
+  bounds: 0, 816, 32, 32
+  index: 6
+GooseAttackRight
+  bounds: 32, 816, 32, 32
+  index: 7
+GooseAttackRight
+  bounds: 0, 848, 32, 32
+  index: 8
+GooseAttackRight
+  bounds: 32, 848, 32, 32
+  index: 9
+GooseWalkLeft
+  bounds: 0, 560, 32, 32
+  index: 0
+GooseWalkLeft
+  bounds: 0, 880, 32, 32
+  index: 1
+GooseWalkLeft
+  bounds: 32, 880, 32, 32
+  index: 2
+GooseWalkLeft
+  bounds: 0, 912, 32, 32
+  index: 3
+GooseWalkRight
+  bounds: 0, 720, 32, 32
+  index: 0
+GooseWalkRight
+  bounds: 32, 912, 32, 32
+  index: 1
+GooseWalkRight
+  bounds: 0, 944, 32, 32
+  index: 2
+GooseWalkRight
+  bounds: 32, 944, 32, 32
+  index: 3
+hit_effect
+  bounds: 0, 976, 32, 32
+  index: 0
+hit_effect
+  bounds: 32, 976, 32, 32
+  index: 1
+hit_effect
+  bounds: 0, 1008, 32, 32
+  index: 2
+hit_effect
+  bounds: 32, 1008, 32, 32
+  index: 3
+hit_effect
+  bounds: 0, 1040, 32, 32
+  index: 4
+hit_effect
+  bounds: 32, 1040, 32, 32
+  index: 5
+hit_effect
+  bounds: 0, 1072, 32, 32
+  index: 6
+hit_effect
+  bounds: 32, 1072, 32, 32
+  index: 7
+hit_effect
+  bounds: 0, 1104, 32, 32
+  index: 8
+hit_effect
+  bounds: 32, 1104, 32, 32
+  index: 9
+LeftIdle
+  bounds: 0, 1136, 32, 32
+  index: 0
+LeftIdle
+  bounds: 0, 1136, 32, 32
+  index: 1
+LeftIdle
+  bounds: 32, 1136, 32, 32
+  index: 2
+LeftIdle
+  bounds: 0, 1168, 32, 32
+  index: 3
+LeftIdle
+  bounds: 0, 1168, 32, 32
+  index: 4
+LeftIdle
+  bounds: 0, 1168, 32, 32
+  index: 5
+LeftIdle
+  bounds: 32, 1168, 32, 32
+  index: 6
+LeftIdle
+  bounds: 0, 1136, 32, 32
+  index: 7
+LeftRun
+  bounds: 0, 1200, 32, 32
+  index: 0
+LeftRun
+  bounds: 32, 1200, 32, 32
+  index: 1
+LeftRun
+  bounds: 0, 1232, 32, 32
+  index: 2
+LeftRun
+  bounds: 32, 1232, 32, 32
+  index: 3
+LeftRun
+  bounds: 0, 1264, 32, 32
+  index: 4
+LeftRun
+  bounds: 32, 1264, 32, 32
+  index: 5
+LeftRun
+  bounds: 0, 1296, 32, 32
+  index: 6
+LeftRun
+  bounds: 32, 1296, 32, 32
+  index: 7
+PALLETE
+  bounds: 0, 1328, 32, 32
+player_test
+  bounds: 32, 1328, 32, 32
+RightIdle
+  bounds: 0, 1360, 32, 32
+  index: 0
+RightIdle
+  bounds: 0, 1360, 32, 32
+  index: 1
+RightIdle
+  bounds: 32, 1360, 32, 32
+  index: 2
+RightIdle
+  bounds: 0, 1392, 32, 32
+  index: 3
+RightIdle
+  bounds: 0, 1392, 32, 32
+  index: 4
+RightIdle
+  bounds: 0, 1392, 32, 32
+  index: 5
+RightIdle
+  bounds: 32, 1392, 32, 32
+  index: 6
+RightIdle
+  bounds: 0, 1360, 32, 32
+  index: 7
+RightRun
+  bounds: 0, 1424, 32, 32
+  index: 0
+RightRun
+  bounds: 32, 1424, 32, 32
+  index: 1
+RightRun
+  bounds: 0, 1456, 32, 32
+  index: 2
+RightRun
+  bounds: 32, 1456, 32, 32
+  index: 3
+RightRun
+  bounds: 0, 1488, 32, 32
+  index: 4
+RightRun
+  bounds: 32, 1488, 32, 32
+  index: 5
+RightRun
+  bounds: 0, 1520, 32, 32
+  index: 6
+RightRun
+  bounds: 32, 1520, 32, 32
+  index: 7
+sheet_6_katana_slash
+  bounds: 0, 0, 32, 48
+  index: 1
+sheet_6_katana_slash
+  bounds: 32, 0, 32, 48
+  index: 2
+sheet_6_katana_slash
+  bounds: 0, 48, 32, 48
+  index: 3
+sheet_6_katana_slash
+  bounds: 32, 48, 32, 48
+  index: 4
+sheet_6_katana_slash
+  bounds: 0, 96, 32, 48
+  index: 5
+sheet_6_katana_slash
+  bounds: 32, 96, 32, 48
+  index: 6
