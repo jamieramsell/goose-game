@@ -48,8 +48,7 @@ public class CreditsPage extends ScreenAdapter {
     Label[] credits = { // Add any credits within this array; they'll be drawn automatically.
       new Label(
           "Main menu background by heyheythere, <https://heyheythere.itch.io/parallax-skies-free / CC BY 4.0>",
-          skin
-      )
+          skin)
     };
 
     // Back button
@@ -89,7 +88,7 @@ public class CreditsPage extends ScreenAdapter {
     Gdx.input.setInputProcessor(stage);
   }
 
-    @Override
+  @Override
   public void hide() {
     Gdx.input.setInputProcessor(null);
   }

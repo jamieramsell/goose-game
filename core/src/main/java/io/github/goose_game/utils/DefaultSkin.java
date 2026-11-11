@@ -62,7 +62,7 @@ public class DefaultSkin {
     style.font = font;
     skin.add("default", style);
 
-    // Small font for text labels 
+    // Small font for text labels
     BitmapFont labelFont = new BitmapFont();
     labelFont.getData().setScale(1f);
 
