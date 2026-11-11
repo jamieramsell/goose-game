@@ -54,7 +54,7 @@ public class PauseMenu extends ScreenAdapter {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            stateManager.mainMenu(pausedGame);
+            stateManager.mainMenu(PauseMenu.this);
           }
         });
 
