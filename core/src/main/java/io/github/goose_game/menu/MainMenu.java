@@ -3,6 +3,7 @@ package io.github.goose_game.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,18 +14,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.utils.DefaultSkin;
 
 public class MainMenu extends ScreenAdapter {
 
-  private final Stage stage = new Stage(new ScreenViewport());
+  private final Stage stage = new Stage(new ExtendViewport(640, 360));
   private final Skin skin;
+
+  private final MenuBackground background = new MenuBackground();
+  private final Viewport bgViewport = new FillViewport(320, 180);
+  private final Batch batch;
 
   public MainMenu(Main game) {
     this.skin = DefaultSkin.getSkin();
+    this.batch = game.getBatch();
 
     // Game title
     Label title =
@@ -63,12 +71,13 @@ public class MainMenu extends ScreenAdapter {
 
     // Animations
     table.getColor().a = 0f;
-    table.addAction(Actions.fadeIn(0.5f));                 // fade the menu in
+    table.addAction(Actions.fadeIn(0.5f)); // fade the menu in
 
-    title.addAction(Actions.forever(Actions.sequence(      // gentle bobbing title
-        Actions.moveBy(0, 6, 1.5f, Interpolation.sine),
-        Actions.moveBy(0, -6, 1.5f, Interpolation.sine)
-    )));
+    title.addAction(
+        Actions.forever(
+            Actions.sequence( // gentle bobbing title
+                Actions.moveBy(0, 6, 1.5f, Interpolation.sine),
+                Actions.moveBy(0, -6, 1.5f, Interpolation.sine))));
   }
 
   @Override
@@ -83,18 +92,29 @@ public class MainMenu extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    ScreenUtils.clear(0.05f, 0.05f, 0.15f, 1);
+    ScreenUtils.clear(0, 0, 0, 1);
+
+    background.update(delta);
+    bgViewport.apply();
+    batch.setProjectionMatrix(bgViewport.getCamera().combined);
+    batch.begin();
+    background.draw(batch);
+    batch.end();
+
+    stage.getViewport().apply();
     stage.act(delta);
     stage.draw();
   }
 
   @Override
   public void resize(int width, int height) {
+    bgViewport.update(width, height, true);
     stage.getViewport().update(width, height, true);
   }
 
   @Override
   public void dispose() {
+    background.dispose();
     stage.dispose();
     skin.dispose();
   }
