@@ -21,6 +21,17 @@ import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.utils.DefaultSkin;
 
+/**
+ * The game's main menu screen.
+ *
+ * <p>Shows the title, a {@code Play}, {@code Credits} and {@code Quit} button over an animated
+ * parallax {@link MenuBackground}. The background and the UI each use their own {@link Viewport},
+ * so that the background fills the window, while the buttons scale uniformly.
+ *
+ * <p>This screen owns native resources (the stage, skin and background), so {@link #dispose()} must
+ * be called when navigating away from it. The shared {@link Batch} belongs to {@link Main} and is
+ * not disposed here.
+ */
 public class MainMenu extends ScreenAdapter {
 
   private final Stage stage = new Stage(new ExtendViewport(640, 360));
@@ -30,6 +41,14 @@ public class MainMenu extends ScreenAdapter {
   private final Viewport bgViewport = new FillViewport(320, 180);
   private final Batch batch;
 
+  /**
+   * Builds the menu's widgets, layout and intro animations.
+   *
+   * <p>The game instance is used to switch screens from the buttons and to obtain the shared batch
+   * used to draw the background. Must be called after libGDX has started, as it loads textures.
+   *
+   * @param game the game that owns this screen
+   */
   public MainMenu(Main game) {
     this.skin = DefaultSkin.getSkin();
     this.batch = game.getBatch();

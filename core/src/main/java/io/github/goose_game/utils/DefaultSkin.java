@@ -18,21 +18,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  * <ul>
  *   <li>{@code "white"}: a 1x1 white {@link Texture}, tinted via {@link Skin#newDrawable} to draw
  *       solid-colour rectangles
- *   <li>a {@link BitmapFont} (libGDX's built-in font, scaled 2x)
+ *   <li>a {@link BitmapFont} (libGDX's built-in font, scaled 2x) for titles and buttons
  *   <li>a {@link TextButton.TextButtonStyle} with dark grey ({@code up}), grey ({@code over}) and
  *       black ({@code down}) backgrounds
+ *   <li>a second, unscaled {@link BitmapFont} and a white {@link Label.LabelStyle} that uses it,
+ *       for body text such as credits
  * </ul>
  *
- * <p>Because the style is named {@code "default"}, widgets constructed with just the skin, such as
- * {@code new TextButton("Play", skin)}, pick it up automatically.
+ * <p>Because the styles are named {@code "default"}, widgets constructed with just the skin, such
+ * as {@code new TextButton("Play", skin)} or {@code new Label("text", skin)}, pick them up
+ * automatically.
  */
 public class DefaultSkin {
   /**
    * Creates a new default skin.
    *
-   * <p>Each call builds a new skin with its own native resources (texture and font). The caller
+   * <p>Each call builds a new skin with its own native resources (texture and fonts). The caller
    * owns the returned skin and must call {@link Skin#dispose()} when finished, which also disposes
-   * the texture and font that it contains.
+   * the texture and fonts that it contains.
    *
    * @return a new skin, containing the game's default UI styles
    */

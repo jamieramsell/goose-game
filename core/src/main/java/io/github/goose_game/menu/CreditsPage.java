@@ -17,11 +17,26 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.utils.DefaultSkin;
 
+/**
+ * Screen listing the credits and licences for the game's third-party assets.
+ *
+ * <p>Each credit is a wrapped, centred {@link Label} in the {@code credits} array in the
+ * constructor; add an entry there to show another one. A {@code Back} button returns to the {@link
+ * MainMenu}.
+ *
+ * <p>This screen owns a stage and skin, so {@link #dispose()} must be called when navigating away
+ * from it.
+ */
 public class CreditsPage extends ScreenAdapter {
 
   private final Stage stage = new Stage(new ExtendViewport(640, 360));
   private final Skin skin;
- 
+
+  /**
+   * Builds the credits page's widgets, layout and intro animation.
+   *
+   * @param game the game that owns this screen, used to return to the main menu
+   */
   public CreditsPage(Main game) {
     this.skin = DefaultSkin.getSkin();
 
@@ -74,7 +89,7 @@ public class CreditsPage extends ScreenAdapter {
     Gdx.input.setInputProcessor(stage);
   }
 
-  @Override
+    @Override
   public void hide() {
     Gdx.input.setInputProcessor(null);
   }

@@ -5,6 +5,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * Animated parallax background for the main menu.
+ *
+ * <p>Six 320x180 layers are drawn back to front (sky, mountains, hills, trees, and two cloud
+ * layers). Each layer scrolls horizontally at its own speed, in pixels per second, and wraps
+ * seamlessly.
+ *
+ * <p>This class does not own a {@link Batch} or viewport; the caller supplies both when drawing. It
+ * does own its textures, so {@link #dispose()} must be called when it is no longer needed.
+ */
 public class MenuBackground implements Disposable {
 
   private static final int WIDTH = 320;
@@ -14,6 +24,11 @@ public class MenuBackground implements Disposable {
   private final float[] speeds = new float[6];
   private final float[] offsets = {0, 0, 0, 0, 0, 0};
 
+  /**
+   * Loads the layer textures from {@code assets/main_menu} and sets each layer's scroll speed.
+   *
+   * <p>Must be called after libGDX has started, as it creates textures.
+   */
   public MenuBackground() {
     // Sky
     layers[0] = new Texture(Gdx.files.internal("main_menu/clear_day_sky.png"));
