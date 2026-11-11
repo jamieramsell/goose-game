@@ -5,7 +5,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-/** 
+/**
  * The set of game states, and the transitions between them, are represented by a digraph, whose
  * nodes are each of the GameStates, and the edges represent each valid transition between two
  * states.
@@ -27,7 +27,7 @@ public class GameStateGraph {
 
   /**
    * Determines whether or not the given transition is valid.
-   * 
+   *
    * @param from the current {@link GameState}
    * @param to the {@link GameState} to transition to
    */
