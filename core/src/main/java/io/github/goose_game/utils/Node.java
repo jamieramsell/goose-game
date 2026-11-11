@@ -13,16 +13,25 @@ public class Node {
   public Vector2 position = new Vector2();
   public int zIndex = 0;
   private Node parent = null;
-  private final Map<String, Node> children = new HashMap<>();
+  protected Map<String, Node> children = new HashMap<>();
+  public String key = "";
 
   public Node(float x, float y, float width, float height) {
     this.bounds = new Rectangle(x, y, width, height);
+    this.position.set(x, y);
     this.texture = null;
   }
 
   public Node(float x, float y, float width, float height, Texture texture) {
     this.bounds = new Rectangle(x, y, width, height);
+    this.position.set(x, y);
     this.texture = texture;
+  }
+
+  public Node() {
+    this.bounds = new Rectangle(0, 0, 0, 0);
+    this.position.set(0, 0);
+    this.texture = null;
   }
 
   public void draw(Batch batch) {
@@ -35,6 +44,8 @@ public class Node {
   }
 
   public void update(float delta) {
+    this.bounds.x = this.position.x;
+    this.bounds.y = this.position.y;
     for (Node child : children.values()) {
       child.update(delta);
     }
@@ -44,12 +55,26 @@ public class Node {
     return parent;
   }
 
+  public boolean overlaps(Node node) {
+    if (node == null) return false;
+    return this.bounds.overlaps(node.bounds);
+  }
+
   public void add_child(String id, Node entity) {
     entity.parent = this;
+    entity.key = id;
     children.put(id, entity);
+  }
+
+  public void delete_self() {
+    getParent().children.remove(key, this);
   }
 
   public Node get_child(String id) {
     return children.get(id);
+  }
+
+  public Map<String, Node> getChildren() {
+    return children;
   }
 }

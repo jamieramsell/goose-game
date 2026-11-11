@@ -29,7 +29,8 @@ public class GameScreen extends ScreenAdapter {
   public GameScreen(Main game) {
     this.game = game;
     this.batch = game.getBatch();
-    this.root.add_child("player", new Player(0, 0, 32, 32, playerTexture, 64));
+    this.root.add_child("player", new Player(0, 0, 32, 32, playerTexture, 64, 200));
+    this.root.add_child("enemyManager", new EnemyManager((Player) this.root.get_child("player")));
     viewport.setCamera(camera);
 
     background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
