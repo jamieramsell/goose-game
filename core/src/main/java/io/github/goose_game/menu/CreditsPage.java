@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.github.goose_game.Main;
+import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 
 /**
@@ -29,6 +30,7 @@ import io.github.goose_game.utils.DefaultSkin;
  */
 public class CreditsPage extends ScreenAdapter {
 
+  private final GameStateManager stateManager;
   private final Stage stage = new Stage(new ExtendViewport(640, 360));
   private final Skin skin;
 
@@ -37,7 +39,8 @@ public class CreditsPage extends ScreenAdapter {
    *
    * @param game the game that owns this screen, used to return to the main menu
    */
-  public CreditsPage(Main game) {
+  public CreditsPage(Main game, GameStateManager stateManager) {
+    this.stateManager = stateManager;
     this.skin = DefaultSkin.getSkin();
 
     // Page title
@@ -60,8 +63,7 @@ public class CreditsPage extends ScreenAdapter {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            game.setScreen(new MainMenu(game));
-            dispose();
+            CreditsPage.this.stateManager.mainMenu(CreditsPage.this);
           }
         });
 
