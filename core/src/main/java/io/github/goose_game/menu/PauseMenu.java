@@ -128,6 +128,7 @@ public class PauseMenu extends ScreenAdapter {
   @Override
   public void resize(int width, int height) {
     stage.getViewport().update(width, height, true);
+    pausedGame.resize(width, height);
   }
 
   @Override
