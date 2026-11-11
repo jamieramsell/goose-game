@@ -102,14 +102,18 @@ public class GameScreen extends ScreenAdapter {
       showEntityBounds = !showEntityBounds;
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-        && stateManager.getGameState() == GameState.GAME) {
-      stateManager.pause(this);
-    }
+    // Updates which should only take place while game is in action should be placed within this
+    // if statement:
+    if (stateManager.getGameState() == GameState.GAME) {
+      if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+        stateManager.pause(this);
+      }
 
-    root.update(delta);
-    Node player = root.get_child("player");
-    camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
+      // Only update nodes while game is active.
+      root.update(delta);
+      Node player = root.get_child("player");
+      camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
+    }
   }
 
   @Override
