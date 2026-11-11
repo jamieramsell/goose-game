@@ -49,6 +49,17 @@ public class MainMenu extends ScreenAdapter {
           }
         });
 
+    // Credits button
+    TextButton credits = new TextButton("Credits", skin);
+    credits.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            game.setScreen(new CreditsPage(game));
+            dispose();
+          }
+        });
+
     // Quit button
     TextButton quit = new TextButton("Quit", skin);
     quit.addListener(
@@ -65,6 +76,7 @@ public class MainMenu extends ScreenAdapter {
     table.setFillParent(true);
     table.add(title).padBottom(40).row();
     table.add(play).width(240).height(60).padBottom(16).row();
+    table.add(credits).width(240).height(60).padBottom(16).row();
     table.add(quit).width(240).height(60);
 
     stage.addActor(table);

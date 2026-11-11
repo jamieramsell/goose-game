@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
@@ -45,7 +46,7 @@ public class DefaultSkin {
     skin.add("white", new Texture(pm));
     pm.dispose();
 
-    // Small default font
+    // Default font
     BitmapFont font = new BitmapFont();
     font.getData().setScale(2f);
     skin.add("default", font);
@@ -57,6 +58,14 @@ public class DefaultSkin {
     style.over = skin.newDrawable("white", Color.GRAY);
     style.font = font;
     skin.add("default", style);
+
+    // Small font for text labels 
+    BitmapFont labelFont = new BitmapFont();
+    labelFont.getData().setScale(1f);
+
+    // Text label style
+    Label.LabelStyle labelStyle = new Label.LabelStyle(labelFont, Color.WHITE);
+    skin.add("default", labelStyle);
 
     return skin;
   }
