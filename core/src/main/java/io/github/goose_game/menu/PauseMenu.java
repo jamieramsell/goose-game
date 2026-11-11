@@ -8,12 +8,13 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
@@ -68,6 +69,12 @@ public class PauseMenu extends ScreenAdapter {
           }
         });
 
+    // Semi-transparent game overlay
+    Drawable gameOverlay = skin.newDrawable("white", new Color(0, 0, 0, 0.6f));
+    Image gameOverlayImage = new Image(gameOverlay);
+    gameOverlayImage.setFillParent(true);
+    stage.addActor(gameOverlayImage);
+
     // Menu layout
     Table table = new Table();
 
@@ -102,7 +109,8 @@ public class PauseMenu extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    ScreenUtils.clear(0, 0, 0, 1);
+    pausedGame.render(delta);
+
     update();
 
     stage.getViewport().apply();
