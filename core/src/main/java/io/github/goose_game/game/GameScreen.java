@@ -36,6 +36,7 @@ public class GameScreen extends ScreenAdapter {
   private static final float WORLD_WIDTH = 320f;
   private static final float WORLD_HEIGHT = 320f;
   private static final float GAME_DURATION_SECONDS = 5 * 60;
+  private static final float ATTACK_MESSAGE_DURATION_SECONDS = 3f;
 
   private final Main game;
   private final GameStateManager stateManager;
@@ -44,9 +45,12 @@ public class GameScreen extends ScreenAdapter {
   private final Stage hudStage = new Stage(new ScreenViewport());
   private final BitmapFont timerFont = new BitmapFont();
   private final BitmapFont victoryFont = new BitmapFont();
+  private final BitmapFont attackFont = new BitmapFont();
   private final Skin victorySkin = DefaultSkin.getSkin();
+  private final EnemyManager enemyManager;
   private final Label timerLabel;
   private final Label escapedLabel;
+  private final Label attackLabel;
   private final Table victoryTable;
 
   private final Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT);
@@ -58,7 +62,9 @@ public class GameScreen extends ScreenAdapter {
   private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private Sprite playerTexture;
   private boolean showEntityBounds;
+  private boolean largeEnemySpawned;
   private float remainingTime = GAME_DURATION_SECONDS;
+  private float attackMessageTime;
   private int displayedSeconds = -1;
 
   Node player;
@@ -71,14 +77,23 @@ public class GameScreen extends ScreenAdapter {
 
     timerFont.getData().setScale(4f);
     victoryFont.getData().setScale(8f);
+    attackFont.getData().setScale(3f);
     timerLabel = new Label("", new Label.LabelStyle(timerFont, Color.WHITE));
     escapedLabel = new Label("You escaped!", new Label.LabelStyle(victoryFont, Color.WHITE));
+    attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(attackFont, Color.WHITE));
 
     Table timerTable = new Table();
     timerTable.setFillParent(true);
     timerTable.top();
     timerTable.add(timerLabel).padTop(12);
     hudStage.addActor(timerTable);
+
+    Table attackTable = new Table();
+    attackTable.setFillParent(true);
+    attackTable.center();
+    attackLabel.setVisible(false);
+    attackTable.add(attackLabel);
+    hudStage.addActor(attackTable);
 
     TextButton mainMenuButton = new TextButton("Return to Main Menu", victorySkin);
     mainMenuButton.addListener(
@@ -108,8 +123,8 @@ public class GameScreen extends ScreenAdapter {
 
     this.root.add_child("player", new Player(8, 6, 16, 20, atlas, 64, 200, camera));
 
-    this.root.add_child(
-        "enemyManager", new EnemyManager(atlas, (Player) this.root.get_child("player")));
+    enemyManager = new EnemyManager(atlas, (Player) this.root.get_child("player"));
+    this.root.add_child("enemyManager", enemyManager);
 
     this.root
         .get_child("player")
@@ -168,6 +183,14 @@ public class GameScreen extends ScreenAdapter {
       if (stateManager.getGameState() == GameState.GAME) {
         remainingTime = Math.max(0, remainingTime - delta);
         updateTimerLabel();
+        updateAttackMessage(delta);
+
+        if (remainingTime <= GAME_DURATION_SECONDS / 2 && !largeEnemySpawned) {
+          largeEnemySpawned = true;
+          enemyManager.spawnLargeEnemy();
+          attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+          attackLabel.setVisible(true);
+        }
 
         if (remainingTime == 0) {
           timerLabel.setVisible(false);
@@ -181,6 +204,13 @@ public class GameScreen extends ScreenAdapter {
           camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
         }
       }
+    }
+  }
+
+  private void updateAttackMessage(float delta) {
+    if (attackMessageTime > 0) {
+      attackMessageTime = Math.max(0, attackMessageTime - delta);
+      attackLabel.setVisible(attackMessageTime > 0);
     }
   }
 
@@ -198,6 +228,7 @@ public class GameScreen extends ScreenAdapter {
     hudStage.dispose();
     timerFont.dispose();
     victoryFont.dispose();
+    attackFont.dispose();
     victorySkin.dispose();
   }
 }

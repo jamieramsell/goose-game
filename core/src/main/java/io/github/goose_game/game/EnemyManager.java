@@ -29,6 +29,15 @@ public class EnemyManager extends Node {
 
   public void spawnEnemy() {
     Enemy enemy = new Enemy(1000, 1000, 20, 20, atlas, player, 20, 20, 270, 100);
+    addEnemyNearPlayer(enemy);
+  }
+
+  public void spawnLargeEnemy() {
+    Enemy enemy = new Enemy(1000, 1000, 40, 40, atlas, player, 20, 30, 270, 200, 2f, true);
+    addEnemyNearPlayer(enemy);
+  }
+
+  private void addEnemyNearPlayer(Enemy enemy) {
     int rndDir = MathUtils.random(0, 360);
     int rndDist = MathUtils.random(360, 370);
     Vector2 randomRotatedVector = new Vector2(1, 0).rotateDeg(rndDir);

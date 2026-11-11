@@ -24,6 +24,8 @@ public class Enemy extends Node {
   private int health;
   private int maxHealth;
   private int i = 0;
+  private final float spriteScale;
+  private final boolean despawnOnDefeat;
 
   public Enemy(
       float x,
@@ -36,6 +38,37 @@ public class Enemy extends Node {
       float damage,
       int attackDelay,
       int health) {
+    this(x, y, width, height, atlas, target, speed, damage, attackDelay, health, 1f, false);
+  }
+
+  public Enemy(
+      float x,
+      float y,
+      float width,
+      float height,
+      TextureAtlas atlas,
+      Player target,
+      float speed,
+      float damage,
+      int attackDelay,
+      int health,
+      float spriteScale) {
+    this(x, y, width, height, atlas, target, speed, damage, attackDelay, health, spriteScale, false);
+  }
+
+  public Enemy(
+      float x,
+      float y,
+      float width,
+      float height,
+      TextureAtlas atlas,
+      Player target,
+      float speed,
+      float damage,
+      int attackDelay,
+      int health,
+      float spriteScale,
+      boolean despawnOnDefeat) {
     super(x, y, width, height);
     this.target = target;
     this.speed = speed;
@@ -45,6 +78,8 @@ public class Enemy extends Node {
     this.target_pos = target.position;
     this.health = health;
     this.maxHealth = health;
+    this.spriteScale = spriteScale;
+    this.despawnOnDefeat = despawnOnDefeat;
     this.animations = new Array<>();
 
     String[] directions = {"Left", "Right"};
@@ -84,6 +119,10 @@ public class Enemy extends Node {
           || position.x - target.position.x < -320
           || position.y - target.position.y > 320
           || position.y - target.position.y < -320) {
+        if (despawnOnDefeat) {
+          delete_self();
+          return;
+        }
         fleeing = false;
         position.x = target.position.x + new int[] {-1, 1}[MathUtils.random(0, 1)] * 320;
         position.y = target.position.y + new int[] {-1, 1}[MathUtils.random(0, 1)] * 320;
@@ -138,8 +177,10 @@ public class Enemy extends Node {
     }
 
     Sprite currentFrame = animations.get(i).getKeyFrame(frame);
+    currentFrame.setScale(spriteScale);
     currentFrame.setPosition(
-        position.x - currentFrame.getWidth() / 2, position.y - currentFrame.getHeight() / 2);
+        position.x - currentFrame.getWidth() * spriteScale / 2,
+        position.y - currentFrame.getHeight() * spriteScale / 2);
     currentFrame.draw(batch);
     for (Node child : children.values()) {
       child.draw(batch);
