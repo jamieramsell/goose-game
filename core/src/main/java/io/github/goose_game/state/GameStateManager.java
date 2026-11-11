@@ -128,6 +128,16 @@ public class GameStateManager {
     game.setScreen(new PauseMenu(game, this, gameScreen));
   }
 
+  /** Transitions the active game to victory without replacing its screen. */
+  public void victory() {
+    if (!GameStateGraph.canTransition(gameState, GameState.VICTORY)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.VICTORY is not currently" + " accessible");
+    }
+
+    gameState = GameState.VICTORY;
+  }
+
   /** @return the current {@link GameState} that the game is in. */
   public GameState getGameState() {
     return gameState;
