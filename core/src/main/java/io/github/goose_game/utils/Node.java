@@ -1,12 +1,10 @@
-package io.github.goose_game;
+package io.github.goose_game.utils;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +17,6 @@ public class Node {
   private Node parent = null;
   protected Map<String, Node> children = new HashMap<>();
   public String key = "";
-
 
   public Node(float x, float y, float width, float height) {
     this.bounds = new Rectangle(x, y, width, height);
@@ -45,7 +42,12 @@ public class Node {
     }
     if (texture == null) return;
 
-    batch.draw(texture, position.x - texture.getWidth() / 2, position.y - texture.getHeight() / 2, texture.getWidth(), texture.getHeight());
+    batch.draw(
+        texture,
+        position.x - texture.getWidth() / 2,
+        position.y - texture.getHeight() / 2,
+        texture.getWidth(),
+        texture.getHeight());
   }
 
   public void drawDebugBounds(ShapeRenderer shapeRenderer) {
@@ -58,8 +60,8 @@ public class Node {
   }
 
   public void update(float delta) {
-    bounds.setCenter(position.x , position.y);
-    for (Node child: new ArrayList<>(children.values())) {
+    bounds.setCenter(position.x, position.y);
+    for (Node child : new ArrayList<>(children.values())) {
       child.update(delta);
     }
   }
