@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
+import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 
 /**
@@ -33,6 +34,8 @@ import io.github.goose_game.utils.DefaultSkin;
  * not disposed here.
  */
 public class MainMenu extends ScreenAdapter {
+
+  private final GameStateManager stateManager;
 
   private final Stage stage = new Stage(new ExtendViewport(640, 360));
   private final Skin skin;
@@ -49,7 +52,8 @@ public class MainMenu extends ScreenAdapter {
    *
    * @param game the game that owns this screen
    */
-  public MainMenu(Main game) {
+  public MainMenu(Main game, GameStateManager stateManager) {
+    this.stateManager = stateManager;
     this.skin = DefaultSkin.getSkin();
     this.batch = game.getBatch();
 
@@ -63,8 +67,7 @@ public class MainMenu extends ScreenAdapter {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            game.setScreen(new GameScreen(game));
-            dispose();
+            stateManager.play(MainMenu.this);
           }
         });
 
@@ -74,8 +77,7 @@ public class MainMenu extends ScreenAdapter {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            game.setScreen(new CreditsPage(game));
-            dispose();
+            stateManager.credits(MainMenu.this);
           }
         });
 
