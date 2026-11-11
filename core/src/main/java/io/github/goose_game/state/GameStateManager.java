@@ -75,7 +75,6 @@ public class GameStateManager {
     switch (gameState) { // Resume existing game if the game is currently paused
       case PAUSED:
         game.setScreen(pausedGame);
-        pausedGame.dispose();
         break;
       default:
         game.setScreen(new GameScreen(game, this));
