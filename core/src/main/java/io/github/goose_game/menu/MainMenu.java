@@ -3,8 +3,10 @@ package io.github.goose_game.menu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -26,7 +28,7 @@ public class MainMenu extends ScreenAdapter {
 
     // Game title
     Label title =
-        new Label("Goose Game", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+        new Label("Flock n Load", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
 
     // Play button
     TextButton play = new TextButton("Play", skin);
@@ -58,6 +60,15 @@ public class MainMenu extends ScreenAdapter {
     table.add(quit).width(240).height(60);
 
     stage.addActor(table);
+
+    // Animations
+    table.getColor().a = 0f;
+    table.addAction(Actions.fadeIn(0.5f));                 // fade the menu in
+
+    title.addAction(Actions.forever(Actions.sequence(      // gentle bobbing title
+        Actions.moveBy(0, 6, 1.5f, Interpolation.sine),
+        Actions.moveBy(0, -6, 1.5f, Interpolation.sine)
+    )));
   }
 
   @Override
