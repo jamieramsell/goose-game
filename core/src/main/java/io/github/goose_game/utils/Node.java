@@ -1,20 +1,25 @@
-package io.github.goose_game.utils;
+package io.github.goose_game;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Node {
-  protected final Rectangle bounds;
-  protected Texture texture;
+  protected Rectangle bounds;
+  protected Sprite texture;
   public Vector2 position = new Vector2();
   public int zIndex = 0;
   private Node parent = null;
   protected Map<String, Node> children = new HashMap<>();
   public String key = "";
+
 
   public Node(float x, float y, float width, float height) {
     this.bounds = new Rectangle(x, y, width, height);
@@ -22,7 +27,7 @@ public class Node {
     this.texture = null;
   }
 
-  public Node(float x, float y, float width, float height, Texture texture) {
+  public Node(float x, float y, float width, float height, Sprite texture) {
     this.bounds = new Rectangle(x, y, width, height);
     this.position.set(x, y);
     this.texture = texture;
@@ -40,13 +45,21 @@ public class Node {
     }
     if (texture == null) return;
 
-    batch.draw(texture, position.x, position.y, bounds.width, bounds.height);
+    batch.draw(texture, position.x - texture.getWidth() / 2, position.y - texture.getHeight() / 2, texture.getWidth(), texture.getHeight());
+  }
+
+  public void drawDebugBounds(ShapeRenderer shapeRenderer) {
+    if (bounds.width > 0 && bounds.height > 0) {
+      shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+    }
+    for (Node child : children.values()) {
+      child.drawDebugBounds(shapeRenderer);
+    }
   }
 
   public void update(float delta) {
-    this.bounds.x = this.position.x;
-    this.bounds.y = this.position.y;
-    for (Node child : children.values()) {
+    bounds.setCenter(position.x , position.y);
+    for (Node child: new ArrayList<>(children.values())) {
       child.update(delta);
     }
   }
