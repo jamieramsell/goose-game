@@ -1,16 +1,15 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import io.github.goose_game.Node;
 
 public class Weapon extends Node {
   private int range;
@@ -77,7 +76,7 @@ public class Weapon extends Node {
       dv = mousePosition.cpy().sub(playerPosition).nor();
       attackAngle = MathUtils.atan2(dv.y, dv.x) - 1.5f;
       position.set(playerPosition.x + dv.x * 30, playerPosition.y + dv.y * 30);
-      for (Node child : ((EnemyManager) getParent().getParent().get_child("enemyManager")).children.values()) {
+      for (Node child : ((EnemyManager) getParent().getParent().get_child("enemyManager")).getChildren().values()) {
         if (this.overlaps(child)) {
           if (child instanceof Enemy) {
             Enemy enemy = (Enemy) child;
