@@ -1,4 +1,4 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import io.github.goose_game.Node;
 
 public class Enemy extends Node {
   Player target;
@@ -132,5 +133,12 @@ public class Enemy extends Node {
 
   public void disperse() {
     fleeing = true;
+  }
+
+  public void damage(int damage) {
+    health -= damage;
+    if (health <= 0) {
+      fleeing = true;
+    }
   }
 }
