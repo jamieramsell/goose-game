@@ -17,8 +17,8 @@ public class Weapon extends Node {
   private int damage;
   float stateTime = 0;
   Animation<Sprite> animation;
-  int attackTime;
-  int attackCounter;
+  float attackTime;
+  float attackCounter;
   float attackAngle;
   private float knockback;
   private final TextureAtlas atlas;
@@ -50,13 +50,6 @@ public class Weapon extends Node {
       currentFrame.setRotation(MathUtils.radiansToDegrees * attackAngle);
       currentFrame.draw(batch);
       bounds = currentFrame.getBoundingRectangle();
-      //shapeRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-
-      //shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-      //shapeRenderer.setColor(Color.RED);
-      //shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
-      //shapeRenderer.end();
-
     }
 
   }
@@ -64,27 +57,14 @@ public class Weapon extends Node {
   public void update(float delta) {
     super.update(delta);
 
-    if (attackTime != attackCounter) {
-      attackCounter += 1;
+    if (attackTime > attackCounter) {
+      attackCounter += 240 * delta;
+    }
+    else if (attackCounter > attackTime) {
+      attackCounter = attackTime;
     }
     Vector2 playerPosition = getParent().position;
     position.set(playerPosition.x + dv.x * 30, playerPosition.y + dv.y * 30);
-
-    if (attackCounter == (int) attackTime / 2) {
-      for (Node child : ((EnemyManager) getParent().getParent().get_child("enemyManager")).children.values()) {
-        if (this.overlaps(child)) {
-          if (child instanceof Enemy) {
-            Enemy enemy = (Enemy) child;
-            enemy.damage(damage);
-            effectCounter += 1;
-            enemy.add_child("hit_effect_" + effectCounter,
-              new Effect(enemy.position.x, enemy.position.y, atlas, "hit_effect", 4, 0.06f));
-            enemy.velocity.y = -enemy.velocity.y * knockback;
-            enemy.velocity.x = -enemy.velocity.x * knockback;
-          }
-        }
-      }
-    }
   }
 
   public void attack() {
@@ -97,6 +77,26 @@ public class Weapon extends Node {
       dv = mousePosition.cpy().sub(playerPosition).nor();
       attackAngle = MathUtils.atan2(dv.y, dv.x) - 1.5f;
       position.set(playerPosition.x + dv.x * 30, playerPosition.y + dv.y * 30);
+      for (Node child : ((EnemyManager) getParent().getParent().get_child("enemyManager")).children.values()) {
+        if (this.overlaps(child)) {
+          if (child instanceof Enemy) {
+            Enemy enemy = (Enemy) child;
+            enemy.damage(damage);
+            effectCounter += 1;
+            enemy.add_child("hit_effect_" + effectCounter,
+              new Effect(
+                enemy.position.x,
+                enemy.position.y,
+                atlas,
+                "hit_effect",
+                4,
+                0.06f)
+            );
+            enemy.velocity.y = -enemy.velocity.y * knockback;
+            enemy.velocity.x = -enemy.velocity.x * knockback;
+          }
+        }
+      }
     }
   }
 }
