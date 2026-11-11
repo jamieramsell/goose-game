@@ -78,7 +78,7 @@ public class Enemy extends Node {
 
 
 
-    for (Node node: getParent().children.values()) {
+    for (Node node : getParent().getChildren().values()) {
       if (node instanceof Enemy) {
         if (position.dst(node.position) <= 32 && position.dst(node.position) != 0 && node != this) {
           Vector2 dirToNode = new Vector2(position.x - node.position.x, position.y - node.position.y);
@@ -132,12 +132,5 @@ public class Enemy extends Node {
 
   public void disperse() {
     fleeing = true;
-  }
-
-  public void damage(int damage) {
-    health -= damage;
-    if (health <= 0) {
-      fleeing = true;
-    }
   }
 }

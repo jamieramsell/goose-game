@@ -1,5 +1,6 @@
 package io.github.goose_game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -33,13 +34,13 @@ public class Node {
   }
 
   public Node() {
-    this.bounds = new Rectangle(0,0,0,0);
-    this.position.set(0,0);
+    this.bounds = new Rectangle(0, 0, 0, 0);
+    this.position.set(0, 0);
     this.texture = null;
   }
 
   public void draw(Batch batch) {
-    for (Node child: children.values()) {
+    for (Node child : children.values()) {
       child.draw(batch);
     }
     if (texture == null) return;
@@ -84,5 +85,9 @@ public class Node {
 
   public Node get_child(String id) {
     return children.get(id);
+  }
+
+  public Map<String, Node> getChildren() {
+    return children;
   }
 }

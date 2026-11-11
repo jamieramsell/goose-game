@@ -1,4 +1,4 @@
-package io.github.goose_game;
+package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -107,9 +107,5 @@ public class Player extends Node {
   public void damage(float damage) {
     health -= damage;
     System.out.println(health);
-  }
-
-  public Camera getCamera() {
-    return camera;
   }
 }
