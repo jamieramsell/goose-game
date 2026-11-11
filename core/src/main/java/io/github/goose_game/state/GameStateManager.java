@@ -54,9 +54,7 @@ public class GameStateManager {
     game.setScreen(new MainMenu(game, this));
     currentScreen.dispose();
 
-    if (pausedGame != null) {
-      pausedGame.dispose();
-    }
+    pausedGameGarbageCollector();
   }
 
   /**
@@ -75,13 +73,17 @@ public class GameStateManager {
     switch (gameState) { // Resume existing game if the game is currently paused
       case PAUSED:
         game.setScreen(pausedGame);
+        pausedGame = null;
         break;
       default:
         game.setScreen(new GameScreen(game, this));
+        break;
     }
 
     gameState = GameState.GAME;
     currentScreen.dispose();
+
+    pausedGameGarbageCollector();
   }
 
   /**
@@ -100,9 +102,7 @@ public class GameStateManager {
     game.setScreen(new CreditsPage(game, this));
     currentScreen.dispose();
 
-    if (pausedGame != null) {
-      pausedGame.dispose();
-    }
+    pausedGameGarbageCollector();
   }
 
   public void pause(GameScreen gameScreen) {
@@ -117,5 +117,13 @@ public class GameStateManager {
 
   public GameState getGameState() {
     return gameState;
+  }
+
+  /** Disposes and deletes the paused game record, if required. Called by every state change. */
+  private void pausedGameGarbageCollector() {
+    if (pausedGame != null) {
+      pausedGame.dispose();
+      pausedGame = null;
+    }
   }
 }
