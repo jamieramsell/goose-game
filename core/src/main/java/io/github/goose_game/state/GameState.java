@@ -11,7 +11,7 @@ public enum GameState {
 
   /** The player is in game. */
   GAME,
-  
+
   /** The player has paused the game. */
   PAUSED,
 
@@ -20,5 +20,4 @@ public enum GameState {
 
   /** The player has lost the game. */
   LOST
-
 }
