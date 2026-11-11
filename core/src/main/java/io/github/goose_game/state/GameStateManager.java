@@ -11,9 +11,9 @@ import io.github.goose_game.menu.PauseMenu;
  * Owns the game's current {@link GameState} and performs transitions between states.
  *
  * <p>Each transition method validates the move against {@link GameStateGraph}, updates the current
- * state, switches {@link Main}'s screen to a newly created one, and disposes the screen that was
- * being left. Calling a transition that the graph does not allow throws an {@link
- * IllegalArgumentException} and leaves the state and screen unchanged.
+ * state, switches {@link Main}'s screen, and disposes the screen that was being left. Calling a
+ * transition that the graph does not allow throws an {@link IllegalArgumentException} and leaves
+ * the state and screen unchanged.
  *
  * <p>Creating a manager immediately puts the game in {@link GameState#MAIN_MENU} and shows the
  * {@link MainMenu}.
@@ -61,6 +61,9 @@ public class GameStateManager {
    * Transitions to {@link GameState#GAME}, either starting a new {@link GameScreen}, or resuming
    * from where the game left off.
    *
+   * <p>If the game is paused, the paused {@link GameScreen} is reused and not disposed; otherwise a
+   * new one is created.
+   *
    * @param currentScreen the screen being left; disposed after the new screen is set
    * @throws IllegalArgumentException if the game cannot be started from the current state
    */
@@ -105,6 +108,16 @@ public class GameStateManager {
     pausedGameGarbageCollector();
   }
 
+  /**
+   * Transitions to {@link GameState#PAUSED}, showing a {@link PauseMenu} over the running game.
+   *
+   * <p>The game screen is not disposed. It is kept so it can be drawn behind the pause menu and
+   * resumed by {@link #play(Disposable)}, and is disposed if the player leaves the paused game
+   * instead.
+   *
+   * @param gameScreen the running game screen to pause
+   * @throws IllegalArgumentException if the game cannot be paused from the current state
+   */
   public void pause(GameScreen gameScreen) {
     if (!GameStateGraph.canTransition(gameState, GameState.PAUSED)) {
       throw new IllegalArgumentException(
@@ -115,6 +128,7 @@ public class GameStateManager {
     game.setScreen(new PauseMenu(game, this, gameScreen));
   }
 
+  /** @return the current {@link GameState} that the game is in. */
   public GameState getGameState() {
     return gameState;
   }

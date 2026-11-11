@@ -22,6 +22,16 @@ import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 
+/**
+ * The pause menu, shown while the game is in {@link GameState#PAUSED}.
+ *
+ * <p>Shows {@code Resume Game}, {@code Quit to menu} and {@code Quit to desktop} buttons over the
+ * paused {@link GameScreen}. Pressing Escape also resumes the game.
+ *
+ * <p>This screen owns a stage and skin, so {@link #dispose()} must be called when navigating away
+ * from it. It does not own the paused game, which is instead kept and disposed by the {@link
+ * GameStateManager}.
+ */
 public class PauseMenu extends ScreenAdapter {
 
   private final GameStateManager stateManager;
@@ -30,6 +40,13 @@ public class PauseMenu extends ScreenAdapter {
   private final Stage stage = new Stage(new ExtendViewport(640, 360));
   private final Skin skin;
 
+  /**
+   * Builds the pause menu's widgets, layout and intro animations.
+   *
+   * @param game the game that owns this screen
+   * @param stateManager the current instance of {@link GameStateManager}
+   * @param pausedGame the paused game screen, drawn behind this menu
+   */
   public PauseMenu(Main game, GameStateManager stateManager, GameScreen pausedGame) {
     this.stateManager = stateManager;
     this.pausedGame = pausedGame;
@@ -118,6 +135,7 @@ public class PauseMenu extends ScreenAdapter {
     stage.draw();
   }
 
+  /** Resumes the game if Escape was pressed while paused. */
   private void update() {
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
         && stateManager.getGameState() == GameState.PAUSED) {
