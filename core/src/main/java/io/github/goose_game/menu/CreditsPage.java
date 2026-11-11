@@ -47,7 +47,10 @@ public class CreditsPage extends ScreenAdapter {
     // Credits
     Label[] credits = { // Add any credits within this array; they'll be drawn automatically.
       new Label(
-          "Main menu background by heyheythere, <https://heyheythere.itch.io/parallax-skies-free / CC BY 4.0>",
+          "Parallax Skies Free by heyheythere (https://heyheythere.itch.io/parallax-skies-free),"
+              + " licensed under CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)."
+              + " Modified: the image is scaled and cropped at runtime to fit the player's window"
+              + " size.",
           skin)
     };
 
