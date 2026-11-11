@@ -1,13 +1,9 @@
 package io.github.goose_game.game;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import io.github.goose_game.Node;
-
+import io.github.goose_game.utils.Node;
 import java.util.ArrayList;
 
 public class EnemyManager extends Node {
@@ -32,17 +28,8 @@ public class EnemyManager extends Node {
   }
 
   public void spawnEnemy() {
-    Enemy enemy = new Enemy(
-      1000, 1000,
-      20, 20,
-      atlas,
-      player,
-      20,
-      20,
-      270,
-        100
-    );
-    int rndDir = MathUtils.random(0,360);
+    Enemy enemy = new Enemy(1000, 1000, 20, 20, atlas, player, 20, 20, 270, 100);
+    int rndDir = MathUtils.random(0, 360);
     int rndDist = MathUtils.random(360, 370);
     Vector2 randomRotatedVector = new Vector2(1, 0).rotateDeg(rndDir);
     randomRotatedVector.scl(rndDist);
@@ -58,12 +45,13 @@ public class EnemyManager extends Node {
   public void update(float delta) {
     super.update(delta);
     ArrayList<Enemy> killList = new ArrayList<Enemy>();
-    for (Node child: children.values()) {
+    for (Node child : children.values()) {
       if (child instanceof Enemy) {
         if (((Enemy) child).fleeing) {
           killList.add((Enemy) child);
         }
-      };
+      }
+      ;
     }
   }
 }

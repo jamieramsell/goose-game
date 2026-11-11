@@ -6,13 +6,19 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
-import io.github.goose_game.Node;
+import io.github.goose_game.utils.Node;
 
 public class Effect extends Node {
   private final Animation<Sprite> animation;
   private float stateTime;
 
-  public Effect(float x, float y, TextureAtlas atlas, String regionName, int framesPerAnimation, float frameDuration) {
+  public Effect(
+      float x,
+      float y,
+      TextureAtlas atlas,
+      String regionName,
+      int framesPerAnimation,
+      float frameDuration) {
     super(x, y, 0, 0);
     if (framesPerAnimation <= 0 || frameDuration <= 0) {
       throw new IllegalArgumentException("Frame count and frame duration must be positive");
@@ -21,7 +27,8 @@ public class Effect extends Node {
     Array<Sprite> atlasFrames = atlas.createSprites(regionName);
     int animationCount = atlasFrames.size / framesPerAnimation;
     if (animationCount == 0) {
-      throw new IllegalArgumentException("Effect animation must have at least one complete frame set");
+      throw new IllegalArgumentException(
+          "Effect animation must have at least one complete frame set");
     }
 
     int startFrame = MathUtils.random(animationCount - 1) * framesPerAnimation;
