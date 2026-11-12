@@ -159,7 +159,7 @@ public class TileMap {
 
       if (dx < 0 || dy < 0 || dx >= size || dy >= size) {
         continue; // If current square is out of bounds, skip it
-      } else if (getTileAtSquare(dx, dy).equals(tile)) {
+      } else if (getTileAtSquare(dx, dy) == tile) {
         return true;
       }
     }
