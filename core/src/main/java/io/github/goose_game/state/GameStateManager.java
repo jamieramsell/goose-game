@@ -118,7 +118,7 @@ public class GameStateManager {
         pausedGame = null;
         break;
       default:
-        game.setScreen(new GameScreen(game, this));
+        startNewGame(currentScreen, null);;
         break;
     }
 
