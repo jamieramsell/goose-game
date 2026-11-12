@@ -121,7 +121,7 @@ public class MapGenerator {
     }
 
     for (int[] poi : pointsOfInterest) {
-      if (map.isPixelSolidForPlayer(poi[0], poi[1])) {
+      if (map.isSquareSolidForPlayer(poi[0], poi[1])) {
         throw new IllegalArgumentException("Map tile (" + poi[0] + ", " + poi[1] + ") is listed as"
             + " a POI, yet is itself not passable by players.");
       }
