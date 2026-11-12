@@ -45,9 +45,10 @@ public class MapGenerator {
     TileMap map = new TileMap(MAP_SIZE);
     Random rng = new Random(seed);
 
-    // Create spawn point
-    int spawnX = Math.round(MAP_SIZE / TILE_SIZE * rng.nextFloat());
-    int spawnY = Math.round(MAP_SIZE / TILE_SIZE * rng.nextFloat());
+    // Create spawn point. Note that the +1, -2 values ensure that the 3x3 patch fit wholly within
+    // the map
+    int spawnX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2); 
+    int spawnY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
 
     for (int x = -1; x < 2; x++) {
       for (int y = -1; y < 2; y++) {
@@ -57,8 +58,8 @@ public class MapGenerator {
     map.setTileAtSquare(spawnX, spawnY, TileType.SPAWN);
 
     // Create escape point
-    int escapeX = Math.round(MAP_SIZE / TILE_SIZE * rng.nextFloat());
-    int escapeY = Math.round(MAP_SIZE / TILE_SIZE * rng.nextFloat());
+    int escapeX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+    int escapeY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
 
     for (int x = -1; x < 2; x++) {
       for (int y = -1; y < 2; y++) {
