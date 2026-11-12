@@ -108,7 +108,7 @@ public class MainMenu extends ScreenAdapter {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            stateManager.play(MainMenu.this);
+            stateManager.startNewGame(MainMenu.this);
           }
         });
     return play;

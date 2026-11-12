@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Disposable;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.menu.CreditsPage;
+import io.github.goose_game.menu.GameGenerationPage;
 import io.github.goose_game.menu.MainMenu;
 import io.github.goose_game.menu.PauseMenu;
 
@@ -54,6 +55,29 @@ public class GameStateManager {
     game.setScreen(new MainMenu(game, this));
     currentScreen.dispose();
 
+    pausedGameGarbageCollector();
+  }
+
+  /**
+   * Transitions to {@link GameState#GENERATION}, showing a {@link GameGenerationPage} while a new
+   * map is generated.
+   *
+   * <p>This is the first step of starting a new game; the generation screen leads on to {@link
+   * GameState#GAME}. Any paused game is discarded.
+   *
+   * @param currentScreen the screen being left; disposed after the new screen is set
+   * @throws IllegalArgumentException if map generation cannot be started from the current state
+   */
+  public void startNewGame(Disposable currentScreen) {
+    if (!GameStateGraph.canTransition(gameState, GameState.GENERATION)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.GENERATION is not currently accessible");
+    }
+
+    game.setScreen(new GameGenerationPage(game));
+    gameState = GameState.GENERATION;
+
+    currentScreen.dispose();
     pausedGameGarbageCollector();
   }
 

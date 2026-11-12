@@ -9,6 +9,9 @@ public enum GameState {
   /** The player is within the credits menu. */
   CREDITS,
 
+  /** The map is currently being generated. */
+  GENERATION,
+
   /** The player is in game. */
   GAME,
 

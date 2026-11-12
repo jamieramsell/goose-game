@@ -16,8 +16,9 @@ public class GameStateGraph {
 
   // Populate the graph
   static {
-    TRANSITIONS.put(GameState.MAIN_MENU, EnumSet.of(GameState.GAME, GameState.CREDITS));
+    TRANSITIONS.put(GameState.MAIN_MENU, EnumSet.of(GameState.GENERATION, GameState.CREDITS));
     TRANSITIONS.put(GameState.CREDITS, EnumSet.of(GameState.MAIN_MENU));
+    TRANSITIONS.put(GameState.GENERATION, EnumSet.of(GameState.GAME));
     TRANSITIONS.put(
         GameState.GAME, EnumSet.of(GameState.PAUSED, GameState.VICTORY, GameState.LOST));
     TRANSITIONS.put(GameState.PAUSED, EnumSet.of(GameState.GAME, GameState.MAIN_MENU));
