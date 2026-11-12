@@ -100,9 +100,6 @@ public class MapGenerator {
     }
   }
 
-  /** A pair of tile indices used as a set element. */
-  private record IntTuple(int x, int y) {}
-
   /**
    * Checks that every given point of interest can be reached from the first one by walking over
    * tiles the player can pass through, moving only up, down, left and right.
@@ -134,22 +131,22 @@ public class MapGenerator {
     boolean[][] visited = new boolean[size][size];
 
     // Create a set of unvisited POIs; select the starting point
-    IntTuple startPoi = new IntTuple(pointsOfInterest[0][0], pointsOfInterest[0][1]);
-    Set<IntTuple> remainingPois = new HashSet<>(
+    TilePosition startPoi = new TilePosition(pointsOfInterest[0][0], pointsOfInterest[0][1]);
+    Set<TilePosition> remainingPois = new HashSet<>(
         Arrays.stream(pointsOfInterest)
-        .map(array -> new IntTuple(array[0], array[1]))
+        .map(array -> new TilePosition(array[0], array[1]))
         .toList()
     ); 
     remainingPois.remove(startPoi); // Removed after conversion to a set to ensure no duplicates
 
     // Begin from the startPoi
-    ArrayDeque<IntTuple> queue = new ArrayDeque<>();
-    visited[startPoi.x][startPoi.y] = true;
+    ArrayDeque<TilePosition> queue = new ArrayDeque<>();
+    visited[startPoi.x()][startPoi.y()] = true;
     queue.add(startPoi);
 
     // Flood fill algorithm
     while (queue.size() != 0) {
-      IntTuple currentNode = queue.poll(); // Select node at the head of the queue
+      TilePosition currentNode = queue.poll(); // Select node at the head of the queue
       remainingPois.remove(currentNode); // This is a no-op if currentNode isn't in remainingPois
       if (remainingPois.size() == 0) {
         return true; // All POIs have been visited; the map is therefore passable
@@ -157,8 +154,8 @@ public class MapGenerator {
 
       int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
       for (int[] offset : offsets) {
-        int dx = currentNode.x + offset[0];
-        int dy = currentNode.y + offset[1];
+        int dx = currentNode.x() + offset[0];
+        int dy = currentNode.y() + offset[1];
 
         // If target square is out of bounds, skip it
         if (dx < 0 || dy < 0 || dx >= size || dy >= size) {
@@ -168,7 +165,7 @@ public class MapGenerator {
         // visited, and add it to the queue
         else if (!visited[dx][dy] && !map.isSquareSolidForPlayer(dx, dy)) {
           visited[dx][dy] = true;
-          queue.add(new IntTuple(dx, dy));
+          queue.add(new TilePosition(dx, dy));
         }
       }
     }
