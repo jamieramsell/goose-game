@@ -62,12 +62,12 @@ public class MainMenu extends ScreenAdapter {
 
     // Game title
     Label title = getTitle();
-        
-    // Play button
-    TextButton play = getPlayButton();
 
     // Custom seed entry
     TextField seed = getSeedField();
+
+    // Play button (Comes after seed here, but is actually placed above it)
+    TextButton play = getPlayButton(seed);
 
     // Credits button
     TextButton credits = getCreditsButton();
@@ -102,13 +102,13 @@ public class MainMenu extends ScreenAdapter {
     return new Label("Flock n Load", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
   }
 
-  private TextButton getPlayButton() {
+  private TextButton getPlayButton(TextField seedField) {
     TextButton play = new TextButton("Play", skin);
     play.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            stateManager.startNewGame(MainMenu.this);
+            stateManager.startNewGame(MainMenu.this, seedField.getText());
           }
         });
     return play;
