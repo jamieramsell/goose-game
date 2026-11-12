@@ -66,9 +66,10 @@ public class GameStateManager {
    * GameState#GAME}. Any paused game is discarded.
    *
    * @param currentScreen the screen being left; disposed after the new screen is set
+   * @param seed the (nullable) seed to use to generate the map
    * @throws IllegalArgumentException if map generation cannot be started from the current state
    */
-  public void startNewGame(Disposable currentScreen) {
+  public void startNewGame(Disposable currentScreen, String seed) {
     if (!GameStateGraph.canTransition(gameState, GameState.GENERATION)) {
       throw new IllegalArgumentException(
           "Illegal transition: GameState.GENERATION is not currently accessible");
@@ -79,6 +80,20 @@ public class GameStateManager {
 
     currentScreen.dispose();
     pausedGameGarbageCollector();
+  }
+
+  /**
+   * Transitions to {@link GameState#GENERATION}, showing a {@link GameGenerationPage} while a new
+   * map is generated, using a random seed.
+   *
+   * <p>This is the first step of starting a new game; the generation screen leads on to {@link
+   * GameState#GAME}. Any paused game is discarded.
+   *
+   * @param currentScreen the screen being left; disposed after the new screen is set
+   * @throws IllegalArgumentException if map generation cannot be started from the current state
+   */
+  public void startNewGame(Disposable currentScreen) {
+    startNewGame(currentScreen, null);
   }
 
   /**
