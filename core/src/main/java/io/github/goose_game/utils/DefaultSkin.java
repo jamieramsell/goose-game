@@ -54,22 +54,26 @@ public class DefaultSkin {
     font.getData().setScale(2f);
     skin.add("default", font);
 
+    // Smaller font for text labels and inputs
+    BitmapFont smallerFont = new BitmapFont();
+    smallerFont.getData().setScale(1f);
+
     // Button styles for each stage
+    TextButton.TextButtonStyle buttonStyle = getButtonStyle(skin, font);
+    skin.add("default", buttonStyle);
+
+    // Text label style
+    Label.LabelStyle labelStyle = new Label.LabelStyle(smallerFont, Color.WHITE);
+    skin.add("default", labelStyle);
+
+  private static TextButton.TextButtonStyle getButtonStyle(Skin skin, BitmapFont font) {
     TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
     style.up = skin.newDrawable("white", Color.DARK_GRAY);
     style.down = skin.newDrawable("white", Color.BLACK);
     style.over = skin.newDrawable("white", Color.GRAY);
     style.font = font;
-    skin.add("default", style);
 
-    // Small font for text labels
-    BitmapFont labelFont = new BitmapFont();
-    labelFont.getData().setScale(1f);
-
-    // Text label style
-    Label.LabelStyle labelStyle = new Label.LabelStyle(labelFont, Color.WHITE);
-    skin.add("default", labelStyle);
-
-    return skin;
+    return style;
+  }
   }
 }
