@@ -96,21 +96,25 @@ public class TileMap {
   }
 
   /**
-   * Returns whether any of the four diagonal neighbours of the given tile is of the given type.
+   * Returns whether any of the four orthogonal neighbours of the given tile is of the given type.
    *
    * @param tileX the x index of the tile, in tiles
    * @param tileY the y index of the tile, in tiles
    * @param tile the tile type to look for
-   * @return {@code true} if a diagonal neighbour is of that type
+   * @return {@code true} if an orthogonal neighbour is of that type
    */
   boolean nextToTileOfGivenType(int tileX, int tileY, TileType tile) {
-    int[] offsets = new int[] {-1, 1};
+    int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int size = getMapSizeInSquares();
 
-    for (int dx : offsets) {
-      for (int dy : offsets) {
-        if (getTileAtSquare(tileX + dx, tileY + dy).equals(tile)) {
-          return true;
-        }
+    for (int[] offset : offsets) {
+      int dx = tileX + offset[0];
+      int dy = tileY + offset[1];
+
+      if (dx < 0 || dy < 0 || dx > size || dy > size) {
+        continue; // If current square is out of bounds, skip it
+      } else if (getTileAtSquare(tileX + dx, tileY + dy).equals(tile)) {
+        return true;
       }
     }
 
