@@ -9,12 +9,18 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import io.github.goose_game.mapgen.MapGenerator;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 
 public class Player extends Node {
-  private Vector2 velocity;
+  private final TileMap map;
   private final float speed;
+
+  private Vector2 velocity;
   private float health;
+
   private Array<Animation<Sprite>> running;
   private Array<Animation<Sprite>> idle;
   private float frame;
@@ -27,6 +33,7 @@ public class Player extends Node {
       float width,
       float height,
       TextureAtlas atlas,
+      TileMap map,
       float speed,
       float health,
       Camera camera) {
@@ -35,6 +42,7 @@ public class Player extends Node {
     this.health = health;
     this.velocity = new Vector2();
     this.camera = camera;
+    this.map = map;
 
     this.running = new Array<>();
     this.idle = new Array<>();
@@ -58,10 +66,37 @@ public class Player extends Node {
 
     velocity.scl(0.65f);
 
-    position.x += velocity.x * delta;
-    position.y += velocity.y * delta;
+    float targetX = position.x + velocity.x * delta;
+    float targetY = position.y + velocity.y * delta;
 
+    /*
+     * Validate that each direction is within bounds.
+     *
+     * Dev note: this is done seperately so that, for example, if the player holds D and S when
+     * there is a wall on their right hand side, they still move downwards, rather than not at all.
+     *
+     * When a player collides with a wall, reset velocity in that direction to prevent a 'sticky
+     * wall' effect, where the player cannot move as their velocity is still positive in the
+     * direction of the wall.
+     */
+    if (isTargetPosInBounds(targetX) && !map.isPixelSolidForPlayer((int) targetX, (int) position.y)) {
+      position.x = targetX;
+    } else {
+      velocity.x = 0;
+    }
+
+    if (isTargetPosInBounds(targetY) && !map.isPixelSolidForPlayer((int) position.x, (int) targetY)) {
+      position.y = targetY;
+    } else {
+      velocity.y = 0;
+    }
+ 
     super.update(delta);
+  }
+
+  private boolean isTargetPosInBounds(float target) {
+    int mapSize = MapGenerator.MAP_SIZE;
+    return !(target < 0 || target > mapSize - 1);
   }
 
   private Vector2 get_input() {

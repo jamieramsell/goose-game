@@ -65,7 +65,7 @@ public class GameScreen extends ScreenAdapter {
     float spawnX = map.getSpawnPosition().x;
     float spawnY = map.getSpawnPosition().y;
 
-    this.root.add_child("player", new Player(spawnX, spawnY, 16, 20, atlas, 64, 200, camera));
+    this.root.add_child("player", new Player(spawnX, spawnY, 16, 20, atlas, map, 64, 200, camera));
 
     this.root.add_child(
         "enemyManager", new EnemyManager(atlas, (Player) this.root.get_child("player")));
