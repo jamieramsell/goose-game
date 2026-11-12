@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.mapgen.TileMap;
+import io.github.goose_game.mapgen.TileMapRenderer;
 import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.Node;
@@ -36,6 +37,7 @@ public class GameScreen extends ScreenAdapter {
   private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
 
   private final TileMap map;
+  private final TileMapRenderer renderer;
 
   private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private Sprite playerTexture;
@@ -48,7 +50,9 @@ public class GameScreen extends ScreenAdapter {
     this.stateManager = stateManager;
     this.batch = game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
+
     this.map = map;
+    this.renderer = new TileMapRenderer(map);
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -89,6 +93,9 @@ public class GameScreen extends ScreenAdapter {
     batch.begin();
 
     batch.draw(background, -32 * 64, -32 * 64, 0, 0, 32 * 128, 32 * 128);
+
+    renderer.render(batch, camera);
+
     root.draw(batch);
 
     batch.end();
@@ -124,5 +131,6 @@ public class GameScreen extends ScreenAdapter {
   @Override
   public void dispose() {
     debugShapeRenderer.dispose();
+    renderer.dispose();
   }
 }
