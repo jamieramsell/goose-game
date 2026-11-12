@@ -1,11 +1,8 @@
 package io.github.goose_game.mapgen;
 
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import com.badlogic.gdx.math.Vector2;
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * A square grid of {@link TileType}s making up the game world.
@@ -284,7 +281,7 @@ public class TileMap {
   }
 
   /** @return all tiles on the map which are marked as points of interest. */
-  Set<TilePosition> getAllPointsOfInterest() {
-    return Set.copyOf(pointsOfInterest.values());
+  Map<TileType, TilePosition> getAllPointsOfInterest() {
+    return pointsOfInterest;
   }
 }
