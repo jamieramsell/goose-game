@@ -109,11 +109,19 @@ public class MapGenerator {
    * @param pointsOfInterest the points to connect, each given as a two-element array of {@code {x,
    *     y}} tile indices, such as the spawn point and the escape point
    * @return {@code true} if every point of interest is reachable from the first
-   * @throws IllegalArgumentException if fewer than two points are given
+   * @throws IllegalArgumentException if fewer than two points are given, or if a given POI is not
+   *     passable itself.
    */
   public boolean isMapPassable(TileMap map, int[][] pointsOfInterest) {
     if (pointsOfInterest.length < 2) {
       throw new IllegalArgumentException("pointsOfInterest must contain at least two coordinates");
+    }
+
+    for (int[] poi : pointsOfInterest) {
+      if (map.isPixelSolidForPlayer(poi[0], poi[1])) {
+        throw new IllegalArgumentException("Map tile (" + poi[0] + ", " + poi[1] + ") is listed as"
+            + " a POI, yet is itself not passable by players.");
+      }
     }
     
     int size = map.getMapSizeInSquares();
