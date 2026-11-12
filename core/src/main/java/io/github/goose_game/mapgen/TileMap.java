@@ -67,6 +67,17 @@ public class TileMap {
   }
 
   /**
+   * Returns whether the player is blocked by the tile at the given tile index.
+   *
+   * @param x the x index, in tiles
+   * @param y the y index, in tiles
+   * @return {@code true} if the player cannot pass through that tile
+   */
+  boolean isSquareSolidForPlayer(int x, int y) {
+    return !map[x][y].playerPassable;
+  }
+
+  /**
    * Returns whether geese are blocked by the tile at the given world position. Geese can swim, so
    * water is not solid for them.
    *
@@ -80,6 +91,24 @@ public class TileMap {
     return !map[x][y].goosePassable;
   }
 
+  /**
+   * Returns whether geese are blocked by the tile at the given tile index. Geese can swim, so water
+   * is not solid for them.
+   *
+   * @param x the x index, in tiles
+   * @param y the y index, in tiles
+   * @return {@code true} if geese cannot pass through that tile
+   */
+  boolean isSquareSolidForGeese(int x, int y) {
+    return !map[x][y].goosePassable;
+  }
+
+  /**
+   * Converts a position in pixels to a tile index.
+   *
+   * @param pixel the position, in pixels
+   * @return the index of the tile containing that position
+   */
   int mapPixelToSquare(int pixel) {
     return pixel / MapGenerator.TILE_SIZE;
   }
