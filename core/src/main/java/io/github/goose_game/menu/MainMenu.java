@@ -6,13 +6,17 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -58,9 +62,12 @@ public class MainMenu extends ScreenAdapter {
 
     // Game title
     Label title = getTitle();
-
+        
     // Play button
     TextButton play = getPlayButton();
+
+    // Custom seed entry
+    TextField seed = getSeedField();
 
     // Credits button
     TextButton credits = getCreditsButton();
@@ -74,6 +81,7 @@ public class MainMenu extends ScreenAdapter {
     table.setFillParent(true);
     table.add(title).padBottom(40).row();
     table.add(play).width(240).height(60).padBottom(16).row();
+    table.add(seed).width(240).height(30).padBottom(16).row();
     table.add(credits).width(240).height(60).padBottom(16).row();
     table.add(quit).width(240).height(60);
 
@@ -104,6 +112,36 @@ public class MainMenu extends ScreenAdapter {
           }
         });
     return play;
+  }
+
+  private TextField getSeedField() {
+    TextField seed = new TextField(null, skin);
+    seed.setMessageText("Custom seed");
+    seed.setAlignment(Align.center);
+
+    // Change style of the text box depending on whether or not the mouse is hovering over the top
+    TextField.TextFieldStyle normalStyle = skin.get("default", TextField.TextFieldStyle.class);
+    TextField.TextFieldStyle hoverStyle = skin.get("hover", TextField.TextFieldStyle.class);
+
+    seed.addListener(
+      new InputListener() {
+        @Override
+        public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+          if (pointer == -1) {
+            seed.setStyle(hoverStyle);
+          }
+        }
+
+        @Override
+        public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+          if (pointer == -1) {
+            seed.setStyle(normalStyle);
+          }
+        }
+      }
+    );
+
+    return seed;
   }
 
   private TextButton getCreditsButton() {
