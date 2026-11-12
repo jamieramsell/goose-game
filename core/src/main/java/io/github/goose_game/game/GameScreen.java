@@ -48,11 +48,11 @@ public class GameScreen extends ScreenAdapter {
   public GameScreen(Main game, GameStateManager stateManager, TileMap map) {
     this.game = game;
     this.stateManager = stateManager;
-    this.batch = game.getBatch();
+    this.batch = this.game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
 
     this.map = map;
-    this.renderer = new TileMapRenderer(map);
+    this.renderer = new TileMapRenderer(this.map);
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
