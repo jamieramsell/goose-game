@@ -35,10 +35,12 @@ public class TileMap {
    * @param x the x position, in pixels
    * @param y the y position, in pixels
    * @return the tile at that position, or {@code null} if it has not been set
+   * @throws IllegalArgumentException if the position is outside the map
    */
   public TileType getTileAtPixel(int x, int y) {
     x = mapPixelToSquare(x);
     y = mapPixelToSquare(y);
+    checkCoordinatesAreInBounds(x, y);
     return map[x][y];
   }
 
@@ -48,8 +50,10 @@ public class TileMap {
    * @param tileX the x index, in tiles
    * @param tileY the y index, in tiles
    * @return the tile at that index, or {@code null} if it has not been set
+   * @throws IllegalArgumentException if the index is outside the map
    */
   TileType getTileAtSquare(int tileX, int tileY) {
+    checkCoordinatesAreInBounds(tileX, tileY);
     return map[tileX][tileY];
   }
 
@@ -59,10 +63,12 @@ public class TileMap {
    * @param x the x position, in pixels
    * @param y the y position, in pixels
    * @return {@code true} if the player cannot pass through that tile
+   * @throws IllegalArgumentException if the position is outside the map
    */
   public boolean isPixelSolidForPlayer(int x, int y) {
     x = mapPixelToSquare(x);
     y = mapPixelToSquare(y);
+    checkCoordinatesAreInBounds(x, y);
     return !map[x][y].playerPassable;
   }
 
@@ -72,8 +78,10 @@ public class TileMap {
    * @param x the x index, in tiles
    * @param y the y index, in tiles
    * @return {@code true} if the player cannot pass through that tile
+   * @throws IllegalArgumentException if the index is outside the map
    */
   boolean isSquareSolidForPlayer(int x, int y) {
+    checkCoordinatesAreInBounds(x, y);
     return !map[x][y].playerPassable;
   }
 
@@ -84,10 +92,12 @@ public class TileMap {
    * @param x the x position, in pixels
    * @param y the y position, in pixels
    * @return {@code true} if geese cannot pass through that tile
+   * @throws IllegalArgumentException if the position is outside the map
    */
   public boolean isPixelSolidForGeese(int x, int y) {
     x = mapPixelToSquare(x);
     y = mapPixelToSquare(y);
+    checkCoordinatesAreInBounds(x, y);
     return !map[x][y].goosePassable;
   }
 
@@ -98,8 +108,10 @@ public class TileMap {
    * @param x the x index, in tiles
    * @param y the y index, in tiles
    * @return {@code true} if geese cannot pass through that tile
+   * @throws IllegalArgumentException if the index is outside the map
    */
   boolean isSquareSolidForGeese(int x, int y) {
+    checkCoordinatesAreInBounds(x, y);
     return !map[x][y].goosePassable;
   }
 
@@ -119,8 +131,10 @@ public class TileMap {
    * @param tileX the x index, in tiles
    * @param tileY the y index, in tiles
    * @param tile the tile type to place
+   * @throws IllegalArgumentException if the index is outside the map
    */
   void setTileAtSquare(int tileX, int tileY, TileType tile) {
+    checkCoordinatesAreInBounds(tileX, tileY);
     map[tileX][tileY] = tile;
   }
 
@@ -131,8 +145,11 @@ public class TileMap {
    * @param tileY the y index of the tile, in tiles
    * @param tile the tile type to look for
    * @return {@code true} if an orthogonal neighbour is of that type
+   * @throws IllegalArgumentException if the given tile is outside the map; neighbours that fall
+   *     outside the map are ignored
    */
   boolean nextToTileOfGivenType(int tileX, int tileY, TileType tile) {
+    checkCoordinatesAreInBounds(tileX, tileY);
     int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     int size = getMapSizeInSquares();
 
@@ -153,5 +170,18 @@ public class TileMap {
   /** @return the map size in terms of the number of squares in each plane. */
   int getMapSizeInSquares() {
     return map.length;
+  }
+
+  /**
+   * Checks that the given tile index lies within the map.
+   *
+   * @param x the x index, in tiles
+   * @param y the y index, in tiles
+   * @throws IllegalArgumentException if either index is negative or is not less than the map size
+   */
+  private void checkCoordinatesAreInBounds(int x, int y) {
+    if (x < 0 || y < 0 || x >= map.length || y >= map.length) {
+      throw new IllegalArgumentException("The given coordinates are out of bounds.");
+    }
   }
 }
