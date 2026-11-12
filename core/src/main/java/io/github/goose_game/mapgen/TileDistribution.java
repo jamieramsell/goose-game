@@ -21,10 +21,10 @@ public final class TileDistribution {
   public static final Map<TileType, Integer> DEFAULT_DISTRIBUTION =
       new EnumMap<>(
           Map.of(
-              TileType.GRASS, 70,
+              TileType.GRASS, 80,
               TileType.WATER, 10,
-              TileType.BUSH, 10,
-              TileType.BUILDING, 10));
+              TileType.BUSH, 5,
+              TileType.BUILDING, 5));
 
   private static final TileType[] VALUES = TileType.values();
   private final int[] cumulative; // Used for the distribution of each TileType

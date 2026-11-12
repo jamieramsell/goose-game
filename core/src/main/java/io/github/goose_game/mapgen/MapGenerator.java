@@ -3,7 +3,6 @@ package io.github.goose_game.mapgen;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -20,7 +19,7 @@ import java.util.Set;
 public class MapGenerator {
 
   /** The width and height of a single tile, in pixels. */
-  public static final int TILE_SIZE = 16;
+  public static final int TILE_SIZE = 128;
 
   /**
    * The width and height of the (square) map, in pixels. Must be a multiple of {@link #TILE_SIZE}.
@@ -77,10 +76,10 @@ public class MapGenerator {
         for (int y = 0; y < MAP_SIZE / TILE_SIZE; y++) {
           if (map.getTileAtSquare(x, y) == null) {
             // Set the tile at the given square. If next to water, boost this tile's chance of being
-            // a water tile by 75%
+            // a water tile by 200%
             boolean nearWater = map.nextToTileOfGivenType(x, y, TileType.WATER);
             TileType t = nearWater
-                ? distribution.boostedSample(rng, TileType.WATER, 0.75f)
+                ? distribution.boostedSample(rng, TileType.WATER, 2.00f)
                 : distribution.sample(rng);
             map.setTileAtSquare(x, y, t);
           }
