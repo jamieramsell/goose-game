@@ -39,7 +39,6 @@ public class GameScreen extends ScreenAdapter {
   private final TileMap map;
   private final TileMapRenderer renderer;
 
-  private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private Sprite playerTexture;
   private boolean showEntityBounds;
 
@@ -63,7 +62,10 @@ public class GameScreen extends ScreenAdapter {
     this.stickAttackTexture =
         new Animation<>(1, atlas.createSprites("sheet_6_katana_slash"), Animation.PlayMode.NORMAL);
 
-    this.root.add_child("player", new Player(8, 6, 16, 20, atlas, 64, 200, camera));
+    float spawnX = map.getSpawnPosition().x;
+    float spawnY = map.getSpawnPosition().y;
+
+    this.root.add_child("player", new Player(spawnX, spawnY, 16, 20, atlas, 64, 200, camera));
 
     this.root.add_child(
         "enemyManager", new EnemyManager(atlas, (Player) this.root.get_child("player")));
@@ -74,8 +76,7 @@ public class GameScreen extends ScreenAdapter {
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
 
     viewport.setCamera(camera);
-
-    background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+    camera.position.set(spawnX, spawnY, 0);
   }
 
   @Override
@@ -91,13 +92,8 @@ public class GameScreen extends ScreenAdapter {
     viewport.apply();
     batch.setProjectionMatrix(viewport.getCamera().combined);
     batch.begin();
-
-    batch.draw(background, -32 * 64, -32 * 64, 0, 0, 32 * 128, 32 * 128);
-
     renderer.render(batch, camera);
-
     root.draw(batch);
-
     batch.end();
 
     if (showEntityBounds) {
