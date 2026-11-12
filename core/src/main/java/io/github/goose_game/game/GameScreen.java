@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.Node;
@@ -33,17 +34,21 @@ public class GameScreen extends ScreenAdapter {
   private final Animation<Sprite> stickAttackTexture;
   private final Node root = new Node(0, 0, 0, 0);
   private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
+
+  private final TileMap map;
+
   private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private Sprite playerTexture;
   private boolean showEntityBounds;
 
   Node player;
 
-  public GameScreen(Main game, GameStateManager stateManager) {
+  public GameScreen(Main game, GameStateManager stateManager, TileMap map) {
     this.game = game;
     this.stateManager = stateManager;
     this.batch = game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
+    this.map = map;
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);

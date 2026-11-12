@@ -1,8 +1,11 @@
 package io.github.goose_game.state;
 
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
+import io.github.goose_game.mapgen.MapGenerator;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.menu.CreditsPage;
 import io.github.goose_game.menu.GameGenerationPage;
 import io.github.goose_game.menu.MainMenu;
@@ -75,10 +78,23 @@ public class GameStateManager {
           "Illegal transition: GameState.GENERATION is not currently accessible");
     }
 
-    game.setScreen(new GameGenerationPage(game));
+    // Screen & state management
+    Screen loadingScreen = new GameGenerationPage(game);
+    game.setScreen(loadingScreen);
     gameState = GameState.GENERATION;
-
     currentScreen.dispose();
+
+    // Now generate the map
+    long longSeed = seed.isBlank() ? (long) Math.random() : (long) seed.hashCode();
+    MapGenerator generator = new MapGenerator();
+    TileMap map = generator.generate(longSeed);
+
+    // Finally, draw the map and update state once more
+    game.setScreen(new GameScreen(game, this, map));
+    gameState = GameState.GAME;
+    loadingScreen.dispose();
+
+    // Garbage collect (you never know lol)
     pausedGameGarbageCollector();
   }
 
