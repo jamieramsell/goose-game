@@ -104,7 +104,6 @@ public class MapGenerator {
    */
   public boolean isMapPassable(TileMap map) {
     Set<TilePosition> pointsOfInterest = Set.copyOf(map.getAllPointsOfInterest().values());
-
     if (pointsOfInterest.size() < 1) {
       throw new IllegalStateException("A map was given with no points of interest");
     } else if (pointsOfInterest.size() == 1) {

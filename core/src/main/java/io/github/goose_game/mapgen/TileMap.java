@@ -3,8 +3,6 @@ package io.github.goose_game.mapgen;
 import com.badlogic.gdx.math.Vector2;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * A square grid of {@link TileType}s making up the game world.
