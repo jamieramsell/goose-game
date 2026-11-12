@@ -57,38 +57,16 @@ public class MainMenu extends ScreenAdapter {
     this.batch = game.getBatch();
 
     // Game title
-    Label title =
-        new Label("Flock n Load", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    Label title = getTitle();
 
     // Play button
-    TextButton play = new TextButton("Play", skin);
-    play.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent event, Actor actor) {
-            stateManager.play(MainMenu.this);
-          }
-        });
+    TextButton play = getPlayButton();
 
     // Credits button
-    TextButton credits = new TextButton("Credits", skin);
-    credits.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent event, Actor actor) {
-            stateManager.credits(MainMenu.this);
-          }
-        });
+    TextButton credits = getCreditsButton();
 
     // Quit button
-    TextButton quit = new TextButton("Quit", skin);
-    quit.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent event, Actor actor) {
-            Gdx.app.exit();
-          }
-        });
+    TextButton quit = getQuitButton();
 
     // Menu layout
     Table table = new Table();
@@ -110,6 +88,46 @@ public class MainMenu extends ScreenAdapter {
             Actions.sequence( // gentle bobbing title
                 Actions.moveBy(0, 6, 1.5f, Interpolation.sine),
                 Actions.moveBy(0, -6, 1.5f, Interpolation.sine))));
+  }
+
+  private Label getTitle() {
+    return new Label("Flock n Load", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+  }
+
+  private TextButton getPlayButton() {
+    TextButton play = new TextButton("Play", skin);
+    play.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            stateManager.play(MainMenu.this);
+          }
+        });
+    return play;
+  }
+
+  private TextButton getCreditsButton() {
+    TextButton credits = new TextButton("Credits", skin);
+    credits.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            stateManager.credits(MainMenu.this);
+          }
+        });
+    return credits;
+  }
+
+  private TextButton getQuitButton() {
+    TextButton quit = new TextButton("Quit", skin);
+    quit.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            Gdx.app.exit();
+          }
+        });
+    return quit;
   }
 
   @Override
