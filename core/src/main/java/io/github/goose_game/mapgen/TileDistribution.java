@@ -16,7 +16,7 @@ import java.util.Random;
 public final class TileDistribution {
 
   /**
-   * The default weights for map generation, which are 70 grass, and 10 each of water, bushes and
+   * The default weights for map generation, which are 80 grass, 10 water, and 5 each of bushes and
    * buildings. The default distribution cannot contain any values of POIs.
    */
   public static final Map<TileType, Integer> DEFAULT_DISTRIBUTION =
