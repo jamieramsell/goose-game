@@ -80,7 +80,7 @@ public class TileMap {
     return !map[x][y].goosePassable;
   }
 
-  private int mapPixelToSquare(int pixel) {
+  int mapPixelToSquare(int pixel) {
     return pixel / MapGenerator.TILE_SIZE;
   }
 
