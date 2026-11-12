@@ -21,9 +21,18 @@ public enum TileType {
   /** An impassible tile occupied by vegetation. */
   BUSH(false, false);
 
+  /** Whether the player can walk over this tile. */
   public final boolean playerPassable;
+
+  /** Whether geese can move over this tile. */
   public final boolean goosePassable;
 
+  /**
+   * Creates a tile type.
+   *
+   * @param playerPassable whether the player can walk over this tile
+   * @param goosePassable whether geese can move over this tile
+   */
   private TileType(boolean playerPassable, boolean goosePassable) {
     this.playerPassable = playerPassable;
     this.goosePassable = goosePassable;
