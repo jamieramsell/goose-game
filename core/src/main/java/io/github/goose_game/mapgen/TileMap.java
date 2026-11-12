@@ -116,4 +116,9 @@ public class TileMap {
 
     return false;
   }
+
+  /** @return the map size in terms of the number of squares in each plane. */
+  int getMapSizeInSquares() {
+    return map.length;
+  }
 }
