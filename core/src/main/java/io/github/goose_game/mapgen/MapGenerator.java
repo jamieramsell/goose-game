@@ -1,6 +1,11 @@
 package io.github.goose_game.mapgen;
 
+import java.util.ArrayDeque;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Random;
+import java.util.Set;
 
 /**
  * Generates a random {@link TileMap} from a seed.
@@ -33,9 +38,10 @@ public class MapGenerator {
    * Generates a map for the given seed.
    *
    * @param seed the seed for the random number generator; equal seeds yield equal maps
-   * @return the generated map, with every tile set
+   * @return the generated map, with every tile set, or an empty {@link Optional} if the given seed
+   *     is not valid.
    */
-  public TileMap generate(long seed) {
+  public Optional<TileMap> generate(long seed) {
     TileMap map = new TileMap(MAP_SIZE);
     Random rng = new Random(seed);
 
@@ -76,8 +82,91 @@ public class MapGenerator {
       }
     }
 
-    // TODO: validate that a clear path exists between the spawn and escape points.
+    // Validate that a clear path exists between the spawn and escape points.
+    int[] spawnPoint = {spawnX, spawnY};
+    int[] escapePoint = {escapeX, escapeY};
+    int[][] pois = {spawnPoint, escapePoint};
 
-    return map;
+    if (isMapPassable(map, pois)) {
+      return Optional.of(map);
+    } else {
+      return Optional.empty();
+    }
+  }
+
+  /** A pair of tile indices used as a set element. */
+  private record IntTuple(int x, int y) {}
+
+  /**
+   * Checks that every given point of interest can be reached from the first one by walking over
+   * tiles the player can pass through, moving only up, down, left and right.
+   *
+   * <p>This is a breadth-first flood fill starting from the first point. Because walking is
+   * symmetric, if every point is reachable from the first, then all points are connected to each
+   * other.
+   *
+   * @param map the map to search
+   * @param pointsOfInterest the points to connect, each given as a two-element array of {@code {x,
+   *     y}} tile indices, such as the spawn point and the escape point
+   * @return {@code true} if every point of interest is reachable from the first
+   * @throws IllegalArgumentException if fewer than two points are given
+   */
+  public boolean isMapPassable(TileMap map, int[][] pointsOfInterest) {
+    if (pointsOfInterest.length < 2) {
+      throw new IllegalArgumentException("pointsOfInterest must contain at least two coordinates");
+    }
+    
+    int size = map.getMapSizeInSquares();
+    boolean[][] visited = new boolean[size][size];
+
+    // Create a set of unvisited POIs; select the starting point
+    IntTuple startPoi = new IntTuple(pointsOfInterest[0][0], pointsOfInterest[0][1]);
+    Set<IntTuple> remainingPois = new HashSet<>(
+        Arrays.stream(pointsOfInterest)
+        .map(array -> new IntTuple(array[0], array[1]))
+        .toList()
+    ); 
+    remainingPois.remove(startPoi); // Removed after conversion to a set to ensure no duplicates
+
+    // Begin from the startPoi
+    ArrayDeque<IntTuple> queue = new ArrayDeque<>();
+    visited[startPoi.x][startPoi.y] = true;
+    queue.add(startPoi);
+
+    // Flood fill algorithm
+    while (queue.size() != 0) {
+      IntTuple currentNode = queue.poll(); // Select node at the head of the queue
+      remainingPois.remove(currentNode); // This is a no-op if currentNode isn't in remainingPois
+      if (remainingPois.size() == 0) {
+        return true; // All POIs have been visited; the map is therefore passable
+      }
+
+      int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+      for (int[] offset : offsets) {
+        int dx = currentNode.x + offset[0];
+        int dy = currentNode.y + offset[1];
+
+        // If target square is out of bounds, skip it
+        if (dx < 0 || dy < 0 || dx > size || dy > size) {
+          continue; 
+        }
+        // If the target square hasnt yet been visited, and is passable by players, the mark it as 
+        // visited, and add it to the queue
+        else if (!visited[dx][dy] && !map.isSquareSolidForPlayer(dx, dy)) {
+          visited[dx][dy] = true;
+          queue.add(new IntTuple(dx, dy));
+        }
+      }
+    }
+    
+    // If this point is reached, then all reachable squares have been exhaused, but there still
+    // remains some POIs to visit.
+    if (remainingPois.size() == 0) {
+      throw new IllegalStateException("Algorithm has managed to terminate, despite all POIs having"
+          + " been reached."
+      );
+    }
+
+    return false;
   }
 }
