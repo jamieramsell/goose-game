@@ -147,7 +147,7 @@ public class MapGenerator {
         int dy = currentNode.y + offset[1];
 
         // If target square is out of bounds, skip it
-        if (dx < 0 || dy < 0 || dx > size || dy > size) {
+        if (dx < 0 || dy < 0 || dx >= size || dy >= size) {
           continue; 
         }
         // If the target square hasnt yet been visited, and is passable by players, the mark it as 

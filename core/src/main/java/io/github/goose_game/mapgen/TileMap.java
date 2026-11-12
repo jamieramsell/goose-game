@@ -140,9 +140,9 @@ public class TileMap {
       int dx = tileX + offset[0];
       int dy = tileY + offset[1];
 
-      if (dx < 0 || dy < 0 || dx > size || dy > size) {
+      if (dx < 0 || dy < 0 || dx >= size || dy >= size) {
         continue; // If current square is out of bounds, skip it
-      } else if (getTileAtSquare(tileX + dx, tileY + dy).equals(tile)) {
+      } else if (getTileAtSquare(dx, dy).equals(tile)) {
         return true;
       }
     }
