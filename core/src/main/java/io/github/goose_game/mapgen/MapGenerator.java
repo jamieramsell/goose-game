@@ -38,60 +38,65 @@ public class MapGenerator {
    * Generates a map for the given seed.
    *
    * @param seed the seed for the random number generator; equal seeds yield equal maps
-   * @return the generated map, with every tile set, or an empty {@link Optional} if the given seed
-   *     is not valid.
+   * @return the generated map, with every tile set
    */
-  public Optional<TileMap> generate(long seed) {
-    TileMap map = new TileMap(MAP_SIZE);
+  public TileMap generate(long seed) {
     Random rng = new Random(seed);
 
-    // Create spawn point. Note that the +1, -2 values ensure that the 3x3 patch fit wholly within
-    // the map
-    int spawnX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2); 
-    int spawnY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+    // Keep generating maps until one is found which is passable. Doing this inside this loop, with
+    // the same rng, means that seeds are deterministic; even if a given seed isn't valid on the
+    // first go, it will be used again to try and find another layout.
+    while (true) {
+      TileMap map = new TileMap(MAP_SIZE);
+      
+      // Create spawn point. Note that the +1, -2 values ensure that the 3x3 patch fit wholly within
+      // the map
+      int spawnX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2); 
+      int spawnY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
 
-    for (int x = -1; x < 2; x++) {
-      for (int y = -1; y < 2; y++) {
-        map.setTileAtSquare(spawnX + x, spawnY + y, TileType.GRASS);
-      }
-    }
-    map.setTileAtSquare(spawnX, spawnY, TileType.SPAWN);
-
-    // Create escape point
-    int escapeX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
-    int escapeY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
-
-    for (int x = -1; x < 2; x++) {
-      for (int y = -1; y < 2; y++) {
-        map.setTileAtSquare(escapeX + x, escapeY + y, TileType.GRASS);
-      }
-    }
-    map.setTileAtSquare(escapeX, escapeY, TileType.ESCAPE);
-
-    // Generate the rest of the map
-    for (int x = 0; x < MAP_SIZE / TILE_SIZE; x++) {
-      for (int y = 0; y < MAP_SIZE / TILE_SIZE; y++) {
-        if (map.getTileAtSquare(x, y) == null) {
-          // Set the tile at the given square. If next to water, boost this tile's chance of being
-          // a water tile by 75%
-          boolean nearWater = map.nextToTileOfGivenType(x, y, TileType.WATER);
-          TileType t = nearWater
-              ? distribution.boostedSample(rng, TileType.WATER, 0.75f)
-              : distribution.sample(rng);
-          map.setTileAtSquare(x, y, t);
+      for (int x = -1; x < 2; x++) {
+        for (int y = -1; y < 2; y++) {
+          map.setTileAtSquare(spawnX + x, spawnY + y, TileType.GRASS);
         }
       }
-    }
+      map.setTileAtSquare(spawnX, spawnY, TileType.SPAWN);
 
-    // Validate that a clear path exists between the spawn and escape points.
-    int[] spawnPoint = {spawnX, spawnY};
-    int[] escapePoint = {escapeX, escapeY};
-    int[][] pois = {spawnPoint, escapePoint};
+      // Create escape point
+      int escapeX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+      int escapeY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
 
-    if (isMapPassable(map, pois)) {
-      return Optional.of(map);
-    } else {
-      return Optional.empty();
+      for (int x = -1; x < 2; x++) {
+        for (int y = -1; y < 2; y++) {
+          map.setTileAtSquare(escapeX + x, escapeY + y, TileType.GRASS);
+        }
+      }
+      map.setTileAtSquare(escapeX, escapeY, TileType.ESCAPE);
+
+      // Generate the rest of the map
+      for (int x = 0; x < MAP_SIZE / TILE_SIZE; x++) {
+        for (int y = 0; y < MAP_SIZE / TILE_SIZE; y++) {
+          if (map.getTileAtSquare(x, y) == null) {
+            // Set the tile at the given square. If next to water, boost this tile's chance of being
+            // a water tile by 75%
+            boolean nearWater = map.nextToTileOfGivenType(x, y, TileType.WATER);
+            TileType t = nearWater
+                ? distribution.boostedSample(rng, TileType.WATER, 0.75f)
+                : distribution.sample(rng);
+            map.setTileAtSquare(x, y, t);
+          }
+        }
+      }
+
+      // Validate that a clear path exists between the spawn and escape points.
+      int[] spawnPoint = {spawnX, spawnY};
+      int[] escapePoint = {escapeX, escapeY};
+      int[][] pois = {spawnPoint, escapePoint};
+
+      if (isMapPassable(map, pois)) {
+        return map;
+      } else {
+        continue;
+      }
     }
   }
 
