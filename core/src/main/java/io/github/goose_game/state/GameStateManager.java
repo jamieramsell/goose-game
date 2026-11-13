@@ -1,10 +1,17 @@
 package io.github.goose_game.state;
 
+import java.util.Random;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
+import io.github.goose_game.mapgen.MapGenerator;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.menu.CreditsPage;
 import io.github.goose_game.menu.GameLostPage;
+import io.github.goose_game.menu.GameGenerationPage;
 import io.github.goose_game.menu.MainMenu;
 import io.github.goose_game.menu.PauseMenu;
 import io.github.goose_game.menu.VictoryPage;
@@ -60,6 +67,73 @@ public class GameStateManager {
   }
 
   /**
+   * Transitions to {@link GameState#GENERATION}, showing a {@link GameGenerationPage} while a new
+   * map is generated.
+   *
+   * <p>This is the first step of starting a new game; the generation screen leads on to {@link
+   * GameState#GAME}. Any paused game is discarded.
+   *
+   * @param currentScreen the screen being left; disposed after the new screen is set
+   * @param seed the (nullable) seed to use to generate the map
+   * @throws IllegalArgumentException if map generation cannot be started from the current state
+   */
+  public void startNewGame(Disposable currentScreen, String seed) {
+    if (!GameStateGraph.canTransition(gameState, GameState.GENERATION)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.GENERATION is not currently accessible");
+    }
+
+    // Screen & state management
+    Screen loadingScreen = new GameGenerationPage(game);
+    game.setScreen(loadingScreen);
+    gameState = GameState.GENERATION;
+    currentScreen.dispose();
+
+    // Parse map seed
+    long longSeed;
+    if (seed == null || seed.isBlank()) {
+      longSeed = new Random().nextLong();
+    } else {
+      longSeed = seed.hashCode();
+    }
+   
+    // Don't use the GDX thread to generate the map
+    Thread worker = new Thread(() -> {
+      // Now generate the map
+      MapGenerator generator = new MapGenerator();
+      TileMap map = generator.generate(longSeed);
+
+      // Return to GDX thread once map has been generated in order to draw it
+      Gdx.app.postRunnable(() -> {
+        // Finally, draw the map and update state once more
+        game.setScreen(new GameScreen(game, this, map));
+        gameState = GameState.GAME;
+        loadingScreen.dispose();
+
+        // Garbage collect (you never know lol)
+        pausedGameGarbageCollector();
+      });
+    });
+    
+    worker.setDaemon(true); // Kill the worker thread if the window is quit mid session
+    worker.start();
+  }
+
+  /**
+   * Transitions to {@link GameState#GENERATION}, showing a {@link GameGenerationPage} while a new
+   * map is generated, using a random seed.
+   *
+   * <p>This is the first step of starting a new game; the generation screen leads on to {@link
+   * GameState#GAME}. Any paused game is discarded.
+   *
+   * @param currentScreen the screen being left; disposed after the new screen is set
+   * @throws IllegalArgumentException if map generation cannot be started from the current state
+   */
+  public void startNewGame(Disposable currentScreen) {
+    startNewGame(currentScreen, null);
+  }
+
+  /**
    * Transitions to {@link GameState#GAME}, either starting a new {@link GameScreen}, or resuming
    * from where the game left off.
    *
@@ -81,7 +155,7 @@ public class GameStateManager {
         pausedGame = null;
         break;
       default:
-        game.setScreen(new GameScreen(game, this));
+        startNewGame(currentScreen, null);;
         break;
     }
 

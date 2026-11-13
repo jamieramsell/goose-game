@@ -5,25 +5,32 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import io.github.goose_game.mapgen.MapGenerator;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 import java.util.function.Consumer;
 
 public class Enemy extends Node {
+  private final TileMap map;
+  private final EnemyManager enemyManager;
   Player target;
+
+  private int health;
+  private int maxHealth;
   float speed;
   Vector2 target_pos;
   Vector2 velocity = new Vector2(0, 0);
+
   private Array<Animation<Sprite>> animations;
+  private float frame;
+
   float damage;
   int attackCounter;
   int attackDelay;
-  private float frame;
+  
   boolean fleeing = false;
-  private int health;
-  private int maxHealth;
   private int i = 0;
   private final float spriteScale;
   private final boolean despawnOnDefeat;
@@ -36,74 +43,19 @@ public class Enemy extends Node {
       float height,
       TextureAtlas atlas,
       Player target,
-      float speed,
-      float damage,
-      int attackDelay,
-      int health) {
-    this(x, y, width, height, atlas, target, speed, damage, attackDelay, health, 1f, false);
-  }
-
-  public Enemy(
-      float x,
-      float y,
-      float width,
-      float height,
-      TextureAtlas atlas,
-      Player target,
-      float speed,
-      float damage,
-      int attackDelay,
-      int health,
-      float spriteScale) {
-    this(
-        x, y, width, height, atlas, target, speed, damage, attackDelay, health, spriteScale, false);
-  }
-
-  public Enemy(
-      float x,
-      float y,
-      float width,
-      float height,
-      TextureAtlas atlas,
-      Player target,
-      float speed,
-      float damage,
-      int attackDelay,
-      int health,
-      float spriteScale,
-      boolean despawnOnDefeat) {
-    this(
-        x,
-        y,
-        width,
-        height,
-        atlas,
-        target,
-        speed,
-        damage,
-        attackDelay,
-        health,
-        spriteScale,
-        despawnOnDefeat,
-        enemy -> {});
-  }
-
-  public Enemy(
-      float x,
-      float y,
-      float width,
-      float height,
-      TextureAtlas atlas,
-      Player target,
+      TileMap map,
+      EnemyManager enemyManager,
       float speed,
       float damage,
       int attackDelay,
       int health,
       float spriteScale,
       boolean despawnOnDefeat,
-      Consumer<Enemy> onDispersed) {
+      Consumer<Enemy> onDispersed
+  ) {
     super(x, y, width, height);
     this.target = target;
+    this.enemyManager = enemyManager;
     this.speed = speed;
     this.damage = damage;
     this.attackCounter = 0;
@@ -115,6 +67,7 @@ public class Enemy extends Node {
     this.despawnOnDefeat = despawnOnDefeat;
     this.onDispersed = onDispersed;
     this.animations = new Array<>();
+    this.map = map;
 
     String[] directions = {"Left", "Right"};
     for (int i = 0; i < 4; i++) {
@@ -144,6 +97,7 @@ public class Enemy extends Node {
       System.out.println("Quack!");
       this.attackCounter += 1;
     }
+    
     Vector2 dir = new Vector2(target_pos.x - position.x, target_pos.y - position.y);
     dir.nor();
     if (fleeing) {
@@ -158,8 +112,7 @@ public class Enemy extends Node {
           return;
         }
         fleeing = false;
-        position.x = target.position.x + new int[] {-1, 1}[MathUtils.random(0, 1)] * 320;
-        position.y = target.position.y + new int[] {-1, 1}[MathUtils.random(0, 1)] * 320;
+        enemyManager.teleportEnemyNearPlayer(this);
         health = maxHealth;
       }
     }
@@ -188,9 +141,46 @@ public class Enemy extends Node {
       velocity.y *= 1.1F;
     }
 
-    position.x += velocity.x * delta;
-    position.y += velocity.y * delta;
+    float targetX = position.x + velocity.x * delta;
+    float targetY = position.y + velocity.y * delta;
+
+    /*
+     * Validate that each direction is within bounds, unless the goose is fleeing. Fleeing geese can 
+     * go anywhere.
+     *
+     * Dev note: this is done seperately so that, for example, if the goose is moving downwards and
+     * to the right when there is a wall on their right hand side, they still move downwards, rather
+     * than not at all.
+     *
+     * When a goose collides with a wall, reset velocity in that direction to prevent a 'sticky
+     * wall' effect, where the goose cannot move as their velocity is still positive in the
+     * direction of the wall.
+     */
+    if (fleeing) {
+      position.x = targetX;
+      position.y = targetY;
+      super.update(delta);
+      return;
+    }
+    
+    if (isTargetPosInBounds(targetX) && !map.isPixelSolidForGeese((int) targetX, (int) position.y)) {
+      position.x = targetX;
+    } else {
+      velocity.x = 0;
+    }
+
+    if (isTargetPosInBounds(targetY) && !map.isPixelSolidForGeese((int) position.x, (int) targetY)) {
+      position.y = targetY;
+    } else {
+      velocity.y = 0;
+    }
+
     super.update(delta);
+  }
+
+  private boolean isTargetPosInBounds(float target) {
+    int mapSize = MapGenerator.MAP_SIZE;
+    return !(target < 0 || target > mapSize - 1);
   }
 
   @Override
@@ -236,4 +226,5 @@ public class Enemy extends Node {
   public int getDispersalScore() {
     return despawnOnDefeat ? 50 : 10;
   }
+
 }

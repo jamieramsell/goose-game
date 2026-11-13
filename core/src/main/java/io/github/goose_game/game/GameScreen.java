@@ -21,6 +21,8 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
+import io.github.goose_game.mapgen.TileMap;
+import io.github.goose_game.mapgen.TileMapRenderer;
 import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
@@ -65,13 +67,16 @@ public class GameScreen extends ScreenAdapter {
   // Scene & Rendering
   private final Skin skin;
   private final Node root = new Node(0, 0, 0, 0);
-  private final EnemyManager enemyManager;
-  private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
+
+  private final TileMap map;
+  private final TileMapRenderer renderer;
+
   private Sprite playerTexture;
   private final Animation<Sprite> stickAttackTexture;
   Node player;
 
   // Game state
+  private EnemyManager enemyManager;
   private boolean largeEnemySpawned;
   private float remainingTime = GAME_DURATION_SECONDS;
   private float attackMessageTime;
@@ -88,11 +93,12 @@ public class GameScreen extends ScreenAdapter {
    *
    * @param game application instance providing the shared sprite batch
    * @param stateManager the current {@link GameStateManager} instance
+   * @param map the generated map of the game
    */
-  public GameScreen(Main game, GameStateManager stateManager) {
+  public GameScreen(Main game, GameStateManager stateManager, TileMap map) {
     this.game = game;
     this.stateManager = stateManager;
-    this.batch = game.getBatch();
+    this.batch = this.game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
     this.skin = DefaultSkin.getSkin();
 
@@ -119,6 +125,9 @@ public class GameScreen extends ScreenAdapter {
     attackTable.add(attackLabel);
     hudStage.addActor(attackTable);
 
+    this.map = map;
+    this.renderer = new TileMapRenderer(this.map);
+
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
@@ -128,20 +137,22 @@ public class GameScreen extends ScreenAdapter {
     this.stickAttackTexture =
         new Animation<>(1, atlas.createSprites("sheet_6_katana_slash"), Animation.PlayMode.NORMAL);
 
-    this.root.add_child("player", new Player(8, 6, 16, 20, atlas, 64, 200, camera));
+    float spawnX = map.getSpawnPosition().x;
+    float spawnY = map.getSpawnPosition().y;
+
+    this.root.add_child("player", new Player(spawnX, spawnY, 16, 20, atlas, map, 64, 200, camera));
 
     enemyManager =
-        new EnemyManager(atlas, (Player) this.root.get_child("player"), this::onEnemyDispersed);
+        new EnemyManager(atlas, (Player) this.root.get_child("player"), map, this::onEnemyDispersed);
     this.root.add_child("enemyManager", enemyManager);
-
+    
     this.root
         .get_child("player")
         .add_child(
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
 
     viewport.setCamera(camera);
-
-    background.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.Repeat);
+    camera.position.set(spawnX, spawnY, 0);
   }
 
   @Override
@@ -158,8 +169,7 @@ public class GameScreen extends ScreenAdapter {
     viewport.apply();
     batch.setProjectionMatrix(viewport.getCamera().combined);
     batch.begin();
-
-    batch.draw(background, -32 * 64, -32 * 64, 0, 0, 32 * 128, 32 * 128);
+    renderer.render(batch, camera);
     root.draw(batch);
     drawScorePopups();
 
@@ -330,6 +340,7 @@ public class GameScreen extends ScreenAdapter {
   public void dispose() {
     debugShapeRenderer.dispose();
     hudStage.dispose();
+    renderer.dispose();
   }
 
   /** Text showing points earned at a world position. */

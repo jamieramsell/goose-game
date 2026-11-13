@@ -1,11 +1,13 @@
 package io.github.goose_game.game;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import io.github.goose_game.mapgen.MapGenerator;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.Random;
 
 /**
  * Node responsible for spawning and tracking {@link Enemy} instances.
@@ -18,9 +20,12 @@ public class EnemyManager extends Node {
 
   private final TextureAtlas atlas;
   private final Player player;
+  private final TileMap map;
+  private final Random rng;
 
   /** Timer used for wave scheduling. */
   int wave_timer;
+
   /** Number of waves spawned so far. Each wave adds one extra enemy. */
   int waves = 0;
 
@@ -30,16 +35,16 @@ public class EnemyManager extends Node {
   /** Running count of enemies spawned, used to generate unique child names. */
   int enemyCounter = 0;
 
-  /**
-   * Creates an enemy manager and immediately spawns the first wave.
-   *
-   * @param atlas texture atlas used to render enemies
-   * @param player the player that enemies target and spawn around
-   * @param onEnemyDispersed callback invoked when a spawned enemy is dispersed
-   */
-  public EnemyManager(TextureAtlas atlas, Player player, Consumer<Enemy> onEnemyDispersed) {
+  public EnemyManager(
+      TextureAtlas atlas,
+      Player player,
+      TileMap map,
+      Consumer<Enemy> onEnemyDispersed
+  ) {
     this.atlas = atlas;
     this.player = player;
+    this.map = map;
+    this.rng = new Random(map.seed);
     this.onEnemyDispersed = onEnemyDispersed;
     spawnWave();
   }
@@ -55,7 +60,7 @@ public class EnemyManager extends Node {
 
   /** Spawns a single standard enemy (small, 100 health) near the player. */
   public void spawnEnemy() {
-    // Positional values are assigned by addEnemyNearPlayer(), these are temporary
+    // Positional values are assigned by teleportEnemyNearPlayer(), these are temporary
     float x = 1000;
     float y = 1000;
 
@@ -77,6 +82,8 @@ public class EnemyManager extends Node {
             gooseHeight,
             atlas,
             player,
+            map,
+            this,
             speed,
             damage,
             attackDelay,
@@ -85,7 +92,10 @@ public class EnemyManager extends Node {
             despawnOnDefeat,
             onEnemyDispersed);
 
-    addEnemyNearPlayer(enemy);
+    teleportEnemyNearPlayer(enemy);
+
+    enemyCounter += 1;
+    add_child(String.valueOf(enemyCounter), enemy);
   }
 
   /**
@@ -93,7 +103,7 @@ public class EnemyManager extends Node {
    * longer attack delay, and despawn when defeated.
    */
   public void spawnLargeEnemy() {
-    // Positional values are assigned by addEnemyNearPlayer(), these are temporary
+    // Positional values are assigned by teleportEnemyNearPlayer(), these are temporary
     float x = 1000;
     float y = 1000;
 
@@ -115,6 +125,8 @@ public class EnemyManager extends Node {
             gooseHeight,
             atlas,
             player,
+            map,
+            this,
             speed,
             damage,
             attackDelay,
@@ -123,26 +135,44 @@ public class EnemyManager extends Node {
             despawnOnDefeat,
             onEnemyDispersed);
 
-    addEnemyNearPlayer(enemy);
-  }
-
-  /**
-   * Positions the enemy at a random angle and a distance of 360-370 units from the player, then
-   * adds it as a child of this node.
-   *
-   * @param enemy the enemy to position and register
-   */
-  private void addEnemyNearPlayer(Enemy enemy) {
-    int rndDir = MathUtils.random(0, 360);
-    int rndDist = MathUtils.random(360, 370);
-    Vector2 randomRotatedVector = new Vector2(1, 0).rotateDeg(rndDir);
-    randomRotatedVector.scl(rndDist);
-    System.out.println(randomRotatedVector);
-    enemy.position.x = player.position.x + randomRotatedVector.x;
-    enemy.position.y = player.position.y + randomRotatedVector.y;
+    teleportEnemyNearPlayer(enemy);
 
     enemyCounter += 1;
     add_child(String.valueOf(enemyCounter), enemy);
+  }
+
+  /**
+   * Positions the enemy at a random angle and a distance of 360-370 units from the player.
+   *
+   * @param enemy the enemy to position
+   */
+  public void teleportEnemyNearPlayer(Enemy enemy) {
+    float targetX;
+    float targetY;
+  
+    while (true) { // Find a random point near the player until one is found which is passable by geese
+      // Seeded random ensures geese spawn in the same place every time on the same seed
+      int rndDir = rng.nextInt(360);
+      int rndDist = rng.nextInt(360, 370);
+
+      Vector2 randomRotatedVector = new Vector2(1, 0).rotateDeg(rndDir);
+      randomRotatedVector.scl(rndDist);
+
+      targetX = player.position.x + randomRotatedVector.x;
+      targetY = player.position.y + randomRotatedVector.y;
+
+      int mapSize = MapGenerator.MAP_SIZE;
+      if (targetX <= 0 || targetY <= 0 || targetX >= mapSize || targetY >= mapSize) {
+        continue; // Goose is out of bounds, try again
+      }
+
+      if (!(map.isPixelSolidForGeese((int) targetX, (int) targetY))) {
+        break;
+      }
+    }
+
+    enemy.position.x = targetX;
+    enemy.position.y = targetY;
   }
 
   /**
