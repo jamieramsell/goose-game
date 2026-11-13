@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class EnemyManager extends Node {
-  int wave_timer;
-  int waves = 0;
+
   private final TextureAtlas atlas;
   private final Player player;
+
+  int wave_timer;
+  int waves = 0;
+
   private final Consumer<Enemy> onEnemyDispersed;
   int enemyCounter = 0;
 
@@ -31,14 +34,70 @@ public class EnemyManager extends Node {
   }
 
   public void spawnEnemy() {
+    // Positional values are assigned by addEnemyNearPlayer(), these are temporary
+    float x = 1000;
+    float y = 1000;
+
+    float gooseWidth = 20;
+    float gooseHeight = 20;
+    float spriteScale = 2;
+
+    float speed = 20;
+    float damage = 20;
+    int attackDelay = 20;
+    int health = 100;
+    boolean despawnOnDefeat = false;
+
     Enemy enemy =
-        new Enemy(1000, 1000, 20, 20, atlas, player, 20, 20, 270, 100, 1f, false, onEnemyDispersed);
+        new Enemy(
+            x,
+            y,
+            gooseWidth,
+            gooseHeight,
+            atlas,
+            player,
+            speed,
+            damage,
+            attackDelay,
+            health,
+            spriteScale,
+            despawnOnDefeat,
+            onEnemyDispersed);
+
     addEnemyNearPlayer(enemy);
   }
 
   public void spawnLargeEnemy() {
+    // Positional values are assigned by addEnemyNearPlayer(), these are temporary
+    float x = 1000;
+    float y = 1000;
+
+    float gooseWidth = 40;
+    float gooseHeight = 40;
+    float spriteScale = 2;
+
+    float speed = 20;
+    float damage = 30;
+    int attackDelay = 270;
+    int health = 200;
+    boolean despawnOnDefeat = true;
+
     Enemy enemy =
-        new Enemy(1000, 1000, 40, 40, atlas, player, 20, 30, 270, 200, 2f, true, onEnemyDispersed);
+        new Enemy(
+            x,
+            y,
+            gooseWidth,
+            gooseHeight,
+            atlas,
+            player,
+            speed,
+            damage,
+            attackDelay,
+            health,
+            spriteScale,
+            despawnOnDefeat,
+            onEnemyDispersed);
+
     addEnemyNearPlayer(enemy);
   }
 
