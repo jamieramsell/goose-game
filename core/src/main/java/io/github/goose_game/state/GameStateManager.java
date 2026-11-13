@@ -4,6 +4,7 @@ import com.badlogic.gdx.utils.Disposable;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.menu.CreditsPage;
+import io.github.goose_game.menu.GameLostPage;
 import io.github.goose_game.menu.MainMenu;
 import io.github.goose_game.menu.PauseMenu;
 
@@ -123,6 +124,8 @@ public class GameStateManager {
       throw new IllegalArgumentException(
           "Illegal transition: GameState.PAUSED is not currently" + " accessible");
     }
+    pausedGameGarbageCollector();
+
     gameState = GameState.PAUSED;
     pausedGame = gameScreen;
     game.setScreen(new PauseMenu(game, this, gameScreen));
@@ -138,14 +141,26 @@ public class GameStateManager {
     gameState = GameState.VICTORY;
   }
 
-  /** Transitions the active game to loss without replacing its screen. */
-  public void lose() {
+  /**
+   * Transitions to {@link GameState#LOST}, showing a {@link GameLostPage} over the running game.
+   *
+   * <p>The game screen is not disposed. It is kept so it can be drawn behind the 'game over' menu,
+   * instead being disposed when the player leaves the game instead.
+   *
+   * @param gameScreen the running game screen
+   * @throws IllegalArgumentException if the game cannot be lost from the current state
+   */
+  public void lose(GameScreen gameScreen) {
     if (!GameStateGraph.canTransition(gameState, GameState.LOST)) {
       throw new IllegalArgumentException(
-          "Illegal transition: GameState.LOST is not currently" + " accessible");
+          "Illegal transition: GameState.LOST is not currently accessible");
     }
 
+    pausedGameGarbageCollector();
+    
     gameState = GameState.LOST;
+    pausedGame = gameScreen;
+    game.setScreen(new GameLostPage(game, this, gameScreen));
   }
 
   /**

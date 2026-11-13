@@ -59,16 +59,14 @@ public class GameScreen extends ScreenAdapter {
   private final BitmapFont scoreFont = new BitmapFont();
   private final BitmapFont scorePopupFont = new BitmapFont();
   private final Skin victorySkin = DefaultSkin.getSkin();
-  
+
   private final Label timerLabel;
   private final Label scoreLabel;
   private final Label escapedLabel;
-  private final Label gameOverLabel;
   private final Label victoryScoreLabel;
   private final Label attackLabel;
   private final Image endScreenOverlay;
   private final TextButton victoryMenuButton;
-  private final TextButton gameOverMenuButton;
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
 
   // Scene & Rendering
@@ -106,7 +104,6 @@ public class GameScreen extends ScreenAdapter {
     timerLabel = new Label("", new Label.LabelStyle(timerFont, Color.WHITE));
     scoreLabel = new Label("Score: 0", new Label.LabelStyle(scoreFont, Color.WHITE));
     escapedLabel = new Label("You escaped!", new Label.LabelStyle(victoryFont, Color.WHITE));
-    gameOverLabel = new Label("Swarmed by geese!", new Label.LabelStyle(gameOverFont, Color.WHITE));
     victoryScoreLabel = new Label("", new Label.LabelStyle(scoreFont, Color.WHITE));
     attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(attackFont, Color.WHITE));
 
@@ -151,21 +148,6 @@ public class GameScreen extends ScreenAdapter {
     victoryScoreLabel.setVisible(false);
     hudStage.addActor(victoryScoreLabel);
 
-    gameOverMenuButton = new TextButton("Return to Main Menu", victorySkin);
-    gameOverMenuButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent event, Actor actor) {
-            stateManager.mainMenu(GameScreen.this);
-          }
-        });
-    gameOverMenuButton.setSize(340, 72);
-
-    gameOverLabel.setVisible(false);
-    gameOverMenuButton.setVisible(false);
-    hudStage.addActor(gameOverLabel);
-    hudStage.addActor(gameOverMenuButton);
-
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
@@ -203,7 +185,6 @@ public class GameScreen extends ScreenAdapter {
     float screenHeight = hudStage.getViewport().getWorldHeight();
 
     layoutEndScreen(escapedLabel, victoryMenuButton, screenWidth, screenHeight);
-    layoutEndScreen(gameOverLabel, gameOverMenuButton, screenWidth, screenHeight);
   }
 
   private void layoutEndScreen(
@@ -347,13 +328,7 @@ public class GameScreen extends ScreenAdapter {
           root.update(delta);
           Player player = (Player) root.get_child("player");
           if (player.getHealth() <= 0) {
-            timerLabel.setVisible(false);
-            scoreLabel.setVisible(false);
-            endScreenOverlay.setVisible(true);
-            gameOverLabel.setVisible(true);
-            gameOverMenuButton.setVisible(true);
-            Gdx.input.setInputProcessor(hudStage);
-            stateManager.lose();
+            stateManager.lose(this);
           } else {
             camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
           }
@@ -401,5 +376,9 @@ public class GameScreen extends ScreenAdapter {
       this.x = x;
       this.y = y;
     }
+  }
+
+  public int getPlayerScore() {
+    return score;
   }
 }
