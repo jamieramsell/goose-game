@@ -61,11 +61,11 @@ public class EnemyManager extends Node {
 
     float gooseWidth = 20;
     float gooseHeight = 20;
-    float spriteScale = 2;
+    float spriteScale = 1;
 
     float speed = 20;
     float damage = 20;
-    int attackDelay = 20;
+    int attackDelay = 270;
     int health = 100;
     boolean despawnOnDefeat = false;
 
