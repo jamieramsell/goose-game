@@ -14,6 +14,8 @@ import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 
 public class Enemy extends Node {
+  private static final float SEED_EAT_DURATION = 1.25f;
+
   private final TileMap map;
   Player target;
 
@@ -29,9 +31,12 @@ public class Enemy extends Node {
   float damage;
   int attackCounter;
   int attackDelay;
-  
+
   boolean fleeing = false;
   private int i = 0;
+  private boolean facingRight = true;
+  private SeedProjectile eatingSeed;
+  private float seedEatTimeRemaining;
 
   public Enemy(
       float x,
@@ -75,18 +80,41 @@ public class Enemy extends Node {
 
   @Override
   public void update(float delta) {
+    EnemyManager enemyManager = (EnemyManager) getParent();
+    if (eatingSeed != null) {
+      if (eatingSeed.isConsumed()) {
+        eatingSeed = null;
+        seedEatTimeRemaining = 0;
+      } else {
+        velocity.setZero();
+        seedEatTimeRemaining -= delta;
+        if (seedEatTimeRemaining <= 0) {
+          eatingSeed.consume();
+          eatingSeed = null;
+        }
+        super.update(delta);
+        return;
+      }
+    }
+
+    SeedProjectile seedTarget = fleeing ? null : enemyManager.getClosestSeed(position);
+    boolean attractedToSeed = seedTarget != null;
+
     if (attackCounter != 0) {
       attackCounter += 1;
       if (attackCounter >= attackDelay) {
         attackCounter = 0;
       }
-    } else if (overlaps(target)) {
+    } else if (!attractedToSeed && overlaps(target)) {
       target.damage(damage);
       System.out.println("Quack!");
       this.attackCounter += 1;
     }
-    Vector2 dir = new Vector2(target_pos.x - position.x, target_pos.y - position.y);
-    dir.nor();
+    Vector2 movementTarget = attractedToSeed ? seedTarget.position : target.position;
+    if (attractedToSeed) {
+      updateFacing(movementTarget.x - position.x);
+    }
+    Vector2 dir = movementTarget.cpy().sub(position).nor();
     if (fleeing) {
       dir.x *= -1;
       dir.y *= -1;
@@ -100,6 +128,14 @@ public class Enemy extends Node {
         health = maxHealth;
       }
     }
+    if (attractedToSeed && position.dst2(seedTarget.position) <= 12 * 12) {
+      eatingSeed = seedTarget;
+      seedEatTimeRemaining = SEED_EAT_DURATION;
+      velocity.setZero();
+      super.update(delta);
+      return;
+    }
+
     velocity.x *= 0.65F;
     velocity.y *= 0.65F;
 
@@ -117,7 +153,7 @@ public class Enemy extends Node {
       }
     }
 
-    if (overlaps(target) && !fleeing) {
+    if (overlaps(target) && !fleeing && !attractedToSeed) {
       velocity = new Vector2(0, 0);
     }
     if (fleeing) {
@@ -129,7 +165,7 @@ public class Enemy extends Node {
     float targetY = position.y + velocity.y * delta;
 
     /*
-     * Validate that each direction is within bounds, unless the goose is fleeing. Fleeing geese can 
+     * Validate that each direction is within bounds, unless the goose is fleeing. Fleeing geese can
      * go anywhere.
      *
      * Dev note: this is done seperately so that, for example, if the goose is moving downwards and
@@ -146,7 +182,7 @@ public class Enemy extends Node {
       super.update(delta);
       return;
     }
-    
+
     if (isTargetPosInBounds(targetX) && !map.isPixelSolidForGeese((int) targetX, (int) position.y)) {
       position.x = targetX;
     } else {
@@ -170,18 +206,20 @@ public class Enemy extends Node {
   @Override
   public void draw(Batch batch) {
     frame += 2 * Gdx.graphics.getDeltaTime();
-    if (target.position.x > position.x) {
-      i = 1;
+    SeedProjectile seedTarget =
+        fleeing ? null : ((EnemyManager) getParent()).getClosestSeed(position);
+    if (seedTarget != null) {
+      updateFacing(seedTarget.position.x - position.x);
+    } else if (target.position.x != position.x) {
+      facingRight = target.position.x > position.x;
     }
-    if (target.position.x < position.x) {
-      i = 0;
-    }
+    i = facingRight ? 1 : 0;
     if (!fleeing && attackCounter != 0) {
       i += 2;
     }
 
     if (fleeing) {
-      i = (i == 0) ? 1 : 0;
+      i = facingRight ? 0 : 1;
     }
 
     Sprite currentFrame = animations.get(i).getKeyFrame(frame);
@@ -190,6 +228,12 @@ public class Enemy extends Node {
     currentFrame.draw(batch);
     for (Node child : children.values()) {
       child.draw(batch);
+    }
+  }
+
+  private void updateFacing(float horizontalDirection) {
+    if (horizontalDirection != 0) {
+      facingRight = horizontalDirection > 0;
     }
   }
 

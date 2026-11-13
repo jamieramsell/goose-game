@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -39,6 +40,9 @@ public class GameScreen extends ScreenAdapter {
   private final TileMap map;
   private final TileMapRenderer renderer;
 
+  private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
+  private final Texture seedTexture;
+  private final SeedWeapon seedWeapon;
   private Sprite playerTexture;
   private boolean showEntityBounds;
 
@@ -49,6 +53,8 @@ public class GameScreen extends ScreenAdapter {
     this.stateManager = stateManager;
     this.batch = this.game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
+    this.seedTexture = new Texture(Gdx.files.internal("seeds.png"));
+    this.seedTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
 
     this.map = map;
     this.renderer = new TileMapRenderer(this.map);
@@ -74,9 +80,8 @@ public class GameScreen extends ScreenAdapter {
         .add_child(
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
 
-    this.root.get_child("player")
-        .add_child(
-            "seed_weapon", new SeedWeapon());
+    this.seedWeapon = new SeedWeapon(new Sprite(seedTexture));
+    this.root.get_child("player").add_child("seed_weapon", seedWeapon);
 
     viewport.setCamera(camera);
     camera.position.set(spawnX, spawnY, 0);
@@ -97,6 +102,13 @@ public class GameScreen extends ScreenAdapter {
     batch.begin();
     renderer.render(batch, camera);
     root.draw(batch);
+
+    batch.end();
+
+    batch.setProjectionMatrix(
+        new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+    batch.begin();
+    game.getFont().draw(batch, "Seeds: " + seedWeapon.getAmmo(), 12, Gdx.graphics.getHeight() - 12);
     batch.end();
 
     if (showEntityBounds) {
@@ -130,6 +142,7 @@ public class GameScreen extends ScreenAdapter {
   @Override
   public void dispose() {
     debugShapeRenderer.dispose();
+    seedTexture.dispose();
     renderer.dispose();
   }
 }
