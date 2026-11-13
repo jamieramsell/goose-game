@@ -1,9 +1,6 @@
 package io.github.goose_game.mapgen;
 
 import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
@@ -42,6 +39,10 @@ public class MapGenerator {
    */
   public TileMap generate(long seed) {
     Random rng = new Random(seed);
+    
+    if (!(TileDistribution.POINTS_OF_INTEREST.contains(TileType.SPAWN))) {
+      throw new IllegalStateException("TileType.SPAWN is not listed as a point of interest.");
+    }
 
     // Keep generating maps until one is found which is passable. Doing this inside this loop, with
     // the same rng, means that seeds are deterministic; even if a given seed isn't valid on the
@@ -49,28 +50,19 @@ public class MapGenerator {
     while (true) {
       TileMap map = new TileMap(MAP_SIZE);
       
-      // Create spawn point. Note that the +1, -2 values ensure that the 3x3 patch fit wholly within
-      // the map
-      int spawnX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2); 
-      int spawnY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+      // Create POIs first. Note that the +1, -2 values on the POI's x and y coords ensure that the
+      // 3x3 patch surround it fits wholly within the map
+      for (TileType poi : TileDistribution.POINTS_OF_INTEREST) {
+        int x = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2); 
+        int y = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
 
-      for (int x = -1; x < 2; x++) {
-        for (int y = -1; y < 2; y++) {
-          map.setTileAtSquare(spawnX + x, spawnY + y, TileType.GRASS);
+        for (int dx = -1; dx < 2; dx++) {
+          for (int dy = -1; dy < 2; dy++) {
+            map.setTileAtSquare(x + dx, y + dy, TileType.GRASS);
+          }
         }
+        map.setTileAtSquare(x, y, poi);
       }
-      map.setTileAtSquare(spawnX, spawnY, TileType.SPAWN);
-
-      // Create escape point
-      int escapeX = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
-      int escapeY = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
-
-      for (int x = -1; x < 2; x++) {
-        for (int y = -1; y < 2; y++) {
-          map.setTileAtSquare(escapeX + x, escapeY + y, TileType.GRASS);
-        }
-      }
-      map.setTileAtSquare(escapeX, escapeY, TileType.ESCAPE);
 
       // Generate the rest of the map
       for (int x = 0; x < MAP_SIZE / TILE_SIZE; x++) {
@@ -87,21 +79,14 @@ public class MapGenerator {
         }
       }
 
-      // Validate that a clear path exists between the spawn and escape points.
-      int[] spawnPoint = {spawnX, spawnY};
-      int[] escapePoint = {escapeX, escapeY};
-      int[][] pois = {spawnPoint, escapePoint};
-
-      if (isMapPassable(map, pois)) {
+      // Validate that a clear path exists between POIs
+      if (isMapPassable(map)) {
         return map;
       } else {
         continue;
       }
     }
   }
-
-  /** A pair of tile indices used as a set element. */
-  private record IntTuple(int x, int y) {}
 
   /**
    * Checks that every given point of interest can be reached from the first one by walking over
@@ -112,21 +97,23 @@ public class MapGenerator {
    * other.
    *
    * @param map the map to search
-   * @param pointsOfInterest the points to connect, each given as a two-element array of {@code {x,
-   *     y}} tile indices, such as the spawn point and the escape point
    * @return {@code true} if every point of interest is reachable from the first
-   * @throws IllegalArgumentException if fewer than two points are given, or if a given POI is not
+   * @throws IllegalStateException if a map with zero POIs is given, or if a given POI is not
    *     passable itself.
    */
-  public boolean isMapPassable(TileMap map, int[][] pointsOfInterest) {
-    if (pointsOfInterest.length < 2) {
-      throw new IllegalArgumentException("pointsOfInterest must contain at least two coordinates");
+  public boolean isMapPassable(TileMap map) {
+    Set<TilePosition> pointsOfInterest = map.getAllPointsOfInterest();
+
+    if (pointsOfInterest.size() < 1) {
+      throw new IllegalStateException("A map was given with no points of interest");
+    } else if (pointsOfInterest.size() == 1) {
+      return true;
     }
 
-    for (int[] poi : pointsOfInterest) {
-      if (map.isSquareSolidForPlayer(poi[0], poi[1])) {
-        throw new IllegalArgumentException("Map tile (" + poi[0] + ", " + poi[1] + ") is listed as"
-            + " a POI, yet is itself not passable by players.");
+    for (TilePosition poi : pointsOfInterest) {
+      if (map.isSquareSolidForPlayer(poi.x(), poi.y())) {
+        throw new IllegalStateException("Map tile (" + poi.x() + ", " + poi.y() + ") is listed"
+            + " as a POI, yet is itself not passable by players.");
       }
     }
     
@@ -134,17 +121,17 @@ public class MapGenerator {
     boolean[][] visited = new boolean[size][size];
 
     // Create a set of unvisited POIs; select the starting point
-    TilePosition startPoi = new TilePosition(pointsOfInterest[0][0], pointsOfInterest[0][1]);
-    Set<TilePosition> remainingPois = new HashSet<>(
-        Arrays.stream(pointsOfInterest)
-        .map(array -> new TilePosition(array[0], array[1]))
-        .toList()
-    ); 
-    remainingPois.remove(startPoi); // Removed after conversion to a set to ensure no duplicates
+    Set<TilePosition> remainingPois = Set.copyOf(pointsOfInterest);
+    TilePosition startPoi = remainingPois.stream()
+        .findAny()
+        .orElseThrow(() -> new IllegalStateException("No pointsOfInterest listed, despite checking"
+            + " that at least one was present earlier" // Impossible to reach in production
+        ));
+    remainingPois.remove(startPoi);
 
     // Begin from the startPoi
     ArrayDeque<TilePosition> queue = new ArrayDeque<>();
-    visited[startPoi.x][startPoi.y] = true;
+    visited[startPoi.x()][startPoi.y()] = true;
     queue.add(startPoi);
 
     // Flood fill algorithm
@@ -157,8 +144,8 @@ public class MapGenerator {
 
       int[][] offsets = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
       for (int[] offset : offsets) {
-        int dx = currentNode.x + offset[0];
-        int dy = currentNode.y + offset[1];
+        int dx = currentNode.x() + offset[0];
+        int dy = currentNode.y() + offset[1];
 
         // If target square is out of bounds, skip it
         if (dx < 0 || dy < 0 || dx >= size || dy >= size) {

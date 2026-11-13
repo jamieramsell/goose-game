@@ -1,6 +1,7 @@
 package io.github.goose_game.mapgen;
 
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public final class TileDistribution {
 
   /**
    * The default weights for map generation, which are 70 grass, and 10 each of water, bushes and
-   * buildings.
+   * buildings. The default distribution cannot contain any values of POIs.
    */
   public static final Map<TileType, Integer> DEFAULT_DISTRIBUTION =
       new EnumMap<>(
@@ -25,6 +26,16 @@ public final class TileDistribution {
               TileType.WATER, 10,
               TileType.BUSH, 10,
               TileType.BUILDING, 10));
+
+  /**
+   * The points of interest on the map. POIs are unique, are always surrounded by a ring of grass
+   * tiles, and there always exists a path between each one. {@link TileType#SPAWN} must be one of
+   * these POIs, and the map generator itself must ensure this.
+   */
+  public static final EnumSet<TileType> POINTS_OF_INTEREST = EnumSet.of(
+      TileType.SPAWN,
+      TileType.ESCAPE
+  );
 
   private static final TileType[] VALUES = TileType.values();
   private final int[] cumulative; // Used for the distribution of each TileType
@@ -46,6 +57,9 @@ public final class TileDistribution {
 
       if (weight < 0) {
         throw new IllegalArgumentException("Negative weight for " + VALUES[i]);
+      } else if (POINTS_OF_INTEREST.contains(VALUES[i]) && weight != 0) {
+        throw new IllegalArgumentException(VALUES[i] + " has a weight > 0, despite being listed as"
+            + " a POI.");
       }
 
       sum += weight;
@@ -57,7 +71,6 @@ public final class TileDistribution {
     if (sum <= 0) {
       throw new IllegalArgumentException("Weights must sum to at least 1");
     }
-    ;
 
     this.total = sum;
   }

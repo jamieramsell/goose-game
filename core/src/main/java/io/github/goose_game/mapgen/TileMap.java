@@ -1,5 +1,8 @@
 package io.github.goose_game.mapgen;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A square grid of {@link TileType}s making up the game world.
  *
@@ -10,6 +13,7 @@ package io.github.goose_game.mapgen;
 public class TileMap {
 
   private final TileType[][] map;
+  private final Set<TilePosition> pointsOfInterest;
 
   /**
    * Creates an empty map, where every tile is {@code null} until set.
@@ -27,6 +31,7 @@ public class TileMap {
 
     int mapSizeInTiles = mapPixelToSquare(mapSize);
     map = new TileType[mapSizeInTiles][mapSizeInTiles];
+    pointsOfInterest = new HashSet<>();
   }
 
   /**
@@ -135,7 +140,16 @@ public class TileMap {
    */
   void setTileAtSquare(int tileX, int tileY, TileType tile) {
     checkCoordinatesAreInBounds(tileX, tileY);
+
+    if (TileDistribution.POINTS_OF_INTEREST.contains(map[tileX][tileY])) {
+      pointsOfInterest.remove(new TilePosition(tileX, tileY));
+    }
+
     map[tileX][tileY] = tile;
+
+    if (TileDistribution.POINTS_OF_INTEREST.contains(tile)) {
+      pointsOfInterest.add(new TilePosition(tileX, tileY));
+    }
   }
 
   /**
@@ -183,5 +197,10 @@ public class TileMap {
     if (x < 0 || y < 0 || x >= map.length || y >= map.length) {
       throw new IllegalArgumentException("The given coordinates are out of bounds.");
     }
+  }
+
+  /** @return all tiles on the map which are marked as points of interest. */
+  Set<TilePosition> getAllPointsOfInterest() {
+    return pointsOfInterest;
   }
 }
