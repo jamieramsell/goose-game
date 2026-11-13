@@ -134,22 +134,22 @@ public class MapGenerator {
     boolean[][] visited = new boolean[size][size];
 
     // Create a set of unvisited POIs; select the starting point
-    IntTuple startPoi = new IntTuple(pointsOfInterest[0][0], pointsOfInterest[0][1]);
-    Set<IntTuple> remainingPois = new HashSet<>(
+    TilePosition startPoi = new TilePosition(pointsOfInterest[0][0], pointsOfInterest[0][1]);
+    Set<TilePosition> remainingPois = new HashSet<>(
         Arrays.stream(pointsOfInterest)
-        .map(array -> new IntTuple(array[0], array[1]))
+        .map(array -> new TilePosition(array[0], array[1]))
         .toList()
     ); 
     remainingPois.remove(startPoi); // Removed after conversion to a set to ensure no duplicates
 
     // Begin from the startPoi
-    ArrayDeque<IntTuple> queue = new ArrayDeque<>();
+    ArrayDeque<TilePosition> queue = new ArrayDeque<>();
     visited[startPoi.x][startPoi.y] = true;
     queue.add(startPoi);
 
     // Flood fill algorithm
     while (queue.size() != 0) {
-      IntTuple currentNode = queue.poll(); // Select node at the head of the queue
+      TilePosition currentNode = queue.poll(); // Select node at the head of the queue
       remainingPois.remove(currentNode); // This is a no-op if currentNode isn't in remainingPois
       if (remainingPois.size() == 0) {
         return true; // All POIs have been visited; the map is therefore passable
@@ -168,7 +168,7 @@ public class MapGenerator {
         // visited, and add it to the queue
         else if (!visited[dx][dy] && !map.isSquareSolidForPlayer(dx, dy)) {
           visited[dx][dy] = true;
-          queue.add(new IntTuple(dx, dy));
+          queue.add(new TilePosition(dx, dy));
         }
       }
     }
