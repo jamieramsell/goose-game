@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,12 +25,13 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-
 import io.github.goose_game.Main;
 import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 import io.github.goose_game.utils.Node;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GameScreen extends ScreenAdapter {
 
@@ -45,13 +47,21 @@ public class GameScreen extends ScreenAdapter {
   private final Stage hudStage = new Stage(new ScreenViewport());
   private final BitmapFont timerFont = new BitmapFont();
   private final BitmapFont victoryFont = new BitmapFont();
+  private final BitmapFont gameOverFont = new BitmapFont();
   private final BitmapFont attackFont = new BitmapFont();
+  private final BitmapFont scoreFont = new BitmapFont();
+  private final BitmapFont scorePopupFont = new BitmapFont();
   private final Skin victorySkin = DefaultSkin.getSkin();
   private final EnemyManager enemyManager;
   private final Label timerLabel;
+  private final Label scoreLabel;
   private final Label escapedLabel;
+  private final Label gameOverLabel;
+  private final Label victoryScoreLabel;
   private final Label attackLabel;
-  private final Table victoryTable;
+  private final Image endScreenOverlay;
+  private final TextButton victoryMenuButton;
+  private final TextButton gameOverMenuButton;
 
   private final Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT);
   private final OrthographicCamera camera = new OrthographicCamera();
@@ -59,12 +69,15 @@ public class GameScreen extends ScreenAdapter {
   private final Animation<Sprite> stickAttackTexture;
   private final Node root = new Node(0, 0, 0, 0);
   private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
+  private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
   private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private Sprite playerTexture;
   private boolean showEntityBounds;
   private boolean largeEnemySpawned;
   private float remainingTime = GAME_DURATION_SECONDS;
   private float attackMessageTime;
+  private float scoreRemainder;
+  private int score;
   private int displayedSeconds = -1;
 
   Node player;
@@ -77,9 +90,15 @@ public class GameScreen extends ScreenAdapter {
 
     timerFont.getData().setScale(4f);
     victoryFont.getData().setScale(8f);
+    gameOverFont.getData().setScale(5f);
     attackFont.getData().setScale(3f);
+    scoreFont.getData().setScale(2.625f);
+    scorePopupFont.getData().setScale(0.75f);
     timerLabel = new Label("", new Label.LabelStyle(timerFont, Color.WHITE));
+    scoreLabel = new Label("Score: 0", new Label.LabelStyle(scoreFont, Color.WHITE));
     escapedLabel = new Label("You escaped!", new Label.LabelStyle(victoryFont, Color.WHITE));
+    gameOverLabel = new Label("Swarmed by geese!", new Label.LabelStyle(gameOverFont, Color.WHITE));
+    victoryScoreLabel = new Label("", new Label.LabelStyle(scoreFont, Color.WHITE));
     attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(attackFont, Color.WHITE));
 
     Table timerTable = new Table();
@@ -88,6 +107,12 @@ public class GameScreen extends ScreenAdapter {
     timerTable.add(timerLabel).padTop(12);
     hudStage.addActor(timerTable);
 
+    Table scoreTable = new Table();
+    scoreTable.setFillParent(true);
+    scoreTable.top().left();
+    scoreTable.add(scoreLabel).padTop(12).padLeft(12);
+    hudStage.addActor(scoreTable);
+
     Table attackTable = new Table();
     attackTable.setFillParent(true);
     attackTable.center();
@@ -95,22 +120,42 @@ public class GameScreen extends ScreenAdapter {
     attackTable.add(attackLabel);
     hudStage.addActor(attackTable);
 
-    TextButton mainMenuButton = new TextButton("Return to Main Menu", victorySkin);
-    mainMenuButton.addListener(
+    endScreenOverlay = new Image(victorySkin.newDrawable("white", Color.BLACK));
+    endScreenOverlay.setFillParent(true);
+    endScreenOverlay.setVisible(false);
+    hudStage.addActor(endScreenOverlay);
+
+    victoryMenuButton = new TextButton("Return to Main Menu", victorySkin);
+    victoryMenuButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
             stateManager.mainMenu(GameScreen.this);
           }
         });
+    victoryMenuButton.setSize(340, 72);
 
-    victoryTable = new Table();
-    victoryTable.setFillParent(true);
-    victoryTable.center();
-    victoryTable.add(escapedLabel).padBottom(24).row();
-    victoryTable.add(mainMenuButton).width(260).height(64);
-    victoryTable.setVisible(false);
-    hudStage.addActor(victoryTable);
+    escapedLabel.setVisible(false);
+    victoryMenuButton.setVisible(false);
+    hudStage.addActor(escapedLabel);
+    hudStage.addActor(victoryMenuButton);
+    victoryScoreLabel.setVisible(false);
+    hudStage.addActor(victoryScoreLabel);
+
+    gameOverMenuButton = new TextButton("Return to Main Menu", victorySkin);
+    gameOverMenuButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            stateManager.mainMenu(GameScreen.this);
+          }
+        });
+    gameOverMenuButton.setSize(340, 72);
+
+    gameOverLabel.setVisible(false);
+    gameOverMenuButton.setVisible(false);
+    hudStage.addActor(gameOverLabel);
+    hudStage.addActor(gameOverMenuButton);
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -123,7 +168,8 @@ public class GameScreen extends ScreenAdapter {
 
     this.root.add_child("player", new Player(8, 6, 16, 20, atlas, 64, 200, camera));
 
-    enemyManager = new EnemyManager(atlas, (Player) this.root.get_child("player"));
+    enemyManager =
+        new EnemyManager(atlas, (Player) this.root.get_child("player"), this::onEnemyDispersed);
     this.root.add_child("enemyManager", enemyManager);
 
     this.root
@@ -140,6 +186,28 @@ public class GameScreen extends ScreenAdapter {
   public void resize(int width, int height) {
     viewport.update(width, height, false);
     hudStage.getViewport().update(width, height, true);
+    layoutEndScreenActors();
+  }
+
+  private void layoutEndScreenActors() {
+    float screenWidth = hudStage.getViewport().getWorldWidth();
+    float screenHeight = hudStage.getViewport().getWorldHeight();
+
+    layoutEndScreen(escapedLabel, victoryMenuButton, screenWidth, screenHeight);
+    layoutEndScreen(gameOverLabel, gameOverMenuButton, screenWidth, screenHeight);
+  }
+
+  private void layoutEndScreen(
+      Label label, TextButton menuButton, float screenWidth, float screenHeight) {
+    label.setSize(label.getPrefWidth(), label.getPrefHeight());
+    label.setPosition(
+        (screenWidth - label.getWidth()) / 2, screenHeight * 0.75f - label.getHeight() / 2);
+    victoryScoreLabel.setSize(victoryScoreLabel.getPrefWidth(), victoryScoreLabel.getPrefHeight());
+    victoryScoreLabel.setPosition(
+        (screenWidth - victoryScoreLabel.getWidth()) / 2,
+        screenHeight * 0.25f - victoryScoreLabel.getHeight() / 2);
+    menuButton.setPosition(
+        (screenWidth - menuButton.getWidth()) / 2, (screenHeight - menuButton.getHeight()) / 2);
   }
 
   @Override
@@ -153,6 +221,7 @@ public class GameScreen extends ScreenAdapter {
 
     batch.draw(background, -32 * 64, -32 * 64, 0, 0, 32 * 128, 32 * 128);
     root.draw(batch);
+    drawScorePopups();
 
     batch.end();
 
@@ -164,8 +233,67 @@ public class GameScreen extends ScreenAdapter {
       debugShapeRenderer.end();
     }
 
+    drawPlayerHealthBar();
+
     hudStage.act(delta);
     hudStage.draw();
+  }
+
+  private void drawPlayerHealthBar() {
+    Player player = (Player) root.get_child("player");
+    float width = 24f;
+    float height = 3f;
+    float x = player.position.x - width / 2;
+    float y = player.position.y - 14f;
+
+    debugShapeRenderer.setProjectionMatrix(camera.combined);
+    debugShapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    debugShapeRenderer.setColor(Color.DARK_GRAY);
+    debugShapeRenderer.rect(x, y, width, height);
+    debugShapeRenderer.setColor(Color.GREEN);
+    debugShapeRenderer.rect(x, y, width * player.getHealth() / player.getMaxHealth(), height);
+    debugShapeRenderer.end();
+  }
+
+  private void drawScorePopups() {
+    for (ScorePopup popup : scorePopups) {
+      float elapsed = 0.5f - popup.timeRemaining;
+      if (((int) (elapsed / 0.1f)) % 2 == 0) {
+        scorePopupFont.draw(batch, popup.text, popup.x, popup.y + 18);
+      }
+    }
+  }
+
+  private void onEnemyDispersed(Enemy enemy) {
+    int points = enemy.getDispersalScore();
+    score += points;
+    updateScoreLabel();
+    scorePopups.add(new ScorePopup("+" + points, enemy.position.x, enemy.position.y));
+  }
+
+  private void updateScore(float delta) {
+    scoreRemainder += delta;
+    int earnedPoints = (int) scoreRemainder;
+    if (earnedPoints > 0) {
+      score += earnedPoints;
+      scoreRemainder -= earnedPoints;
+      updateScoreLabel();
+    }
+  }
+
+  private void updateScoreLabel() {
+    scoreLabel.setText("Score: " + score);
+  }
+
+  private void updateScorePopups(float delta) {
+    Iterator<ScorePopup> iterator = scorePopups.iterator();
+    while (iterator.hasNext()) {
+      ScorePopup popup = iterator.next();
+      popup.timeRemaining -= delta;
+      if (popup.timeRemaining <= 0) {
+        iterator.remove();
+      }
+    }
   }
 
   private void update(float delta) {
@@ -181,6 +309,8 @@ public class GameScreen extends ScreenAdapter {
       }
 
       if (stateManager.getGameState() == GameState.GAME) {
+        updateScore(Math.min(delta, remainingTime));
+        updateScorePopups(delta);
         remainingTime = Math.max(0, remainingTime - delta);
         updateTimerLabel();
         updateAttackMessage(delta);
@@ -194,14 +324,30 @@ public class GameScreen extends ScreenAdapter {
 
         if (remainingTime == 0) {
           timerLabel.setVisible(false);
-          victoryTable.setVisible(true);
+          scoreLabel.setVisible(false);
+          endScreenOverlay.setVisible(true);
+          escapedLabel.setVisible(true);
+          victoryMenuButton.setVisible(true);
+          victoryScoreLabel.setText("Score: " + score);
+          layoutEndScreenActors();
+          victoryScoreLabel.setVisible(true);
           Gdx.input.setInputProcessor(hudStage);
           stateManager.victory();
         } else {
-          /* Only update nodes while game is active */ 
+          /* Only update nodes while game is active */
           root.update(delta);
-          Node player = root.get_child("player");
-          camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
+          Player player = (Player) root.get_child("player");
+          if (player.getHealth() <= 0) {
+            timerLabel.setVisible(false);
+            scoreLabel.setVisible(false);
+            endScreenOverlay.setVisible(true);
+            gameOverLabel.setVisible(true);
+            gameOverMenuButton.setVisible(true);
+            Gdx.input.setInputProcessor(hudStage);
+            stateManager.lose();
+          } else {
+            camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
+          }
         }
       }
     }
@@ -228,7 +374,23 @@ public class GameScreen extends ScreenAdapter {
     hudStage.dispose();
     timerFont.dispose();
     victoryFont.dispose();
+    gameOverFont.dispose();
     attackFont.dispose();
+    scoreFont.dispose();
+    scorePopupFont.dispose();
     victorySkin.dispose();
+  }
+
+  private static class ScorePopup {
+    private final String text;
+    private final float x;
+    private final float y;
+    private float timeRemaining = 0.5f;
+
+    private ScorePopup(String text, float x, float y) {
+      this.text = text;
+      this.x = x;
+      this.y = y;
+    }
   }
 }

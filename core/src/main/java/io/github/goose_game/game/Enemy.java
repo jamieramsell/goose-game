@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import io.github.goose_game.utils.Node;
+import java.util.function.Consumer;
 
 public class Enemy extends Node {
   Player target;
@@ -26,6 +27,7 @@ public class Enemy extends Node {
   private int i = 0;
   private final float spriteScale;
   private final boolean despawnOnDefeat;
+  private final Consumer<Enemy> onDispersed;
 
   public Enemy(
       float x,
@@ -53,7 +55,8 @@ public class Enemy extends Node {
       int attackDelay,
       int health,
       float spriteScale) {
-    this(x, y, width, height, atlas, target, speed, damage, attackDelay, health, spriteScale, false);
+    this(
+        x, y, width, height, atlas, target, speed, damage, attackDelay, health, spriteScale, false);
   }
 
   public Enemy(
@@ -69,6 +72,36 @@ public class Enemy extends Node {
       int health,
       float spriteScale,
       boolean despawnOnDefeat) {
+    this(
+        x,
+        y,
+        width,
+        height,
+        atlas,
+        target,
+        speed,
+        damage,
+        attackDelay,
+        health,
+        spriteScale,
+        despawnOnDefeat,
+        enemy -> {});
+  }
+
+  public Enemy(
+      float x,
+      float y,
+      float width,
+      float height,
+      TextureAtlas atlas,
+      Player target,
+      float speed,
+      float damage,
+      int attackDelay,
+      int health,
+      float spriteScale,
+      boolean despawnOnDefeat,
+      Consumer<Enemy> onDispersed) {
     super(x, y, width, height);
     this.target = target;
     this.speed = speed;
@@ -80,6 +113,7 @@ public class Enemy extends Node {
     this.maxHealth = health;
     this.spriteScale = spriteScale;
     this.despawnOnDefeat = despawnOnDefeat;
+    this.onDispersed = onDispersed;
     this.animations = new Array<>();
 
     String[] directions = {"Left", "Right"};
@@ -193,8 +227,13 @@ public class Enemy extends Node {
 
   public void damage(int damage) {
     health -= damage;
-    if (health <= 0) {
+    if (health <= 0 && !fleeing) {
       fleeing = true;
+      onDispersed.accept(this);
     }
+  }
+
+  public int getDispersalScore() {
+    return despawnOnDefeat ? 50 : 10;
   }
 }

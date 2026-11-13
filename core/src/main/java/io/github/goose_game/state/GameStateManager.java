@@ -138,7 +138,19 @@ public class GameStateManager {
     gameState = GameState.VICTORY;
   }
 
-  /** @return the current {@link GameState} that the game is in. */
+  /** Transitions the active game to loss without replacing its screen. */
+  public void lose() {
+    if (!GameStateGraph.canTransition(gameState, GameState.LOST)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.LOST is not currently" + " accessible");
+    }
+
+    gameState = GameState.LOST;
+  }
+
+  /**
+   * @return the current {@link GameState} that the game is in.
+   */
   public GameState getGameState() {
     return gameState;
   }
