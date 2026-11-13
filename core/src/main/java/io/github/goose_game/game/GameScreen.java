@@ -13,14 +13,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -28,7 +23,6 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
-import io.github.goose_game.utils.DefaultSkin;
 import io.github.goose_game.utils.Node;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -53,20 +47,13 @@ public class GameScreen extends ScreenAdapter {
   // HUD
   private final Stage hudStage = new Stage(new ScreenViewport());
   private final BitmapFont timerFont = new BitmapFont();
-  private final BitmapFont victoryFont = new BitmapFont();
-  private final BitmapFont gameOverFont = new BitmapFont();
   private final BitmapFont attackFont = new BitmapFont();
   private final BitmapFont scoreFont = new BitmapFont();
   private final BitmapFont scorePopupFont = new BitmapFont();
-  private final Skin victorySkin = DefaultSkin.getSkin();
 
   private final Label timerLabel;
   private final Label scoreLabel;
-  private final Label escapedLabel;
-  private final Label victoryScoreLabel;
   private final Label attackLabel;
-  private final Image endScreenOverlay;
-  private final TextButton victoryMenuButton;
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
 
   // Scene & Rendering
@@ -96,15 +83,11 @@ public class GameScreen extends ScreenAdapter {
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
 
     timerFont.getData().setScale(4f);
-    victoryFont.getData().setScale(8f);
-    gameOverFont.getData().setScale(5f);
     attackFont.getData().setScale(3f);
     scoreFont.getData().setScale(2.625f);
     scorePopupFont.getData().setScale(0.75f);
     timerLabel = new Label("", new Label.LabelStyle(timerFont, Color.WHITE));
     scoreLabel = new Label("Score: 0", new Label.LabelStyle(scoreFont, Color.WHITE));
-    escapedLabel = new Label("You escaped!", new Label.LabelStyle(victoryFont, Color.WHITE));
-    victoryScoreLabel = new Label("", new Label.LabelStyle(scoreFont, Color.WHITE));
     attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(attackFont, Color.WHITE));
 
     Table timerTable = new Table();
@@ -125,28 +108,6 @@ public class GameScreen extends ScreenAdapter {
     attackLabel.setVisible(false);
     attackTable.add(attackLabel);
     hudStage.addActor(attackTable);
-
-    endScreenOverlay = new Image(victorySkin.newDrawable("white", Color.BLACK));
-    endScreenOverlay.setFillParent(true);
-    endScreenOverlay.setVisible(false);
-    hudStage.addActor(endScreenOverlay);
-
-    victoryMenuButton = new TextButton("Return to Main Menu", victorySkin);
-    victoryMenuButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent event, Actor actor) {
-            stateManager.mainMenu(GameScreen.this);
-          }
-        });
-    victoryMenuButton.setSize(340, 72);
-
-    escapedLabel.setVisible(false);
-    victoryMenuButton.setVisible(false);
-    hudStage.addActor(escapedLabel);
-    hudStage.addActor(victoryMenuButton);
-    victoryScoreLabel.setVisible(false);
-    hudStage.addActor(victoryScoreLabel);
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -177,27 +138,6 @@ public class GameScreen extends ScreenAdapter {
   public void resize(int width, int height) {
     viewport.update(width, height, false);
     hudStage.getViewport().update(width, height, true);
-    layoutEndScreenActors();
-  }
-
-  private void layoutEndScreenActors() {
-    float screenWidth = hudStage.getViewport().getWorldWidth();
-    float screenHeight = hudStage.getViewport().getWorldHeight();
-
-    layoutEndScreen(escapedLabel, victoryMenuButton, screenWidth, screenHeight);
-  }
-
-  private void layoutEndScreen(
-      Label label, TextButton menuButton, float screenWidth, float screenHeight) {
-    label.setSize(label.getPrefWidth(), label.getPrefHeight());
-    label.setPosition(
-        (screenWidth - label.getWidth()) / 2, screenHeight * 0.75f - label.getHeight() / 2);
-    victoryScoreLabel.setSize(victoryScoreLabel.getPrefWidth(), victoryScoreLabel.getPrefHeight());
-    victoryScoreLabel.setPosition(
-        (screenWidth - victoryScoreLabel.getWidth()) / 2,
-        screenHeight * 0.25f - victoryScoreLabel.getHeight() / 2);
-    menuButton.setPosition(
-        (screenWidth - menuButton.getWidth()) / 2, (screenHeight - menuButton.getHeight()) / 2);
   }
 
   @Override
@@ -312,22 +252,14 @@ public class GameScreen extends ScreenAdapter {
           attackLabel.setVisible(true);
         }
 
-        if (remainingTime == 0) {
-          timerLabel.setVisible(false);
-          scoreLabel.setVisible(false);
-          endScreenOverlay.setVisible(true);
-          escapedLabel.setVisible(true);
-          victoryMenuButton.setVisible(true);
-          victoryScoreLabel.setText("Score: " + score);
-          layoutEndScreenActors();
-          victoryScoreLabel.setVisible(true);
-          Gdx.input.setInputProcessor(hudStage);
-          stateManager.victory();
+        if (remainingTime == 0) { // Time has reached 0, you've escaped!
+          stateManager.victory(this);
         } else {
           /* Only update nodes while game is active */
           root.update(delta);
           Player player = (Player) root.get_child("player");
-          if (player.getHealth() <= 0) {
+
+          if (player.getHealth() <= 0) { // Player dead, lose condition
             stateManager.lose(this);
           } else {
             camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
@@ -357,12 +289,9 @@ public class GameScreen extends ScreenAdapter {
     debugShapeRenderer.dispose();
     hudStage.dispose();
     timerFont.dispose();
-    victoryFont.dispose();
-    gameOverFont.dispose();
     attackFont.dispose();
     scoreFont.dispose();
     scorePopupFont.dispose();
-    victorySkin.dispose();
   }
 
   private static class ScorePopup {
