@@ -35,15 +35,22 @@ import java.util.Iterator;
 
 public class GameScreen extends ScreenAdapter {
 
+  // Gameplay values
   private static final float WORLD_WIDTH = 320f;
   private static final float WORLD_HEIGHT = 320f;
   private static final float GAME_DURATION_SECONDS = 5 * 60;
   private static final float ATTACK_MESSAGE_DURATION_SECONDS = 3f;
 
+  // Framework
   private final Main game;
   private final GameStateManager stateManager;
+
   private final Batch batch;
   private final TextureAtlas atlas;
+  private final Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT);
+  private final OrthographicCamera camera = new OrthographicCamera();
+
+  // HUD
   private final Stage hudStage = new Stage(new ScreenViewport());
   private final BitmapFont timerFont = new BitmapFont();
   private final BitmapFont victoryFont = new BitmapFont();
@@ -52,7 +59,7 @@ public class GameScreen extends ScreenAdapter {
   private final BitmapFont scoreFont = new BitmapFont();
   private final BitmapFont scorePopupFont = new BitmapFont();
   private final Skin victorySkin = DefaultSkin.getSkin();
-  private final EnemyManager enemyManager;
+  
   private final Label timerLabel;
   private final Label scoreLabel;
   private final Label escapedLabel;
@@ -62,17 +69,17 @@ public class GameScreen extends ScreenAdapter {
   private final Image endScreenOverlay;
   private final TextButton victoryMenuButton;
   private final TextButton gameOverMenuButton;
-
-  private final Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT);
-  private final OrthographicCamera camera = new OrthographicCamera();
-
-  private final Animation<Sprite> stickAttackTexture;
-  private final Node root = new Node(0, 0, 0, 0);
-  private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
+
+  // Scene & Rendering
+  private final Node root = new Node(0, 0, 0, 0);
+  private final EnemyManager enemyManager;
   private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
   private Sprite playerTexture;
-  private boolean showEntityBounds;
+  private final Animation<Sprite> stickAttackTexture;
+  Node player;
+
+  // Game state
   private boolean largeEnemySpawned;
   private float remainingTime = GAME_DURATION_SECONDS;
   private float attackMessageTime;
@@ -80,7 +87,9 @@ public class GameScreen extends ScreenAdapter {
   private int score;
   private int displayedSeconds = -1;
 
-  Node player;
+  // Debug
+  private boolean showEntityBounds;
+  private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
 
   public GameScreen(Main game, GameStateManager stateManager) {
     this.game = game;
