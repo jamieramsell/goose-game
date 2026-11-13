@@ -1,7 +1,6 @@
 package io.github.goose_game.menu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
@@ -19,7 +18,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.game.GameScreen;
-import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 
@@ -32,11 +30,11 @@ public class GameLostPage extends ScreenAdapter {
   private final Skin skin;
 
   /**
-   * Builds the pause menu's widgets, layout and intro animations.
+   * Builds the game over menu's widgets, layout and intro animations.
    *
    * @param game the game that owns this screen
    * @param stateManager the current instance of {@link GameStateManager}
-   * @param pausedGame the paused game screen, drawn behind this menu
+   * @param lostGame the game screen, drawn behind this menu
    */
   public GameLostPage(Main game, GameStateManager stateManager, GameScreen lostGame) {
     this.stateManager = stateManager;
@@ -63,7 +61,7 @@ public class GameLostPage extends ScreenAdapter {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            stateManager.mainMenu(GameLostPage.this);
+            GameLostPage.this.stateManager.mainMenu(GameLostPage.this);
           }
         });
 
@@ -120,19 +118,9 @@ public class GameLostPage extends ScreenAdapter {
   public void render(float delta) {
     lostGame.render(delta);
 
-    update();
-
     stage.getViewport().apply();
     stage.act(delta);
     stage.draw();
-  }
-
-  /** Resumes the game if Escape was pressed while paused. */
-  private void update() {
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)
-        && stateManager.getGameState() == GameState.PAUSED) {
-      stateManager.play(this);
-    }
   }
 
   @Override
