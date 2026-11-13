@@ -37,6 +37,16 @@ public final class TileDistribution {
       TileType.ESCAPE
   );
 
+  /**
+   * The points of interest on the map. POIs are unique, are always surrounded by a ring of grass
+   * tiles, and there always exists a path between each one. {@link TileType#SPAWN} must be one of
+   * these POIs, and the map generator itself must ensure this.
+   */
+  public static final EnumSet<TileType> POINTS_OF_INTEREST = EnumSet.of(
+      TileType.SPAWN,
+      TileType.ESCAPE
+  );
+
   private static final TileType[] VALUES = TileType.values();
   private final int[] cumulative; // Used for the distribution of each TileType
   private final int total; // Used as an upper bound for random numbers
