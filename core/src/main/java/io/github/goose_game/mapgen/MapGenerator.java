@@ -1,6 +1,7 @@
 package io.github.goose_game.mapgen;
 
 import java.util.ArrayDeque;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -121,7 +122,7 @@ public class MapGenerator {
     boolean[][] visited = new boolean[size][size];
 
     // Create a set of unvisited POIs; select the starting point
-    Set<TilePosition> remainingPois = Set.copyOf(pointsOfInterest);
+    Set<TilePosition> remainingPois = new HashSet<>(pointsOfInterest);
     TilePosition startPoi = remainingPois.stream()
         .findAny()
         .orElseThrow(() -> new IllegalStateException("No pointsOfInterest listed, despite checking"
