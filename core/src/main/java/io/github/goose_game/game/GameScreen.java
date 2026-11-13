@@ -60,6 +60,7 @@ public class GameScreen extends ScreenAdapter {
 
   private final Label timerLabel;
   private final Label scoreLabel;
+  private final Label testLabel;
   private final Label attackLabel;
 
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
@@ -82,6 +83,7 @@ public class GameScreen extends ScreenAdapter {
   private float attackMessageTime;
   private float scoreRemainder;
   private int score;
+  private int displayedSwingCount;
   private int displayedSeconds = -1;
 
   // Debug
@@ -104,6 +106,7 @@ public class GameScreen extends ScreenAdapter {
 
     timerLabel = new Label("", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
     scoreLabel = new Label("Score: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    testLabel = new Label("Test: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
 
     Table timerTable = new Table();
@@ -117,6 +120,12 @@ public class GameScreen extends ScreenAdapter {
     scoreTable.top().left();
     scoreTable.add(scoreLabel).padTop(12).padLeft(12);
     hudStage.addActor(scoreTable);
+
+    Table testTable = new Table();
+    testTable.setFillParent(true);
+    testTable.top().left();
+    testTable.add(testLabel).padTop(36).padLeft(12);
+    hudStage.addActor(testTable);
 
     Table attackTable = new Table();
     attackTable.setFillParent(true);
@@ -303,6 +312,7 @@ public class GameScreen extends ScreenAdapter {
         } else {
           /* Only update nodes while game is active */
           root.update(delta);
+          updateSwingLabel();
           Player player = (Player) root.get_child("player");
 
           if (player.getHealth() <= 0) { // Player dead, lose condition
@@ -333,6 +343,15 @@ public class GameScreen extends ScreenAdapter {
     if (seconds != displayedSeconds) {
       displayedSeconds = seconds;
       timerLabel.setText(String.format("%02d:%02d", seconds / 60, seconds % 60));
+    }
+  }
+
+  /** Refreshes the weapon swing label when the swing count changes. */
+  private void updateSwingLabel() {
+    int swingCount = ((Weapon) root.get_child("player").get_child("weapon_test")).getSwingCount();
+    if (swingCount != displayedSwingCount) {
+      displayedSwingCount = swingCount;
+      testLabel.setText("Test: " + swingCount);
     }
   }
 
