@@ -42,12 +42,9 @@ public class Node {
     }
     if (texture == null) return;
 
-    batch.draw(
-        texture,
-        position.x - texture.getWidth() / 2,
-        position.y - texture.getHeight() / 2,
-        texture.getWidth(),
-        texture.getHeight());
+    texture.setPosition(
+        position.x - texture.getWidth() / 2, position.y - texture.getHeight() / 2);
+    texture.draw(batch);
   }
 
   public void drawDebugBounds(ShapeRenderer shapeRenderer) {

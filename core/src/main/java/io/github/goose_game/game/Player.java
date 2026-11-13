@@ -116,6 +116,9 @@ public class Player extends Node {
     if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
       ((Weapon) get_child("weapon_test")).attack();
     }
+    if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+      ((SeedWeapon) get_child("seed_weapon")).attack();
+    }
     dir = dir.nor();
 
     return dir;
@@ -159,4 +162,5 @@ public class Player extends Node {
   public Camera getCamera() {
     return camera;
   }
+
 }
