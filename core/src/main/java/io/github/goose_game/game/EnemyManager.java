@@ -52,7 +52,7 @@ public class EnemyManager extends Node {
       targetY = player.position.y + randomRotatedVector.y;
 
       int mapSize = MapGenerator.MAP_SIZE;
-      if (targetX < 0 || targetY < 0 || targetX > mapSize || targetY > mapSize) {
+      if (targetX <= 0 || targetY <= 0 || targetX >= mapSize || targetY >= mapSize) {
         continue; // Goose is out of bounds, try again
       }
 
