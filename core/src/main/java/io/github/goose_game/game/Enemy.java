@@ -129,7 +129,8 @@ public class Enemy extends Node {
     float targetY = position.y + velocity.y * delta;
 
     /*
-     * Validate that each direction is within bounds.
+     * Validate that each direction is within bounds, unless the goose is fleeing. Fleeing geese can 
+     * go anywhere.
      *
      * Dev note: this is done seperately so that, for example, if the goose is moving downwards and
      * to the right when there is a wall on their right hand side, they still move downwards, rather
@@ -139,6 +140,13 @@ public class Enemy extends Node {
      * wall' effect, where the goose cannot move as their velocity is still positive in the
      * direction of the wall.
      */
+    if (fleeing) {
+      position.x = targetX;
+      position.y = targetY;
+      super.update(delta);
+      return;
+    }
+    
     if (isTargetPosInBounds(targetX) && !map.isPixelSolidForGeese((int) targetX, (int) position.y)) {
       position.x = targetX;
     } else {
