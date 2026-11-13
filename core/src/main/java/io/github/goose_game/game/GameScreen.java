@@ -27,6 +27,14 @@ import io.github.goose_game.utils.Node;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Main gameplay screen, which owns the scene graph (player, enemies, weapons), the world camera,
+ * and the HUD (timer, score, attack warning, health bar), and drives the 5 minute survival round.
+ *
+ * <p>The round is won by surviving until the timer reaches zero, or lost if the player's health
+ * reaches zero. Halfway through the round a large enemy spawns. Win, lose and pause transitions are
+ * delegated to the {@link GameStateManager}.
+ */
 public class GameScreen extends ScreenAdapter {
 
   // Gameplay values
@@ -76,6 +84,12 @@ public class GameScreen extends ScreenAdapter {
   private boolean showEntityBounds;
   private final ShapeRenderer debugShapeRenderer = new ShapeRenderer();
 
+  /**
+   * Creates the game screen, builds the HUD, and sets up the player, enemy manager and weapon.
+   *
+   * @param game application instance providing the shared sprite batch
+   * @param stateManager the current {@link GameStateManager} instance
+   */
   public GameScreen(Main game, GameStateManager stateManager) {
     this.game = game;
     this.stateManager = stateManager;
@@ -169,6 +183,7 @@ public class GameScreen extends ScreenAdapter {
     hudStage.draw();
   }
 
+  /** Draws a health bar beneath the player in world space. */
   private void drawPlayerHealthBar() {
     Player player = (Player) root.get_child("player");
     float width = 24f;
@@ -185,6 +200,7 @@ public class GameScreen extends ScreenAdapter {
     debugShapeRenderer.end();
   }
 
+  /** Draws score popups, flashing them on and off while they are active. */
   private void drawScorePopups() {
     for (ScorePopup popup : scorePopups) {
       float elapsed = 0.5f - popup.timeRemaining;
@@ -194,6 +210,11 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  /**
+   * Awards the enemy's dispersal score and spawns a score popup at its position.
+   *
+   * @param enemy the enemy that was dispersed
+   */
   private void onEnemyDispersed(Enemy enemy) {
     int points = enemy.getDispersalScore();
     score += points;
@@ -201,6 +222,11 @@ public class GameScreen extends ScreenAdapter {
     scorePopups.add(new ScorePopup("+" + points, enemy.position.x, enemy.position.y));
   }
 
+  /**
+   * Awards one point per second survived.
+   *
+   * @param delta time elapsed since the last frame, in seconds
+   */
   private void updateScore(float delta) {
     scoreRemainder += delta;
     int earnedPoints = (int) scoreRemainder;
@@ -211,10 +237,16 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  /** Refreshes the score label text. */
   private void updateScoreLabel() {
     scoreLabel.setText("Score: " + score);
   }
 
+  /**
+   * Ticks down popup lifetimes and removes expired ones.
+   *
+   * @param delta time elapsed since the last frame, in seconds
+   */
   private void updateScorePopups(float delta) {
     Iterator<ScorePopup> iterator = scorePopups.iterator();
     while (iterator.hasNext()) {
@@ -226,6 +258,14 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  /**
+   * Advances the game by one frame
+   * 
+   * <p>Handles the debug toggle and pause key, updates the timer, score, the large enemy event,
+   * scene nodes, win/lose checks and the camera.
+   *
+   * @param delta time elapsed since the last frame, in seconds
+   */
   private void update(float delta) {
     if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
       showEntityBounds = !showEntityBounds;
@@ -269,6 +309,11 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  /**
+   * Counts down the attack warning and hides it when expired.
+   *
+   * @param delta time elapsed since the last frame, in seconds
+   */
   private void updateAttackMessage(float delta) {
     if (attackMessageTime > 0) {
       attackMessageTime = Math.max(0, attackMessageTime - delta);
@@ -276,6 +321,7 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  /** Updates the timer label. */
   private void updateTimerLabel() {
     int seconds = (int) Math.ceil(remainingTime);
     if (seconds != displayedSeconds) {
@@ -294,6 +340,7 @@ public class GameScreen extends ScreenAdapter {
     scorePopupFont.dispose();
   }
 
+  /** Text showing points earned at a world position. */
   private static class ScorePopup {
     private final String text;
     private final float x;
@@ -307,6 +354,9 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  /**
+   * @return the player's score
+   */
   public int getPlayerScore() {
     return score;
   }
