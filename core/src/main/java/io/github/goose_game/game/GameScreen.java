@@ -60,7 +60,7 @@ public class GameScreen extends ScreenAdapter {
 
   private final Label timerLabel;
   private final Label scoreLabel;
-  private final Label testLabel;
+  private final Label swingLabel;
   private final Label attackLabel;
 
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
@@ -106,7 +106,7 @@ public class GameScreen extends ScreenAdapter {
 
     timerLabel = new Label("", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
     scoreLabel = new Label("Score: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
-    testLabel = new Label("Test: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    swingLabel = new Label("Stick Swings: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
 
     Table timerTable = new Table();
@@ -121,11 +121,11 @@ public class GameScreen extends ScreenAdapter {
     scoreTable.add(scoreLabel).padTop(12).padLeft(12);
     hudStage.addActor(scoreTable);
 
-    Table testTable = new Table();
-    testTable.setFillParent(true);
-    testTable.top().left();
-    testTable.add(testLabel).padTop(36).padLeft(12);
-    hudStage.addActor(testTable);
+    Table swingTable = new Table();
+    swingTable.setFillParent(true);
+    swingTable.top().left();
+    swingTable.add(swingLabel).padTop(50).padLeft(12);
+    hudStage.addActor(swingTable);
 
     Table attackTable = new Table();
     attackTable.setFillParent(true);
@@ -351,7 +351,7 @@ public class GameScreen extends ScreenAdapter {
     int swingCount = ((Weapon) root.get_child("player").get_child("weapon_test")).getSwingCount();
     if (swingCount != displayedSwingCount) {
       displayedSwingCount = swingCount;
-      testLabel.setText("Test: " + swingCount);
+      swingLabel.setText("Stick Swings: " + swingCount);
     }
   }
 
