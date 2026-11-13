@@ -1,5 +1,10 @@
 package io.github.goose_game.mapgen;
 
+import java.util.EnumMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.badlogic.gdx.math.Vector2;
 
 /**
@@ -12,12 +17,7 @@ import com.badlogic.gdx.math.Vector2;
 public class TileMap {
 
   private final TileType[][] map;
-  
-  /** The tile holding {@link TileType#SPAWN}, or {@code null} if none has been placed. */
-  private TilePosition spawn;
-
-  /** The tile holding {@link TileType#ESCAPE}, or {@code null} if none has been placed. */
-  private TilePosition escape;
+  private final Map<TileType, TilePosition> pointsOfInterest;
 
   /**
    * Creates an empty map, where every tile is {@code null} until set.
@@ -35,6 +35,7 @@ public class TileMap {
 
     int mapSizeInTiles = mapPixelToSquare(mapSize);
     map = new TileType[mapSizeInTiles][mapSizeInTiles];
+    pointsOfInterest = new EnumMap<>(TileType.class);
   }
 
   /**
@@ -74,10 +75,10 @@ public class TileMap {
    * @throws IllegalStateException if called before a {@link TileType#SPAWN} tile has been placed.
    */
   public Vector2 getSpawnPosition() {
-    if (spawn == null) {
+    if (!pointsOfInterest.containsKey(TileType.SPAWN)) {
       throw new IllegalStateException("spawn has not yet been placed");
     }
-    return new Vector2(getCentrePixelOfSquare(spawn));
+    return new Vector2(getCentrePixelOfSquare(pointsOfInterest.get(TileType.SPAWN)));
   }
 
   /**
@@ -86,32 +87,43 @@ public class TileMap {
    * @return the spawn tile, or {@code null} if no {@link TileType#SPAWN} tile has been placed
    */
   TilePosition getSpawnTile() {
-    return spawn;
+    return getPoiTile(TileType.SPAWN);
   }
 
   /**
-   * Returns the player's escape point as a world position.
+   * Returns the coordinates of a given point of interest as a world position.
    *
-   * <p>A new {@link Vector2} is returned on every call, so changing it does not move the escape
-   * point.
+   * <p>A new {@link Vector2} is returned on every call, so changing it does not move the POI.
    *
-   * @return the centre of the escape tile, in pixels
-   * @throws IllegalStateException if called before an {@link TileType#ESCAPE} tile has been placed.
+   * @param poi the point of interest to find
+   * @return the centre of the given POI, in pixels
+   * @throws IllegalArgumentException if a {@link TileType} is passed which is not a POI specified
+   *     by {@link TileDistribution#POINTS_OF_INTEREST}
+   * @throws IllegalStateException if this method is called before the given POI has been placed.
    */
-  public Vector2 getEscapePosition() {
-    if (spawn == null) {
+  public Vector2 getPositionOfPoi(TileType poi) {
+    if (!TileDistribution.POINTS_OF_INTEREST.contains(poi)) {
+      throw new IllegalArgumentException(poi + " is not a point of interest");
+    } else if (!pointsOfInterest.containsKey(poi)) {
       throw new IllegalStateException("escape has not yet been placed");
     }
-    return new Vector2(getCentrePixelOfSquare(escape));
+
+    return new Vector2(getCentrePixelOfSquare(pointsOfInterest.get(poi)));
   }
 
   /**
-   * Returns the tile index of the escape point.
+   * Returns the tile index of the given POI.
    *
-   * @return the escape tile, or {@code null} if no {@link TileType#ESCAPE} tile has been placed
+   * @return the position of the POI in terms of its index, or {@code null} if the given tile has
+   *     not yet been placed
+   * @throws IllegalArgumentException if {@code poi} is not a POI specified by
+   *     {@link TileDistribution#POINTS_OF_INTEREST}
    */
-  TilePosition getEscapeTile() {
-    return escape;
+  TilePosition getPoiTile(TileType poi) {
+    if (!TileDistribution.POINTS_OF_INTEREST.contains(poi)) {
+      throw new IllegalArgumentException(poi + " is not a point of interest");
+    }
+    return pointsOfInterest.get(poi);
   }
 
   /**
@@ -212,18 +224,15 @@ public class TileMap {
    */
   void setTileAtSquare(int tileX, int tileY, TileType tile) {
     checkCoordinatesAreInBounds(tileX, tileY);
-    if (map[tileX][tileY] == TileType.SPAWN) {
-      spawn = null;
-    } else if (map[tileX][tileY] == TileType.ESCAPE) {
-      escape = null;
+
+    if (TileDistribution.POINTS_OF_INTEREST.contains(map[tileX][tileY])) {
+      pointsOfInterest.remove(map[tileX][tileY]);
     }
 
     map[tileX][tileY] = tile;
 
-    if (tile == TileType.SPAWN) {
-      spawn = new TilePosition(tileX, tileY);
-    } else if (tile == TileType.ESCAPE) {
-      escape = new TilePosition(tileX, tileY);
+    if (TileDistribution.POINTS_OF_INTEREST.contains(tile)) {
+      pointsOfInterest.put(tile, new TilePosition(tileX, tileY));
     }
   }
 
@@ -272,5 +281,10 @@ public class TileMap {
     if (x < 0 || y < 0 || x >= map.length || y >= map.length) {
       throw new IllegalArgumentException("The given coordinates are out of bounds.");
     }
+  }
+
+  /** @return all tiles on the map which are marked as points of interest. */
+  Set<TilePosition> getAllPointsOfInterest() {
+    return Set.copyOf(pointsOfInterest.values());
   }
 }
