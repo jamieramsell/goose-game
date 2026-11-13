@@ -10,8 +10,19 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * Draws a {@link TileMap} as flat coloured squares, one per tile, as a placeholder until real tile
+ * artwork exists.
+ *
+ * <p>Only the tiles inside the camera's view are drawn each frame, so the cost depends on the size
+ * of the window and not on the size of the map.
+ *
+ * <p>This renderer owns a native {@link Texture}, so {@link #dispose()} must be called when it is
+ * no longer needed. The {@link Batch} it draws with belongs to the caller and is not disposed here.
+ */
 public class TileMapRenderer implements Disposable {
-  
+
+  /** The colour each type of tile is drawn in. */
   private static final Map<TileType, Color> COLOURS = new EnumMap<>(Map.of(
       TileType.GRASS, Color.GREEN,
       TileType.WATER, Color.BLUE,
@@ -21,9 +32,19 @@ public class TileMapRenderer implements Disposable {
       TileType.ESCAPE, Color.RED
   ));
 
+  /** The map to draw. */
   private final TileMap map;
+
+  /** A 1x1 white texture, which is tinted and stretched to draw each tile as a solid square. */
   private final Texture pixel;
 
+  /**
+   * Creates a renderer for the given map.
+   *
+   * <p>Must be called after libGDX has started, as it creates a texture.
+   *
+   * @param map the map to draw
+   */
   public TileMapRenderer(TileMap map) {
     this.map = map;
 
@@ -34,6 +55,18 @@ public class TileMapRenderer implements Disposable {
     pm.dispose();
   }
 
+  /**
+   * Draws every tile that is inside the camera's view.
+   *
+   * <p>Must be called between {@link Batch#begin()} and {@link Batch#end()}, and with the batch's
+   * projection matrix already set to the camera's, so that tile positions are interpreted as world
+   * coordinates. Call it before drawing entities so that they appear on top of the tiles.
+   *
+   * <p>The batch's tint colour is changed while drawing, and is reset to white afterwards.
+   *
+   * @param batch the batch to draw with
+   * @param camera the camera whose view determines which tiles are drawn
+   */
   public void render(Batch batch, OrthographicCamera camera) {
     // Calculate which tiles are in view to avoid drawing ones that are off screen
     float camX = camera.position.x;
@@ -73,7 +106,8 @@ public class TileMapRenderer implements Disposable {
     batch.setColor(Color.WHITE);
   }
 
-  @Override 
+  /** Disposes the texture used to draw tiles. The renderer must not be used afterwards. */
+  @Override
   public void dispose() {
     pixel.dispose();
   }
