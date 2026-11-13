@@ -59,10 +59,13 @@ public class GameScreen extends ScreenAdapter {
     this.root.add_child(
         "enemyManager", new EnemyManager(atlas, (Player) this.root.get_child("player")));
 
-    this.root
-        .get_child("player")
+    this.root.get_child("player")
         .add_child(
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
+
+    this.root.get_child("player")
+        .add_child(
+            "seed_weapon", new SeedWeapon());
 
     viewport.setCamera(camera);
 
