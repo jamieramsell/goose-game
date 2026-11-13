@@ -18,12 +18,12 @@ import java.util.Set;
 public class MapGenerator {
 
   /** The width and height of a single tile, in pixels. */
-  public static final int TILE_SIZE = 256;
+  public static final int TILE_SIZE = 128;
 
   /**
    * The width and height of the (square) map, in pixels. Must be a multiple of {@link #TILE_SIZE}.
    */
-  public static final int MAP_SIZE = 4096;
+  public static final int MAP_SIZE = TILE_SIZE * 64;
 
   private final TileDistribution distribution;
 
