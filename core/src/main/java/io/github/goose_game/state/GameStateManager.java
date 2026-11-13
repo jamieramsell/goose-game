@@ -1,5 +1,7 @@
 package io.github.goose_game.state;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.goose_game.Main;
@@ -85,7 +87,13 @@ public class GameStateManager {
     currentScreen.dispose();
 
     // Now generate the map
-    long longSeed = seed.isBlank() ? (long) Math.random() : (long) seed.hashCode();
+    long longSeed;
+    if (seed == null || seed.isBlank()) {
+      longSeed = new Random().nextLong();
+    } else {
+      longSeed = seed.hashCode();
+    }
+   
     MapGenerator generator = new MapGenerator();
     TileMap map = generator.generate(longSeed);
 
