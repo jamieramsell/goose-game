@@ -41,6 +41,29 @@ public class EnemyManager extends Node {
     add_child(String.valueOf(enemyCounter), enemy);
   }
 
+  public SeedProjectile getClosestSeed(Vector2 position) {
+    Node seedWeapon = player.get_child("seed_weapon");
+    if (seedWeapon == null) {
+      return null;
+    }
+
+    SeedProjectile closestSeed = null;
+    float closestDistance2 = Float.MAX_VALUE;
+    for (Node child : seedWeapon.getChildren().values()) {
+      if (child instanceof SeedProjectile) {
+        SeedProjectile seed = (SeedProjectile) child;
+        if (seed.isLanded() && !seed.isConsumed()) {
+          float distance2 = position.dst2(seed.position);
+          if (distance2 < closestDistance2) {
+            closestSeed = seed;
+            closestDistance2 = distance2;
+          }
+        }
+      }
+    }
+    return closestSeed;
+  }
+
   @Override
   public void update(float delta) {
     super.update(delta);
