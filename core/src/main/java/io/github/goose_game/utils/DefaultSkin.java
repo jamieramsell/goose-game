@@ -54,6 +54,16 @@ public class DefaultSkin {
     font.getData().setScale(2f);
     skin.add("default", font);
 
+    // Larger font for title text
+    BitmapFont titleFont = new BitmapFont();
+    titleFont.getData().setScale(3f);
+    skin.add("title", titleFont);
+
+    // Small font for text labels
+    BitmapFont labelFont = new BitmapFont();
+    labelFont.getData().setScale(1f);
+    skin.add("small", labelFont);
+
     // Button styles for each stage
     TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
     style.up = skin.newDrawable("white", Color.DARK_GRAY);
@@ -61,10 +71,6 @@ public class DefaultSkin {
     style.over = skin.newDrawable("white", Color.GRAY);
     style.font = font;
     skin.add("default", style);
-
-    // Small font for text labels
-    BitmapFont labelFont = new BitmapFont();
-    labelFont.getData().setScale(1f);
 
     // Text label style
     Label.LabelStyle labelStyle = new Label.LabelStyle(labelFont, Color.WHITE);

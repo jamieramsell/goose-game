@@ -58,7 +58,7 @@ public class MainMenu extends ScreenAdapter {
 
     // Game title
     Label title =
-        new Label("Flock n Load", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+        new Label("Flock n' Load", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
 
     // Play button
     TextButton play = new TextButton("Play", skin);

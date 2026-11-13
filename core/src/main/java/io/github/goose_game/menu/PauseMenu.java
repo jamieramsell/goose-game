@@ -54,7 +54,7 @@ public class PauseMenu extends ScreenAdapter {
 
     // Menu title
     Label title =
-        new Label("Game Paused", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+        new Label("Game Paused", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
 
     // Resume button
     TextButton resume = new TextButton("Resume Game", skin);
