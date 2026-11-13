@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import io.github.goose_game.Main;
 import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
+import io.github.goose_game.utils.DefaultSkin;
 import io.github.goose_game.utils.Node;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -54,17 +55,15 @@ public class GameScreen extends ScreenAdapter {
 
   // HUD
   private final Stage hudStage = new Stage(new ScreenViewport());
-  private final BitmapFont timerFont = new BitmapFont();
-  private final BitmapFont attackFont = new BitmapFont();
-  private final BitmapFont scoreFont = new BitmapFont();
-  private final BitmapFont scorePopupFont = new BitmapFont();
 
   private final Label timerLabel;
   private final Label scoreLabel;
   private final Label attackLabel;
+
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
 
   // Scene & Rendering
+  private final Skin skin;
   private final Node root = new Node(0, 0, 0, 0);
   private final EnemyManager enemyManager;
   private Texture background = new Texture(Gdx.files.internal("floor_test.png"));
@@ -95,14 +94,11 @@ public class GameScreen extends ScreenAdapter {
     this.stateManager = stateManager;
     this.batch = game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
+    this.skin = DefaultSkin.getSkin();
 
-    timerFont.getData().setScale(4f);
-    attackFont.getData().setScale(3f);
-    scoreFont.getData().setScale(2.625f);
-    scorePopupFont.getData().setScale(0.75f);
-    timerLabel = new Label("", new Label.LabelStyle(timerFont, Color.WHITE));
-    scoreLabel = new Label("Score: 0", new Label.LabelStyle(scoreFont, Color.WHITE));
-    attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(attackFont, Color.WHITE));
+    timerLabel = new Label("", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
+    scoreLabel = new Label("Score: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    attackLabel = new Label("Large Goose Attack!", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
 
     Table timerTable = new Table();
     timerTable.setFillParent(true);
@@ -205,7 +201,7 @@ public class GameScreen extends ScreenAdapter {
     for (ScorePopup popup : scorePopups) {
       float elapsed = 0.5f - popup.timeRemaining;
       if (((int) (elapsed / 0.1f)) % 2 == 0) {
-        scorePopupFont.draw(batch, popup.text, popup.x, popup.y + 18);
+        skin.getFont("small").draw(batch, popup.text, popup.x, popup.y + 18);
       }
     }
   }
@@ -334,10 +330,6 @@ public class GameScreen extends ScreenAdapter {
   public void dispose() {
     debugShapeRenderer.dispose();
     hudStage.dispose();
-    timerFont.dispose();
-    attackFont.dispose();
-    scoreFont.dispose();
-    scorePopupFont.dispose();
   }
 
   /** Text showing points earned at a world position. */
