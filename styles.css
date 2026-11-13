@@ -293,6 +293,22 @@ h2 {
   margin: 0
 }
 
+.chart {
+	cursor: zoom-in;
+}
+
+#photo-modal {
+	border: none;
+	padding: 0;
+	background: transparent;
+	cursor: zoom-out;
+}
+
+#photo-modal img {
+	max-width: 90vw;
+	max-height: 90vh;
+}
+
 details {
   border-bottom: 1px solid var(--rule)
 }

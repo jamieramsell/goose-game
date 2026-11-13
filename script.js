@@ -87,3 +87,19 @@ document.querySelectorAll('[data-jump]').forEach(element => {
 reducedMotion.addEventListener('change', () => {
   document.querySelectorAll('.bounce').forEach(letter => letter.classList.remove('bounce'));
 });
+
+const ganttChart = document.querySelectorAll('.chart');
+const modal = document.getElementById('photo-modal');
+const modalImg = document.getElementById('modal-img');
+
+ganttChart.forEach(photo => {
+	photo.addEventListener('click', () => {
+		modalImg.src = photo.src;
+		modalImg.alt = photo.alt;
+		modal.showModal();
+	});
+});
+
+modal.addEventListener('click', () => {
+	modal.close();
+});
