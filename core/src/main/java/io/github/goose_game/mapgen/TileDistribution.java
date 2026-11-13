@@ -16,16 +16,16 @@ import java.util.Random;
 public final class TileDistribution {
 
   /**
-   * The default weights for map generation, which are 70 grass, and 10 each of water, bushes and
+   * The default weights for map generation, which are 80 grass, 10 water, and 5 each of bushes and
    * buildings. The default distribution cannot contain any values of POIs.
    */
   public static final Map<TileType, Integer> DEFAULT_DISTRIBUTION =
       new EnumMap<>(
           Map.of(
-              TileType.GRASS, 70,
+              TileType.GRASS, 80,
               TileType.WATER, 10,
-              TileType.BUSH, 10,
-              TileType.BUILDING, 10));
+              TileType.BUSH, 5,
+              TileType.BUILDING, 5));
 
   /**
    * The points of interest on the map. POIs are unique, are always surrounded by a ring of grass

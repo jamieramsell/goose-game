@@ -18,12 +18,12 @@ import java.util.Set;
 public class MapGenerator {
 
   /** The width and height of a single tile, in pixels. */
-  public static final int TILE_SIZE = 16;
+  public static final int TILE_SIZE = 128;
 
   /**
    * The width and height of the (square) map, in pixels. Must be a multiple of {@link #TILE_SIZE}.
    */
-  public static final int MAP_SIZE = 4096;
+  public static final int MAP_SIZE = TILE_SIZE * 64;
 
   private final TileDistribution distribution;
 
@@ -49,7 +49,7 @@ public class MapGenerator {
     // the same rng, means that seeds are deterministic; even if a given seed isn't valid on the
     // first go, it will be used again to try and find another layout.
     while (true) {
-      TileMap map = new TileMap(MAP_SIZE);
+      TileMap map = new TileMap(MAP_SIZE, seed);
       
       // Create POIs first. Note that the +1, -2 values on the POI's x and y coords ensure that the
       // 3x3 patch surround it fits wholly within the map
@@ -70,10 +70,10 @@ public class MapGenerator {
         for (int y = 0; y < MAP_SIZE / TILE_SIZE; y++) {
           if (map.getTileAtSquare(x, y) == null) {
             // Set the tile at the given square. If next to water, boost this tile's chance of being
-            // a water tile by 75%
+            // a water tile by 200%
             boolean nearWater = map.nextToTileOfGivenType(x, y, TileType.WATER);
             TileType t = nearWater
-                ? distribution.boostedSample(rng, TileType.WATER, 0.75f)
+                ? distribution.boostedSample(rng, TileType.WATER, 2.00f)
                 : distribution.sample(rng);
             map.setTileAtSquare(x, y, t);
           }
@@ -103,8 +103,7 @@ public class MapGenerator {
    *     passable itself.
    */
   public boolean isMapPassable(TileMap map) {
-    Set<TilePosition> pointsOfInterest = map.getAllPointsOfInterest();
-
+    Set<TilePosition> pointsOfInterest = Set.copyOf(map.getAllPointsOfInterest().values());
     if (pointsOfInterest.size() < 1) {
       throw new IllegalStateException("A map was given with no points of interest");
     } else if (pointsOfInterest.size() == 1) {
