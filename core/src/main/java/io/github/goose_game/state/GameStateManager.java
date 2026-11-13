@@ -2,6 +2,7 @@ package io.github.goose_game.state;
 
 import java.util.Random;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.goose_game.Main;
@@ -86,7 +87,7 @@ public class GameStateManager {
     gameState = GameState.GENERATION;
     currentScreen.dispose();
 
-    // Now generate the map
+    // Parse map seed
     long longSeed;
     if (seed == null || seed.isBlank()) {
       longSeed = new Random().nextLong();
@@ -94,16 +95,26 @@ public class GameStateManager {
       longSeed = seed.hashCode();
     }
    
-    MapGenerator generator = new MapGenerator();
-    TileMap map = generator.generate(longSeed);
+    // Don't use the GDX thread to generate the map
+    Thread worker = new Thread(() -> {
+      // Now generate the map
+      MapGenerator generator = new MapGenerator();
+      TileMap map = generator.generate(longSeed);
 
-    // Finally, draw the map and update state once more
-    game.setScreen(new GameScreen(game, this, map));
-    gameState = GameState.GAME;
-    loadingScreen.dispose();
+      // Return to GDX thread once map has been generated in order to draw it
+      Gdx.app.postRunnable(() -> {
+        // Finally, draw the map and update state once more
+        game.setScreen(new GameScreen(game, this, map));
+        gameState = GameState.GAME;
+        loadingScreen.dispose();
 
-    // Garbage collect (you never know lol)
-    pausedGameGarbageCollector();
+        // Garbage collect (you never know lol)
+        pausedGameGarbageCollector();
+      });
+    });
+    
+    worker.setDaemon(true); // Kill the worker thread if the window is quit mid session
+    worker.start();
   }
 
   /**
