@@ -49,7 +49,7 @@ public class MapGenerator {
     // the same rng, means that seeds are deterministic; even if a given seed isn't valid on the
     // first go, it will be used again to try and find another layout.
     while (true) {
-      TileMap map = new TileMap(MAP_SIZE);
+      TileMap map = new TileMap(MAP_SIZE, seed);
       
       // Create POIs first. Note that the +1, -2 values on the POI's x and y coords ensure that the
       // 3x3 patch surround it fits wholly within the map

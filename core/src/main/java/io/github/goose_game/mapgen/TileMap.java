@@ -15,15 +15,17 @@ public class TileMap {
 
   private final TileType[][] map;
   private final Map<TileType, TilePosition> pointsOfInterest;
+  public final long seed;
 
   /**
    * Creates an empty map, where every tile is {@code null} until set.
    *
    * @param mapSize the width and height of the map, in pixels
+   * @param seed the seed used to generate the map
    * @throws IllegalArgumentException if {@code mapSize} is not positive, or is not a multiple of
    *     {@link MapGenerator#TILE_SIZE}
    */
-  public TileMap(int mapSize) {
+  public TileMap(int mapSize, long seed) {
     if (mapSize <= 0) {
       throw new IllegalArgumentException("mapSize must be greater than 0");
     } else if (mapSize % MapGenerator.TILE_SIZE != 0) {
@@ -33,6 +35,7 @@ public class TileMap {
     int mapSizeInTiles = mapPixelToSquare(mapSize);
     map = new TileType[mapSizeInTiles][mapSizeInTiles];
     pointsOfInterest = new EnumMap<>(TileType.class);
+    this.seed = seed;
   }
 
   /**
