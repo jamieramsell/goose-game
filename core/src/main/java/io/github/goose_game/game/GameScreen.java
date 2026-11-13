@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -12,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -45,6 +47,8 @@ public class GameScreen extends ScreenAdapter {
   private static final float WORLD_HEIGHT = 320f;
   private static final float GAME_DURATION_SECONDS = 5 * 60;
   private static final float ATTACK_MESSAGE_DURATION_SECONDS = 3f;
+  private static final float PICKUP_ATTRACTION_RADIUS = 50f;
+  private static final float PICKUP_ATTRACTION_SPEED = 25f;
 
   // Framework
   private final Main game;
@@ -52,6 +56,7 @@ public class GameScreen extends ScreenAdapter {
 
   private final Batch batch;
   private final TextureAtlas atlas;
+  private final Texture pickupTexture;
   private final Viewport viewport = new ExtendViewport(WORLD_WIDTH, WORLD_HEIGHT);
   private final OrthographicCamera camera = new OrthographicCamera();
 
@@ -64,6 +69,7 @@ public class GameScreen extends ScreenAdapter {
   private final Label attackLabel;
 
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
+  private final ArrayList<Node> healthPickups = new ArrayList<>();
 
   // Scene & Rendering
   private final Skin skin;
@@ -102,6 +108,7 @@ public class GameScreen extends ScreenAdapter {
     this.stateManager = stateManager;
     this.batch = this.game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
+    this.pickupTexture = createPickupTexture();
     this.skin = DefaultSkin.getSkin();
 
     timerLabel = new Label("", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
@@ -180,6 +187,9 @@ public class GameScreen extends ScreenAdapter {
     batch.begin();
     renderer.render(batch, camera);
     root.draw(batch);
+    for (Node pickup : healthPickups) {
+      pickup.draw(batch);
+    }
     drawScorePopups();
 
     batch.end();
@@ -220,7 +230,11 @@ public class GameScreen extends ScreenAdapter {
     for (ScorePopup popup : scorePopups) {
       float elapsed = 0.5f - popup.timeRemaining;
       if (((int) (elapsed / 0.1f)) % 2 == 0) {
-        skin.getFont("small").draw(batch, popup.text, popup.x, popup.y + 18);
+        com.badlogic.gdx.graphics.g2d.BitmapFont font = skin.getFont("small");
+        Color previousColor = font.getColor().cpy();
+        font.setColor(popup.color);
+        font.draw(batch, popup.text, popup.x, popup.y + 18);
+        font.setColor(previousColor);
       }
     }
   }
@@ -235,6 +249,50 @@ public class GameScreen extends ScreenAdapter {
     score += points;
     updateScoreLabel();
     scorePopups.add(new ScorePopup("+" + points, enemy.position.x, enemy.position.y));
+
+    if (MathUtils.randomBoolean(0.2f)) {
+      Sprite pickupSprite = new Sprite(pickupTexture);
+      pickupSprite.setScale(1.125f);
+      healthPickups.add(new Node(enemy.position.x, enemy.position.y, 9, 9, pickupSprite));
+    }
+  }
+
+  private Texture createPickupTexture() {
+    Pixmap pixmap = new Pixmap(8, 8, Pixmap.Format.RGBA8888);
+    String[] pixels = {
+      "...dd...",
+      "..dBBd..",
+      ".dBBBBd.",
+      "dBBBLLBd",
+      "dBBLLBBd",
+      ".dBBBBd.",
+      "..dBBd..",
+      "...dd..."
+    };
+
+    for (int y = 0; y < pixels.length; y++) {
+      for (int x = 0; x < pixels[y].length(); x++) {
+        switch (pixels[y].charAt(x)) {
+          case 'd':
+            pixmap.setColor(0.25f, 0.12f, 0.04f, 1f);
+            break;
+          case 'B':
+            pixmap.setColor(0.48f, 0.27f, 0.10f, 1f);
+            break;
+          case 'L':
+            pixmap.setColor(0.68f, 0.43f, 0.20f, 1f);
+            break;
+          default:
+            continue;
+        }
+        pixmap.drawPixel(x, 7 - y);
+      }
+    }
+
+    Texture texture = new Texture(pixmap);
+    pixmap.dispose();
+    texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+    return texture;
   }
 
   /**
@@ -314,6 +372,7 @@ public class GameScreen extends ScreenAdapter {
           root.update(delta);
           updateSwingLabel();
           Player player = (Player) root.get_child("player");
+          updateHealthPickups(player, delta);
 
           if (player.getHealth() <= 0) { // Player dead, lose condition
             stateManager.lose(this);
@@ -355,11 +414,34 @@ public class GameScreen extends ScreenAdapter {
     }
   }
 
+  private void updateHealthPickups(Player player, float delta) {
+    Iterator<Node> iterator = healthPickups.iterator();
+    while (iterator.hasNext()) {
+      Node pickup = iterator.next();
+      float dx = player.position.x - pickup.position.x;
+      float dy = player.position.y - pickup.position.y;
+      float distanceSquared = dx * dx + dy * dy;
+      if (distanceSquared > 0
+          && distanceSquared <= PICKUP_ATTRACTION_RADIUS * PICKUP_ATTRACTION_RADIUS) {
+        float distance = (float) Math.sqrt(distanceSquared);
+        float travel = Math.min(distance, PICKUP_ATTRACTION_SPEED * delta);
+        pickup.position.add(dx / distance * travel, dy / distance * travel);
+      }
+      pickup.update(0);
+      if (player.overlaps(pickup)) {
+        player.heal(20);
+        scorePopups.add(new ScorePopup("+20", pickup.position.x, pickup.position.y, Color.GREEN));
+        iterator.remove();
+      }
+    }
+  }
+
   @Override
   public void dispose() {
     debugShapeRenderer.dispose();
     hudStage.dispose();
     renderer.dispose();
+    pickupTexture.dispose();
   }
 
   /** Text showing points earned at a world position. */
@@ -367,12 +449,18 @@ public class GameScreen extends ScreenAdapter {
     private final String text;
     private final float x;
     private final float y;
+    private final Color color;
     private float timeRemaining = 0.5f;
 
     private ScorePopup(String text, float x, float y) {
+      this(text, x, y, Color.WHITE);
+    }
+
+    private ScorePopup(String text, float x, float y, Color color) {
       this.text = text;
       this.x = x;
       this.y = y;
+      this.color = color;
     }
   }
 
