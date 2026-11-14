@@ -1,0 +1,248 @@
+floorspritesheet.png
+size: 199, 102
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+floor
+  bounds: 1, 1, 32, 32
+  index: 0
+floor
+  bounds: 1, 35, 32, 32
+  index: 1
+floor
+  bounds: 1, 69, 32, 32
+  index: 2
+floor
+  bounds: 35, 1, 32, 32
+  index: 3
+floor
+  bounds: 35, 35, 32, 32
+  index: 4
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 5
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 6
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 7
+floor
+  bounds: 35, 69, 32, 32
+  index: 8
+floor
+  bounds: 69, 1, 32, 32
+  index: 9
+floor
+  bounds: 69, 35, 32, 32
+  index: 10
+floor
+  bounds: 69, 69, 32, 32
+  index: 11
+floor
+  bounds: 103, 1, 32, 32
+  index: 12
+floor
+  bounds: 137, 1, 32, 32
+  index: 13
+floor
+  bounds: 171, 55, 29, 12
+  offsets: 3, 17, 32, 32
+  rotate: 90
+  index: 14
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 15
+floor
+  bounds: 103, 35, 32, 32
+  index: 16
+floor
+  bounds: 137, 35, 32, 32
+  index: 17
+floor
+  bounds: 103, 69, 32, 32
+  index: 18
+floor
+  bounds: 171, 31, 26, 22
+  offsets: 3, 4, 32, 32
+  index: 19
+floor
+  bounds: 137, 69, 32, 32
+  index: 20
+floor
+  bounds: 171, 1, 27, 28
+  offsets: 2, 1, 32, 32
+  index: 21
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 22
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 23
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 24
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 25
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 26
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 27
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 28
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 29
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 30
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 31
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 32
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 33
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 34
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 35
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 36
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 37
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 38
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 39
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 40
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 41
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 42
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 43
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 44
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 45
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 46
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 47
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 48
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 49
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 50
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 51
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 52
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 53
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 54
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 55
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 56
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 57
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 58
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 59
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 60
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 61
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 62
+floor
+  bounds: 185, 55, 3, 3
+  offsets: 0, 29, 32, 32
+  index: 63

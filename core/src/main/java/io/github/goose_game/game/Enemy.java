@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import io.github.goose_game.mapgen.MapGenerator;
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 
 public class Enemy extends Node {
@@ -28,10 +30,7 @@ public class Enemy extends Node {
   float damage;
   int attackCounter;
   int attackDelay;
-  private float frame;
   boolean fleeing = false;
-  private int health;
-  private int maxHealth;
   private int i = 0;
   private boolean facingRight = true;
   private SeedProjectile eatingSeed;
