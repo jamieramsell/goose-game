@@ -16,7 +16,6 @@ public class Enemy extends Node {
   private static final float SEED_EAT_DURATION = 1.25f;
 
   private final TileMap map;
-  private final EnemyManager enemyManager;
   Player target;
 
   private int health;
@@ -48,7 +47,6 @@ public class Enemy extends Node {
       TextureAtlas atlas,
       Player target,
       TileMap map,
-      EnemyManager enemyManager,
       float speed,
       float damage,
       int attackDelay,
@@ -59,7 +57,6 @@ public class Enemy extends Node {
   ) {
     super(x, y, width, height);
     this.target = target;
-    this.enemyManager = enemyManager;
     this.speed = speed;
     this.damage = damage;
     this.attackCounter = 0;
