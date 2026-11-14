@@ -15,10 +15,12 @@ public class EnemyManager extends Node {
   private final Player player;
   private final TileMap map;
   private final Random rng;
+  private final ArrayList<Vector2> pendingPickups = new ArrayList<>();
 
   int wave_timer;
   int waves = 0;
   int enemyCounter = 0;
+  private int PickupCounter;
 
   public EnemyManager(TextureAtlas atlas, Player player, TileMap map) {
     this.atlas = atlas;
@@ -39,7 +41,7 @@ public class EnemyManager extends Node {
   public void spawnEnemy() {
     float targetX;
     float targetY;
-  
+
     while (true) { // Find a random spawn point near the player where geese can spawn
       // Seeded random ensures geese spawn in the same place every time on the same seed
       int rndDir = rng.nextInt(360);
@@ -89,17 +91,27 @@ public class EnemyManager extends Node {
     return closestSeed;
   }
 
+  void queuePickup(Vector2 position) {
+    pendingPickups.add(position.cpy());
+  }
+
   @Override
   public void update(float delta) {
-    super.update(delta);
-    ArrayList<Enemy> killList = new ArrayList<Enemy>();
-    for (Node child : children.values()) {
-      if (child instanceof Enemy) {
-        if (((Enemy) child).fleeing) {
-          killList.add((Enemy) child);
+    for (Vector2 position : pendingPickups) {
+      if (Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
+          add_child(
+              String.valueOf(PickupCounter),
+              new HeartPickup(position.x, position.y, 16, 16, player));
+        } else {
+          add_child(
+              String.valueOf(PickupCounter),
+              new SeedPickup(position.x, position.y, 16, 16, player));
         }
+        PickupCounter++;
       }
-      ;
-    }
+      }
+    pendingPickups.clear();
+    super.update(delta);
   }
 }

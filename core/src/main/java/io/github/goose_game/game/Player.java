@@ -20,6 +20,7 @@ public class Player extends Node {
 
   private Vector2 velocity;
   private float health;
+  private final float MAX_HEALTH;
 
   private Array<Animation<Sprite>> running;
   private Array<Animation<Sprite>> idle;
@@ -40,6 +41,7 @@ public class Player extends Node {
     super(x, y, width, height);
     this.speed = speed;
     this.health = health;
+    this.MAX_HEALTH = health;
     this.velocity = new Vector2();
     this.camera = camera;
     this.map = map;
@@ -90,7 +92,7 @@ public class Player extends Node {
     } else {
       velocity.y = 0;
     }
- 
+
     super.update(delta);
   }
 
@@ -161,6 +163,14 @@ public class Player extends Node {
 
   public Camera getCamera() {
     return camera;
+  }
+
+  public boolean heal() {
+    if (health < MAX_HEALTH) {
+      health = Math.min(health + MAX_HEALTH / 10f, MAX_HEALTH);
+      return true;
+    }
+    return false;
   }
 
 }

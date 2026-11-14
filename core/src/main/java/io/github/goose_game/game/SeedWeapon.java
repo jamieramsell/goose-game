@@ -55,4 +55,12 @@ public class SeedWeapon extends Node {
   public int getAmmo() {
     return ammo;
   }
+
+  public boolean addAmmo(int amount) {
+    if (ammo < MAX_AMMO) {
+      ammo = Math.min(ammo + amount, MAX_AMMO);
+      return true;
+    }
+    return false;
+  }
 }

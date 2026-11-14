@@ -235,14 +235,13 @@ public class Enemy extends Node {
     }
   }
 
-  public void disperse() {
-    fleeing = true;
-  }
-
   public void damage(int damage) {
     health -= damage;
     if (health <= 0) {
-      fleeing = true;
+      if (!fleeing) {
+        fleeing = true;
+        ((EnemyManager) getParent()).queuePickup(position);
+      }
     }
   }
 }
