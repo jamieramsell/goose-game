@@ -66,7 +66,6 @@ public class MainMenu extends ScreenAdapter {
     backgroundMusic.setLooping(true);
     backgroundMusic.play();
 
-
     // Game title
     Label title = getTitle();
 
@@ -213,5 +212,6 @@ public class MainMenu extends ScreenAdapter {
     background.dispose();
     stage.dispose();
     skin.dispose();
+    backgroundMusic.dispose();
   }
 }
