@@ -137,8 +137,8 @@ public class Enemy extends Node {
       velocity = new Vector2(0, 0);
     }
     if (fleeing) {
-      velocity.x *= 1.1F;
-      velocity.y *= 1.1F;
+      velocity.x *= 1.3F;
+      velocity.y *= 1.3F;
     }
 
     float targetX = position.x + velocity.x * delta;
