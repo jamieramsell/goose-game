@@ -207,11 +207,6 @@ public class GameScreen extends ScreenAdapter {
     renderer.render(batch, camera);
     root.draw(batch);
 
-    batch.end();
-
-    batch.setProjectionMatrix(
-        new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
-    batch.begin();
     drawScorePopups();
 
     batch.end();
