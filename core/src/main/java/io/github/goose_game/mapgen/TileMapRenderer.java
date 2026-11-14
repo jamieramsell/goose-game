@@ -68,8 +68,6 @@ public class TileMapRenderer implements Disposable {
    * projection matrix already set to the camera's, so that tile positions are interpreted as world
    * coordinates. Call it before drawing entities so that they appear on top of the tiles.
    *
-   * <p>The batch's tint colour is changed while drawing, and is reset to white afterwards.
-   *
    * @param batch the batch to draw with
    * @param camera the camera whose view determines which tiles are drawn
    */
@@ -103,29 +101,25 @@ public class TileMapRenderer implements Disposable {
     // Draw all tiles in view
     for (int x = minTileX; x <= maxTileX; x++) {
       for (int y = minTileY; y <= maxTileY; y++) {
-        if (map.getTileAtSquare(x, y) != TileType.WATER) {
-          drawGrass(batch, x, y, mapSize);
-          if (map.getTileAtSquare(x, y) == TileType.BUILDING) {
+        switch (map.getTileAtSquare(x, y)) {
+          case BUILDING -> {
+            drawGrass(batch, x, y, mapSize);
             Sprite building = atlas.createSprite("floor", 21);
             building.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
             building.draw(batch);
-          }
-          if (map.getTileAtSquare(x, y) == TileType.BUSH) {
+          } case BUSH -> {
+            drawGrass(batch, x, y, mapSize);
             Sprite bush = atlas.createSprite("floor", 19);
             bush.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
             bush.draw(batch);
+          } case WATER -> {
+            drawWater(batch, x, y, mapSize);
+          } case GRASS, SPAWN, ESCAPE -> {
+            drawGrass(batch, x, y, mapSize);
           }
         }
-        if (map.getTileAtSquare(x, y) == TileType.WATER) {
-          drawWater(batch, x, y, mapSize);
-        }
-        //TileType currentTile = map.getTileAtSquare(x, y);
-        //batch.setColor(COLOURS.get(currentTile));
-        //batch.draw(pixel, x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE, MapGenerator.TILE_SIZE, MapGenerator.TILE_SIZE);
       }
     }
-
-    batch.setColor(Color.WHITE);
   }
 
   public void drawGrass(Batch batch, int x, int y, int mapSize) {

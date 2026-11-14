@@ -6,7 +6,12 @@ public enum TileType {
   /** The player spawn point. */
   SPAWN(true, true),
 
-  /** The player's escape point. */
+  /**
+   * The player's escape point.
+   * 
+   * <p>The escape point is unused as an escape for the player, but remains as a POI to ensure that
+   * the player-reachable area of the map is large enough.
+   */
   ESCAPE(true, true),
 
   /** A plain, grassy tile. Passable by all. */
