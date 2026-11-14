@@ -21,6 +21,7 @@ public class Player extends Node {
 
   private Vector2 velocity;
   private float health;
+  private final float MAX_HEALTH;
 
   private Array<Animation<Sprite>> running;
   private Array<Animation<Sprite>> idle;
@@ -42,6 +43,7 @@ public class Player extends Node {
     this.speed = speed;
     this.maxHealth = health;
     this.health = health;
+    this.MAX_HEALTH = health;
     this.velocity = new Vector2();
     this.camera = camera;
     this.map = map;
@@ -92,7 +94,7 @@ public class Player extends Node {
     } else {
       velocity.y = 0;
     }
- 
+
     super.update(delta);
   }
 
@@ -117,6 +119,9 @@ public class Player extends Node {
     }
     if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
       ((Weapon) get_child("weapon_test")).attack();
+    }
+    if (Gdx.input.isButtonJustPressed(Input.Buttons.RIGHT)) {
+      ((SeedWeapon) get_child("seed_weapon")).attack();
     }
     dir = dir.nor();
 
@@ -168,4 +173,13 @@ public class Player extends Node {
   public Camera getCamera() {
     return camera;
   }
+
+  public boolean heal() {
+    if (health < MAX_HEALTH) {
+      health = Math.min(health + MAX_HEALTH / 10f, MAX_HEALTH);
+      return true;
+    }
+    return false;
+  }
+
 }

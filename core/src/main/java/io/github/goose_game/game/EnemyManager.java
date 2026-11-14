@@ -22,6 +22,7 @@ public class EnemyManager extends Node {
   private final Player player;
   private final TileMap map;
   private final Random rng;
+  private final ArrayList<Vector2> pendingPickups = new ArrayList<>();
 
   /** Timer used for wave scheduling. */
   int wave_timer;
@@ -32,9 +33,20 @@ public class EnemyManager extends Node {
   /** Callback passed to each spawned enemy, invoked when it is dispersed. */
   private final Consumer<Enemy> onEnemyDispersed;
 
-  /** Running count of enemies spawned, used to generate unique child names. */
+  /** Running count of enemies spawned used to generate unique child names. */
   int enemyCounter = 0;
 
+  /** Running count of pickups spawned used to generate unique child names. */
+  private int PickupCounter;
+
+  /**
+   * Creates the manager and immediately spawns the first wave of enemies.
+   *
+   * @param atlas atlas containing the goose animations
+   * @param player the player enemies chase and spawn around
+   * @param map the map used for spawn validation and collision; its seed seeds spawn randomness
+   * @param onEnemyDispersed callback invoked whenever a spawned enemy is dispersed
+   */
   public EnemyManager(
       TextureAtlas atlas,
       Player player,
@@ -83,7 +95,6 @@ public class EnemyManager extends Node {
             atlas,
             player,
             map,
-            this,
             speed,
             damage,
             attackDelay,
@@ -126,7 +137,6 @@ public class EnemyManager extends Node {
             atlas,
             player,
             map,
-            this,
             speed,
             damage,
             attackDelay,
@@ -149,8 +159,8 @@ public class EnemyManager extends Node {
   public void teleportEnemyNearPlayer(Enemy enemy) {
     float targetX;
     float targetY;
-  
-    while (true) { // Find a random point near the player until one is found which is passable by geese
+
+    while (true) { // Find a random spawn point near the player where geese can spawn
       // Seeded random ensures geese spawn in the same place every time on the same seed
       int rndDir = rng.nextInt(360);
       int rndDist = rng.nextInt(360, 370);
@@ -163,10 +173,10 @@ public class EnemyManager extends Node {
 
       int mapSize = MapGenerator.MAP_SIZE;
       if (targetX <= 0 || targetY <= 0 || targetX >= mapSize || targetY >= mapSize) {
-        continue; // Goose is out of bounds, try again
+        continue;
       }
 
-      if (!(map.isPixelSolidForGeese((int) targetX, (int) targetY))) {
+      if (!map.isPixelSolidForGeese((int) targetX, (int) targetY)) {
         break;
       }
     }
@@ -176,21 +186,64 @@ public class EnemyManager extends Node {
   }
 
   /**
-   * Updates all child enemies and collects those that are fleeing.
+   * Finds the seed nearest to a position that enemies can still be attracted to.
    *
-   * @param delta time elapsed since the last frame, in seconds
+   * <p>Only seeds that have landed and have not yet been consumed are considered.
+   *
+   * @param position the position to measure distance from
+   * @return the closest eligible seed, or {@code null} if there is none or the player has no seed
+   *     weapon
    */
-  @Override
-  public void update(float delta) {
-    super.update(delta);
-    ArrayList<Enemy> killList = new ArrayList<Enemy>();
-    for (Node child : children.values()) {
-      if (child instanceof Enemy) {
-        if (((Enemy) child).fleeing) {
-          killList.add((Enemy) child);
+  public SeedProjectile getClosestSeed(Vector2 position) {
+    Node seedWeapon = player.get_child("seed_weapon");
+    if (seedWeapon == null) {
+      return null;
+    }
+
+    SeedProjectile closestSeed = null;
+    float closestDistance2 = Float.MAX_VALUE;
+    for (Node child : seedWeapon.getChildren().values()) {
+      if (child instanceof SeedProjectile) {
+        SeedProjectile seed = (SeedProjectile) child;
+        if (seed.isLanded() && !seed.isConsumed()) {
+          float distance2 = position.dst2(seed.position);
+          if (distance2 < closestDistance2) {
+            closestSeed = seed;
+            closestDistance2 = distance2;
+          }
         }
       }
-      ;
     }
+    return closestSeed;
+  }
+
+  /**
+   * Queues a possible pickup drop at a position. The drop is resolved on the next {@link
+   * #update()}, where it has a chance of spawning a heart or seed pickup.
+   *
+   * @param position the position to drop at
+   */
+  void queuePickup(Vector2 position) {
+    pendingPickups.add(position.cpy());
+  }
+
+  @Override
+  public void update(float delta) {
+    for (Vector2 position : pendingPickups) {
+      if (Math.random() < 0.5) {
+        if (Math.random() < 0.5) {
+          add_child(
+              String.valueOf(PickupCounter),
+              new HeartPickup(position.x, position.y, 16, 16, player));
+        } else {
+          add_child(
+              String.valueOf(PickupCounter),
+              new SeedPickup(position.x, position.y, 16, 16, player));
+        }
+        PickupCounter++;
+      }
+      }
+    pendingPickups.clear();
+    super.update(delta);
   }
 }

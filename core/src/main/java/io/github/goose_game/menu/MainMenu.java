@@ -2,6 +2,7 @@ package io.github.goose_game.menu;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
@@ -39,6 +40,7 @@ import io.github.goose_game.utils.DefaultSkin;
 public class MainMenu extends ScreenAdapter {
 
   private final GameStateManager stateManager;
+  private final Music backgroundMusic;
 
   private final Stage stage = new Stage(new ExtendViewport(640, 360));
   private final Skin skin;
@@ -59,6 +61,10 @@ public class MainMenu extends ScreenAdapter {
     this.stateManager = stateManager;
     this.skin = DefaultSkin.getSkin();
     this.batch = game.getBatch();
+
+    this.backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/GOOSE MAIN MENU.mp3"));
+    backgroundMusic.setLooping(true);
+    backgroundMusic.play();
 
     // Game title
     Label title = getTitle();
@@ -175,6 +181,7 @@ public class MainMenu extends ScreenAdapter {
 
   @Override
   public void hide() {
+    backgroundMusic.stop();
     Gdx.input.setInputProcessor(null);
   }
 
@@ -205,5 +212,6 @@ public class MainMenu extends ScreenAdapter {
     background.dispose();
     stage.dispose();
     skin.dispose();
+    backgroundMusic.dispose();
   }
 }
