@@ -17,6 +17,7 @@ import io.github.goose_game.utils.Node;
 public class Player extends Node {
   private final TileMap map;
   private final float speed;
+  private final float maxHealth;
 
   private Vector2 velocity;
   private float health;
@@ -40,6 +41,7 @@ public class Player extends Node {
       Camera camera) {
     super(x, y, width, height);
     this.speed = speed;
+    this.maxHealth = health;
     this.health = health;
     this.MAX_HEALTH = health;
     this.velocity = new Vector2();
@@ -157,8 +159,15 @@ public class Player extends Node {
   }
 
   public void damage(float damage) {
-    health -= damage;
-    System.out.println(health);
+    health = Math.max(0, health - damage);
+  }
+
+  public float getHealth() {
+    return health;
+  }
+
+  public float getMaxHealth() {
+    return maxHealth;
   }
 
   public Camera getCamera() {

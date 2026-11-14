@@ -64,9 +64,15 @@ public class DefaultSkin {
     font.getData().setScale(2f);
     skin.add("default", font);
 
-    // Smaller font for text labels and inputs
+    // Larger font for title text
+    BitmapFont titleFont = new BitmapFont();
+    titleFont.getData().setScale(3f);
+    skin.add("title", titleFont);
+
+    // Small font for text labels
     BitmapFont smallerFont = new BitmapFont();
     smallerFont.getData().setScale(1f);
+    skin.add("small", smallerFont);
 
     // Button styles for each stage
     TextButton.TextButtonStyle buttonStyle = getButtonStyle(skin, font);

@@ -45,7 +45,7 @@ public class CreditsPage extends ScreenAdapter {
 
     // Page title
     Label title =
-        new Label("Asset Credits", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+        new Label("Asset Credits", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
 
     // Credits
     Label[] credits = { // Add any credits within this array; they'll be drawn automatically.

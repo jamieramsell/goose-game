@@ -22,6 +22,7 @@ public class Weapon extends Node {
   private float knockback;
   private final TextureAtlas atlas;
   private int effectCounter;
+  private int swingCount;
 
   private Vector2 dv = new Vector2();
 
@@ -77,6 +78,7 @@ public class Weapon extends Node {
 
   public void attack() {
     if (attackTime == attackCounter) {
+      swingCount++;
       attackCounter = 0;
       animation.setPlayMode(Animation.PlayMode.NORMAL);
       Vector3 temp =
@@ -106,5 +108,9 @@ public class Weapon extends Node {
         }
       }
     }
+  }
+
+  public int getSwingCount() {
+    return swingCount;
   }
 }

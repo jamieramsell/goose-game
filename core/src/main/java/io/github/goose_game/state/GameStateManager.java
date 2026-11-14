@@ -10,9 +10,11 @@ import io.github.goose_game.game.GameScreen;
 import io.github.goose_game.mapgen.MapGenerator;
 import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.menu.CreditsPage;
+import io.github.goose_game.menu.GameLostPage;
 import io.github.goose_game.menu.GameGenerationPage;
 import io.github.goose_game.menu.MainMenu;
 import io.github.goose_game.menu.PauseMenu;
+import io.github.goose_game.menu.VictoryPage;
 
 /**
  * Owns the game's current {@link GameState} and performs transitions between states.
@@ -197,12 +199,60 @@ public class GameStateManager {
       throw new IllegalArgumentException(
           "Illegal transition: GameState.PAUSED is not currently" + " accessible");
     }
+    pausedGameGarbageCollector();
+
     gameState = GameState.PAUSED;
     pausedGame = gameScreen;
     game.setScreen(new PauseMenu(game, this, gameScreen));
   }
 
-  /** @return the current {@link GameState} that the game is in. */
+  /**
+   * Transitions to {@link GameState#VICTORY}, showing a {@link VictoryPage} over the running game.
+   *
+   * <p>The game screen is not disposed. It is kept so it can be drawn behind the victory menu,
+   * instead being disposed when the player leaves the game.
+   *
+   * @param gameScreen the running game screen
+   * @throws IllegalArgumentException if the game cannot be won from the current state
+   */
+  public void victory(GameScreen gameScreen) {
+    if (!GameStateGraph.canTransition(gameState, GameState.VICTORY)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.VICTORY is not currently accessible");
+    }
+
+    pausedGameGarbageCollector();
+    
+    gameState = GameState.VICTORY;
+    pausedGame = gameScreen;
+    game.setScreen(new VictoryPage(game, this, gameScreen));
+  }
+
+  /**
+   * Transitions to {@link GameState#LOST}, showing a {@link GameLostPage} over the running game.
+   *
+   * <p>The game screen is not disposed. It is kept so it can be drawn behind the 'game over' menu,
+   * instead being disposed when the player leaves the game.
+   *
+   * @param gameScreen the running game screen
+   * @throws IllegalArgumentException if the game cannot be lost from the current state
+   */
+  public void lose(GameScreen gameScreen) {
+    if (!GameStateGraph.canTransition(gameState, GameState.LOST)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.LOST is not currently accessible");
+    }
+
+    pausedGameGarbageCollector();
+    
+    gameState = GameState.LOST;
+    pausedGame = gameScreen;
+    game.setScreen(new GameLostPage(game, this, gameScreen));
+  }
+
+  /**
+   * @return the current {@link GameState} that the game is in.
+   */
   public GameState getGameState() {
     return gameState;
   }
