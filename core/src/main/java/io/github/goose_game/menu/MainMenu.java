@@ -99,7 +99,7 @@ public class MainMenu extends ScreenAdapter {
   }
 
   private Label getTitle() {
-    return new Label("Flock n Load", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    return new Label("Flock n' Load", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
   }
 
   private TextButton getPlayButton(TextField seedField) {

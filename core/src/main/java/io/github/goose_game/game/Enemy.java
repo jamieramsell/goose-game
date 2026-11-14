@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-
 import io.github.goose_game.mapgen.MapGenerator;
 import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
+import java.util.function.Consumer;
 
 public class Enemy extends Node {
   private final TileMap map;
+  private final EnemyManager enemyManager;
   Player target;
 
   private int health;
@@ -32,6 +32,9 @@ public class Enemy extends Node {
   
   boolean fleeing = false;
   private int i = 0;
+  private final float spriteScale;
+  private final boolean despawnOnDefeat;
+  private final Consumer<Enemy> onDispersed;
 
   public Enemy(
       float x,
@@ -41,12 +44,18 @@ public class Enemy extends Node {
       TextureAtlas atlas,
       Player target,
       TileMap map,
+      EnemyManager enemyManager,
       float speed,
       float damage,
       int attackDelay,
-      int health) {
+      int health,
+      float spriteScale,
+      boolean despawnOnDefeat,
+      Consumer<Enemy> onDispersed
+  ) {
     super(x, y, width, height);
     this.target = target;
+    this.enemyManager = enemyManager;
     this.speed = speed;
     this.damage = damage;
     this.attackCounter = 0;
@@ -54,6 +63,9 @@ public class Enemy extends Node {
     this.target_pos = target.position;
     this.health = health;
     this.maxHealth = health;
+    this.spriteScale = spriteScale;
+    this.despawnOnDefeat = despawnOnDefeat;
+    this.onDispersed = onDispersed;
     this.animations = new Array<>();
     this.map = map;
 
@@ -85,6 +97,7 @@ public class Enemy extends Node {
       System.out.println("Quack!");
       this.attackCounter += 1;
     }
+    
     Vector2 dir = new Vector2(target_pos.x - position.x, target_pos.y - position.y);
     dir.nor();
     if (fleeing) {
@@ -94,9 +107,12 @@ public class Enemy extends Node {
           || position.x - target.position.x < -320
           || position.y - target.position.y > 320
           || position.y - target.position.y < -320) {
+        if (despawnOnDefeat) {
+          delete_self();
+          return;
+        }
         fleeing = false;
-        position.x = target.position.x + new int[] {-1, 1}[MathUtils.random(0, 1)] * 320;
-        position.y = target.position.y + new int[] {-1, 1}[MathUtils.random(0, 1)] * 320;
+        enemyManager.teleportEnemyNearPlayer(this);
         health = maxHealth;
       }
     }
@@ -121,8 +137,8 @@ public class Enemy extends Node {
       velocity = new Vector2(0, 0);
     }
     if (fleeing) {
-      velocity.x *= 1.1F;
-      velocity.y *= 1.1F;
+      velocity.x *= 1.3F;
+      velocity.y *= 1.3F;
     }
 
     float targetX = position.x + velocity.x * delta;
@@ -185,8 +201,10 @@ public class Enemy extends Node {
     }
 
     Sprite currentFrame = animations.get(i).getKeyFrame(frame);
+    currentFrame.setScale(spriteScale);
     currentFrame.setPosition(
-        position.x - currentFrame.getWidth() / 2, position.y - currentFrame.getHeight() / 2);
+        position.x - currentFrame.getWidth() * spriteScale / 2,
+        position.y - currentFrame.getHeight() * spriteScale / 2);
     currentFrame.draw(batch);
     for (Node child : children.values()) {
       child.draw(batch);
@@ -199,8 +217,14 @@ public class Enemy extends Node {
 
   public void damage(int damage) {
     health -= damage;
-    if (health <= 0) {
+    if (health <= 0 && !fleeing) {
       fleeing = true;
+      onDispersed.accept(this);
     }
   }
+
+  public int getDispersalScore() {
+    return despawnOnDefeat ? 50 : 10;
+  }
+
 }

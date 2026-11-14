@@ -24,7 +24,7 @@ public class TileMapRenderer implements Disposable {
 
   /** The colour each type of tile is drawn in. */
   private static final Map<TileType, Color> COLOURS = new EnumMap<>(Map.of(
-      TileType.GRASS, Color.GREEN,
+      TileType.GRASS, Color.valueOf("7CBF4A"),
       TileType.WATER, Color.BLUE,
       TileType.BUILDING, Color.GRAY,
       TileType.BUSH, Color.FOREST,
