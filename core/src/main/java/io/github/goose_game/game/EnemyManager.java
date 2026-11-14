@@ -33,10 +33,20 @@ public class EnemyManager extends Node {
   /** Callback passed to each spawned enemy, invoked when it is dispersed. */
   private final Consumer<Enemy> onEnemyDispersed;
 
-  /** Running count of enemies spawned, used to generate unique child names. */
+  /** Running count of enemies spawned used to generate unique child names. */
   int enemyCounter = 0;
+
+  /** Running count of pickups spawned used to generate unique child names. */
   private int PickupCounter;
 
+  /**
+   * Creates the manager and immediately spawns the first wave of enemies.
+   *
+   * @param atlas atlas containing the goose animations
+   * @param player the player enemies chase and spawn around
+   * @param map the map used for spawn validation and collision; its seed seeds spawn randomness
+   * @param onEnemyDispersed callback invoked whenever a spawned enemy is dispersed
+   */
   public EnemyManager(
       TextureAtlas atlas,
       Player player,
@@ -175,6 +185,15 @@ public class EnemyManager extends Node {
     enemy.position.y = targetY;
   }
 
+  /**
+   * Finds the seed nearest to a position that enemies can still be attracted to.
+   *
+   * <p>Only seeds that have landed and have not yet been consumed are considered.
+   *
+   * @param position the position to measure distance from
+   * @return the closest eligible seed, or {@code null} if there is none or the player has no seed
+   *     weapon
+   */
   public SeedProjectile getClosestSeed(Vector2 position) {
     Node seedWeapon = player.get_child("seed_weapon");
     if (seedWeapon == null) {
@@ -198,6 +217,12 @@ public class EnemyManager extends Node {
     return closestSeed;
   }
 
+  /**
+   * Queues a possible pickup drop at a position. The drop is resolved on the next {@link
+   * #update()}, where it has a chance of spawning a heart or seed pickup.
+   *
+   * @param position the position to drop at
+   */
   void queuePickup(Vector2 position) {
     pendingPickups.add(position.cpy());
   }
