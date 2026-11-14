@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -48,10 +47,10 @@ public class GameScreen extends ScreenAdapter {
 
   Node player;
 
-  public GameScreen(Main game, GameStateManager stateManager, TileMap map) {
+  public GameScreen(Main game, GameStateManager stateManager) {
     this.game = game;
     this.stateManager = stateManager;
-    this.batch = this.game.getBatch();
+    this.batch = game.getBatch();
     this.atlas = new TextureAtlas(Gdx.files.internal("spritesheet.atlas"));
     this.seedTexture = new Texture(Gdx.files.internal("seeds.png"));
     this.seedTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
