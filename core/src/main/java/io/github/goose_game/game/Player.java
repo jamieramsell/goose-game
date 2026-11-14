@@ -157,10 +157,6 @@ public class Player extends Node {
     health = Math.max(0, health - damage);
   }
 
-  public void heal(float amount) {
-    health = Math.min(maxHealth, health + amount);
-  }
-
   public float getHealth() {
     return health;
   }
