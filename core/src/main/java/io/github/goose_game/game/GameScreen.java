@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -64,6 +63,7 @@ public class GameScreen extends ScreenAdapter {
   private final Label scoreLabel;
   private final Label seedsLabel;
   private final Label swingLabel;
+  private final Label attackTitle;
   private final Label attackLabel;
 
   private final ArrayList<ScorePopup> scorePopups = new ArrayList<>();
@@ -112,6 +112,7 @@ public class GameScreen extends ScreenAdapter {
     this.seedTexture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     this.skin = DefaultSkin.getSkin();
 
+    // Initialise HUD elements
     timerLabel = new Label("", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
     scoreLabel = new Label("Score: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     seedsLabel =
@@ -119,11 +120,13 @@ public class GameScreen extends ScreenAdapter {
             "Seeds: 0",
             new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     swingLabel = new Label("Stick Swings: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    attackTitle = new Label("Survive for 5 minutes!", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
+    attackTitle.setAlignment(Align.center);
     attackLabel =
         new Label(
-            "Survive for 5 minutes! Press left-click to use your stick and disperse the geese, "
+            "Press left-click to use your stick and disperse the geese, "
                 + "press right click to throw seeds to distract them!",
-            new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
+            new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     attackLabel.setWrap(true);
     attackLabel.setAlignment(Align.center);
 
@@ -154,9 +157,11 @@ public class GameScreen extends ScreenAdapter {
     Table attackTable = new Table();
     attackTable.setFillParent(true);
     attackTable.center();
-    attackTable.add(attackLabel).growX().padLeft(12).padRight(12);
+    attackTable.add(attackTitle).width(500).padLeft(12).padRight(12).padBottom(16).row();
+    attackTable.add(attackLabel).width(500).padLeft(12).padRight(12).row();
     hudStage.addActor(attackTable);
 
+    // Render map
     this.map = map;
     this.renderer = new TileMapRenderer(this.map);
 
@@ -164,6 +169,7 @@ public class GameScreen extends ScreenAdapter {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
     }
 
+    // Render player & weapons
     playerTexture = atlas.createSprite("player_test");
 
     this.stickAttackTexture =
@@ -173,10 +179,6 @@ public class GameScreen extends ScreenAdapter {
     float spawnY = map.getSpawnPosition().y;
 
     this.root.add_child("player", new Player(spawnX, spawnY, 16, 20, atlas, map, 64, 200, camera));
-
-    enemyManager =
-        new EnemyManager(atlas, (Player) this.root.get_child("player"), map, this::onEnemyDispersed);
-    this.root.add_child("enemyManager", enemyManager);
     
     this.root
         .get_child("player")
@@ -185,7 +187,13 @@ public class GameScreen extends ScreenAdapter {
 
     this.seedWeapon = new SeedWeapon(new Sprite(seedTexture));
     this.root.get_child("player").add_child("seed_weapon", seedWeapon);
+    
+    // Spawn enemies
+    enemyManager =
+        new EnemyManager(atlas, (Player) this.root.get_child("player"), map, this::onEnemyDispersed);
+    this.root.add_child("enemyManager", enemyManager);
 
+    // Initialise camera
     viewport.setCamera(camera);
     camera.position.set(spawnX, spawnY, 0);
   }
@@ -332,8 +340,8 @@ public class GameScreen extends ScreenAdapter {
           largeEnemySpawned = true;
           enemyManager.spawnLargeEnemy();
           attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
-          attackLabel.setText("Large Goose Attack!");
-          attackLabel.setVisible(true);
+          attackTitle.setText("Large Goose Attack!");
+          attackTitle.setVisible(true);
         }
 
         if (remainingTime == 0) { // Time has reached 0, you've escaped!
@@ -362,7 +370,8 @@ public class GameScreen extends ScreenAdapter {
   private void updateAttackMessage(float delta) {
     if (attackMessageTime > 0) {
       attackMessageTime = Math.max(0, attackMessageTime - delta);
-      attackLabel.setVisible(attackMessageTime > 0);
+      attackLabel.setVisible(attackMessageTime > 0 && !largeEnemySpawned);
+      attackTitle.setVisible(attackMessageTime > 0);
     }
   }
 
