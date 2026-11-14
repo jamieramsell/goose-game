@@ -40,7 +40,7 @@ public class EnemyManager extends Node {
     float targetX;
     float targetY;
   
-    do { // Find a random spawn point near the player until one is found where geese can spawn
+    while (true) { // Find a random spawn point near the player where geese can spawn
       // Seeded random ensures geese spawn in the same place every time on the same seed
       int rndDir = rng.nextInt(360);
       int rndDist = rng.nextInt(360, 370);
@@ -53,10 +53,13 @@ public class EnemyManager extends Node {
 
       int mapSize = MapGenerator.MAP_SIZE;
       if (targetX <= 0 || targetY <= 0 || targetX >= mapSize || targetY >= mapSize) {
-        continue; // Goose is out of bounds, try again
+        continue;
       }
 
-    } while (map.isPixelSolidForGeese((int) targetX, (int) targetY));
+      if (!map.isPixelSolidForGeese((int) targetX, (int) targetY)) {
+        break;
+      }
+    }
 
     Enemy enemy = new Enemy(targetX, targetY, 20, 20, atlas, player, map, 20, 20, 270, 100);
     enemyCounter += 1;

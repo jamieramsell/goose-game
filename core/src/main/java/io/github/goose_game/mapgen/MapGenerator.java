@@ -11,19 +11,24 @@ import java.util.Set;
  * <p>Generation is deterministic: the same seed always produces the same map, because all
  * randomness is drawn from a single {@link Random} created from that seed.
  *
- * <p>A map is built by reserving a spawn point and an escape point (each surrounded by a 3x3 patch
- * of grass), then filling every remaining tile by sampling a {@link TileDistribution}. Tiles next
- * to water have a boosted chance of being water, so that lakes form clusters.
+ * <p>A map is built from blocks of uniform terrain, then places spawn and escape points (each
+ * surrounded by a 3x3 patch of grass). Blocks next to water have a boosted chance of being water.
  */
 public class MapGenerator {
 
   /** The width and height of a single tile, in pixels. */
-  public static final int TILE_SIZE = 128;
+  public static final int TILE_SIZE = 32;
+
+  /** The width and height of each terrain block, in pixels. */
+  public static final int BLOCK_SIZE = 128;
+
+  /** The number of terrain blocks along each side of the map. */
+  public static final int BLOCKS_PER_SIDE = 64;
 
   /**
    * The width and height of the (square) map, in pixels. Must be a multiple of {@link #TILE_SIZE}.
    */
-  public static final int MAP_SIZE = TILE_SIZE * 64;
+  public static final int MAP_SIZE = BLOCK_SIZE * BLOCKS_PER_SIDE;
 
   private final TileDistribution distribution;
 
@@ -40,7 +45,7 @@ public class MapGenerator {
    */
   public TileMap generate(long seed) {
     Random rng = new Random(seed);
-    
+
     if (!(TileDistribution.POINTS_OF_INTEREST.contains(TileType.SPAWN))) {
       throw new IllegalStateException("TileType.SPAWN is not listed as a point of interest.");
     }
@@ -50,12 +55,35 @@ public class MapGenerator {
     // first go, it will be used again to try and find another layout.
     while (true) {
       TileMap map = new TileMap(MAP_SIZE, seed);
-      
-      // Create POIs first. Note that the +1, -2 values on the POI's x and y coords ensure that the
-      // 3x3 patch surround it fits wholly within the map
+
+      // Fill each block with one sampled terrain type.
+      for (int blockX = 0; blockX < BLOCKS_PER_SIDE; blockX++) {
+        for (int blockY = 0; blockY < BLOCKS_PER_SIDE; blockY++) {
+          int blockStartX = blockX * (BLOCK_SIZE / TILE_SIZE);
+          int blockStartY = blockY * (BLOCK_SIZE / TILE_SIZE);
+          boolean nearWater = map.nextToTileOfGivenType(blockStartX, blockStartY, TileType.WATER);
+          TileType type = nearWater
+              ? distribution.boostedSample(rng, TileType.WATER, 2.00f)
+              : distribution.sample(rng);
+
+          for (int dx = 0; dx < BLOCK_SIZE / TILE_SIZE; dx++) {
+            for (int dy = 0; dy < BLOCK_SIZE / TILE_SIZE; dy++) {
+              map.setTileAtSquare(blockStartX + dx, blockStartY + dy, type);
+            }
+          }
+        }
+      }
+
+      // Place POIs after the terrain so their grass patches are preserved. The +1 offset ensures
+      // the 3x3 patch around each POI fits wholly within the map. Keep patches apart so placing one
+      // POI cannot overwrite another.
       for (TileType poi : TileDistribution.POINTS_OF_INTEREST) {
-        int x = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2); 
-        int y = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+        int x;
+        int y;
+        do {
+          x = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+          y = 1 + rng.nextInt((MAP_SIZE / TILE_SIZE) - 2);
+        } while (!canPlacePoiAt(map, x, y));
 
         for (int dx = -1; dx < 2; dx++) {
           for (int dy = -1; dy < 2; dy++) {
@@ -65,21 +93,6 @@ public class MapGenerator {
         map.setTileAtSquare(x, y, poi);
       }
 
-      // Generate the rest of the map
-      for (int x = 0; x < MAP_SIZE / TILE_SIZE; x++) {
-        for (int y = 0; y < MAP_SIZE / TILE_SIZE; y++) {
-          if (map.getTileAtSquare(x, y) == null) {
-            // Set the tile at the given square. If next to water, boost this tile's chance of being
-            // a water tile by 200%
-            boolean nearWater = map.nextToTileOfGivenType(x, y, TileType.WATER);
-            TileType t = nearWater
-                ? distribution.boostedSample(rng, TileType.WATER, 2.00f)
-                : distribution.sample(rng);
-            map.setTileAtSquare(x, y, t);
-          }
-        }
-      }
-
       // Validate that a clear path exists between POIs
       if (isMapPassable(map)) {
         return map;
@@ -87,6 +100,15 @@ public class MapGenerator {
         continue;
       }
     }
+  }
+
+  private boolean canPlacePoiAt(TileMap map, int x, int y) {
+    for (TilePosition existingPoi : map.getAllPointsOfInterest().values()) {
+      if (Math.abs(existingPoi.x() - x) <= 2 && Math.abs(existingPoi.y() - y) <= 2) {
+        return false;
+      }
+    }
+    return true;
   }
 
   /**
@@ -116,7 +138,7 @@ public class MapGenerator {
             + " as a POI, yet is itself not passable by players.");
       }
     }
-    
+
     int size = map.getMapSizeInSquares();
     boolean[][] visited = new boolean[size][size];
 
@@ -149,9 +171,9 @@ public class MapGenerator {
 
         // If target square is out of bounds, skip it
         if (dx < 0 || dy < 0 || dx >= size || dy >= size) {
-          continue; 
+          continue;
         }
-        // If the target square hasnt yet been visited, and is passable by players, the mark it as 
+        // If the target square hasnt yet been visited, and is passable by players, the mark it as
         // visited, and add it to the queue
         else if (!visited[dx][dy] && !map.isSquareSolidForPlayer(dx, dy)) {
           visited[dx][dy] = true;
@@ -159,7 +181,7 @@ public class MapGenerator {
         }
       }
     }
-    
+
     // If this point is reached, then all reachable squares have been exhaused, but there still
     // remains some POIs to visit.
     if (remainingPois.size() == 0) {

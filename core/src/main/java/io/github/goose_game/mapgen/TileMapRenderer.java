@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
 
 /**
@@ -35,6 +37,8 @@ public class TileMapRenderer implements Disposable {
   /** The map to draw. */
   private final TileMap map;
 
+  private final TextureAtlas atlas = new TextureAtlas("floorspritesheet/floorspritesheet.atlas");
+
   /** A 1x1 white texture, which is tinted and stretched to draw each tile as a solid square. */
   private final Texture pixel;
 
@@ -47,6 +51,8 @@ public class TileMapRenderer implements Disposable {
    */
   public TileMapRenderer(TileMap map) {
     this.map = map;
+
+    atlas.getTextures().forEach(texture -> texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest));
 
     Pixmap pm = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
     pm.setColor(Color.WHITE);
@@ -97,13 +103,72 @@ public class TileMapRenderer implements Disposable {
     // Draw all tiles in view
     for (int x = minTileX; x <= maxTileX; x++) {
       for (int y = minTileY; y <= maxTileY; y++) {
-        TileType currentTile = map.getTileAtSquare(x, y);
-        batch.setColor(COLOURS.get(currentTile));
-        batch.draw(pixel, x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE, MapGenerator.TILE_SIZE, MapGenerator.TILE_SIZE);
+        if (map.getTileAtSquare(x, y) != TileType.WATER) {
+          drawGrass(batch, x, y, mapSize);
+          if (map.getTileAtSquare(x, y) == TileType.BUILDING) {
+            Sprite building = atlas.createSprite("floor", 21);
+            building.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
+            building.draw(batch);
+          }
+          if (map.getTileAtSquare(x, y) == TileType.BUSH) {
+            Sprite bush = atlas.createSprite("floor", 19);
+            bush.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
+            bush.draw(batch);
+          }
+        }
+        if (map.getTileAtSquare(x, y) == TileType.WATER) {
+          drawWater(batch, x, y, mapSize);
+        }
+        //TileType currentTile = map.getTileAtSquare(x, y);
+        //batch.setColor(COLOURS.get(currentTile));
+        //batch.draw(pixel, x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE, MapGenerator.TILE_SIZE, MapGenerator.TILE_SIZE);
       }
     }
-    
+
     batch.setColor(Color.WHITE);
+  }
+
+  public void drawGrass(Batch batch, int x, int y, int mapSize) {
+    int index = 9;
+    if (isWaterAt(x, y + 1, mapSize)) {
+      index = 1;
+    }
+    if (isWaterAt(x + 1, y, mapSize)) {
+      index = 10;
+    }
+    if (isWaterAt(x, y - 1, mapSize)) {
+      index = 17;
+    }
+    if (isWaterAt(x - 1, y, mapSize)) {
+      index = 8;
+    }
+    if (isWaterAt(x + 1, y, mapSize) && isWaterAt(x, y + 1, mapSize)) {
+      index = 2;
+    }
+    if (isWaterAt(x + 1, y, mapSize) && isWaterAt(x, y - 1, mapSize)) {
+      index = 18;
+    }
+    if (isWaterAt(x - 1, y, mapSize) && isWaterAt(x, y + 1, mapSize)) {
+      index = 0;
+    }
+    if (isWaterAt(x - 1, y, mapSize) && isWaterAt(x, y - 1, mapSize)) {
+      index = 16;
+    }
+    Sprite grass = atlas.createSprite("floor", index);
+    grass.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
+    grass.draw(batch);
+  }
+
+  private boolean isWaterAt(int x, int y, int mapSize) {
+    return x >= 0 && y >= 0 && x < mapSize && y < mapSize
+        && map.getTileAtSquare(x, y) == TileType.WATER;
+  }
+
+  public void drawWater(Batch batch, int x, int y, int mapSize) {
+    int index = 3;
+    Sprite water = atlas.createSprite("floor", index);
+    water.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
+    water.draw(batch);
   }
 
   /** Disposes the texture used to draw tiles. The renderer must not be used afterwards. */
