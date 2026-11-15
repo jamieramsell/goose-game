@@ -1,0 +1,13 @@
+@startuml Pickup
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title Pickup (HeartPickup, SeedPickup)
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Sit at a drop location | EnemyManager |
+| Detect the player touching it | Player |
+| Apply its effect via collect() | Player, SeedWeapon |
+| Remove itself once collected | Node |
+]
+@enduml

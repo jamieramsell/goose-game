@@ -1,0 +1,13 @@
+@startuml Weapons
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title Weapon and SeedWeapon
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Attack towards the cursor on a cooldown | Player |
+| Damage and knock back geese (Weapon) | EnemyManager, Enemy, Effect |
+| Throw seeds and manage ammo (SeedWeapon) | SeedProjectile, SeedPickup |
+| Report swings and ammo for the HUD | GameScreen |
+]
+@enduml

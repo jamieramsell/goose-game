@@ -1,0 +1,12 @@
+@startuml TileMap
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title TileMap
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Store tiles and points of interest | TileType, TilePosition |
+| Answer solidity queries for boundaries | Player, Enemy |
+| Provide the spawn position | GameScreen |
+]
+@enduml

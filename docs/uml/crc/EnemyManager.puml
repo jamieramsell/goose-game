@@ -1,0 +1,15 @@
+@startuml EnemyManager
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title EnemyManager
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Spawn waves and the large goose | Enemy |
+| Spawn the ten angry geese for the tower defence event | Enemy, GameScreen |
+| Count angry geese still present | Enemy |
+| Place geese near the player | Player, TileMap |
+| Find the closest seed | SeedProjectile |
+| Create dropped pickups | HeartPickup, SeedPickup |
+]
+@enduml

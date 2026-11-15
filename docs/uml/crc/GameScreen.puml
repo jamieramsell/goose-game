@@ -1,0 +1,15 @@
+@startuml GameScreen
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title GameScreen
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Build and update the scene tree | Node, Player, EnemyManager |
+| Run the 5 minute timer and score | Enemy |
+| Trigger pause, win and loss | GameStateManager |
+| Draw map and HUD | TileMapRenderer |
+| Start the large goose and tower defence events | EnemyManager, GameStateManager |
+| Show event messages and award the defence bonus | EnemyManager |
+]
+@enduml
