@@ -15,6 +15,9 @@ public enum GameState {
   /** The player is in game. */
   GAME,
 
+  /** The player is in game, and has triggered the tower defence event. */
+  TOWER_DEFENCE,
+
   /** The player has paused the game. */
   PAUSED,
 
