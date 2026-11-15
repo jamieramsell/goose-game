@@ -1,0 +1,18 @@
+@startuml
+' Interim sequence diagram for using an item, drawn before implementation began.
+actor Person
+participant GameScreen
+participant Player
+participant Item
+participant Inventory
+participant HUD
+
+Person -> GameScreen: press key
+GameScreen -> Player: useItem()
+Player -> Inventory: getSelected()
+Inventory --> Player: selected item
+Player -> Item: use()
+Item --> Player: effect done
+Player -> Inventory: remove(item)
+Inventory -> HUD: incrementCount()
+@enduml

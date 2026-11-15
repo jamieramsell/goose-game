@@ -294,19 +294,39 @@ h2 {
 }
 
 .chart {
-	cursor: zoom-in;
+	display: block;
+	max-width: 100%;
+	height: auto;
 }
 
-#photo-modal {
-	border: none;
-	padding: 0;
-	background: transparent;
-	cursor: zoom-out;
+.design {
+	display: block;
+	max-width: 100%;
+	height: auto;
+	background: #fff;
+	border: 1px solid var(--rule);
+	margin-bottom: 8px;
 }
 
-#photo-modal img {
-	max-width: 90vw;
-	max-height: 90vh;
+.designs p {
+	max-width: 65ch;
+	margin: 0 0 12px;
+}
+
+.crc {
+	width: 100%;
+	border-collapse: collapse;
+	background: #fff;
+	color: var(--ink);
+	margin-bottom: 12px;
+}
+
+.crc th,
+.crc td {
+	border: 1px solid var(--ink);
+	padding: 8px 10px;
+	text-align: left;
+	vertical-align: top;
 }
 
 details {
@@ -355,6 +375,10 @@ details p {
   font-size: 14px;
   max-width: 65ch;
   margin: 0 35px 20px 103px
+}
+
+.guide {
+  min-width: 0
 }
 
 .guide-num {
@@ -613,8 +637,10 @@ footer p {
     padding: 0;
     border: 0;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 20px
+    gap: 10px 20px;
+    min-width: 0
   }
 
   .release p {

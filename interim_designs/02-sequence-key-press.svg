@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 324" width="760" height="324" role="img" aria-labelledby="t d">
+<title id="t">Interim sequence diagram: key press</title>
+<desc id="d">Interim UML sequence diagram. The person presses a key. GameScreen calls updatePos on Player. Player calls checkBounds on HiddenEvent. HiddenEvent calls triggerActive on HUD.</desc>
+<defs><marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M1 1L11 6L1 11" fill="none" stroke="#20211d" stroke-width="1.5"/></marker><marker id="solid" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M1 1L11 6L1 11Z" fill="#20211d"/></marker></defs>
+<rect width="760" height="324" fill="#ffffff"/>
+<circle cx="80" cy="34" r="8" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/><path d="M80 42V64M67 50H93M80 64L69 78M80 64L91 78" fill="none" stroke="#20211d" stroke-width="1.5"/>
+<text x="80" y="96" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">Person</text>
+<line x1="80" y1="104" x2="80" y2="310" stroke="#20211d" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="171.0" y="48" width="118" height="38" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="230" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#20211d">GameScreen</text>
+<line x1="230" y1="86" x2="230" y2="310" stroke="#20211d" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="321.0" y="48" width="118" height="38" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="380" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#20211d">Player</text>
+<line x1="380" y1="86" x2="380" y2="310" stroke="#20211d" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="471.0" y="48" width="118" height="38" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="530" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#20211d">HiddenEvent</text>
+<line x1="530" y1="86" x2="530" y2="310" stroke="#20211d" stroke-width="1.2" stroke-dasharray="5 4"/>
+<rect x="621.0" y="48" width="118" height="38" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="680" y="72" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="bold" fill="#20211d">HUD</text>
+<line x1="680" y1="86" x2="680" y2="310" stroke="#20211d" stroke-width="1.2" stroke-dasharray="5 4"/>
+<line x1="80" y1="120" x2="230" y2="120" stroke="#20211d" stroke-width="1.5" marker-end="url(#solid)"/>
+<rect x="115.69999999999999" y="96" width="78.60000000000001" height="18" fill="#ffffff"/>
+<text x="155.0" y="110" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#20211d">press key</text>
+<line x1="230" y1="166" x2="380" y2="166" stroke="#20211d" stroke-width="1.5" marker-end="url(#solid)"/>
+<rect x="258.3" y="142" width="93.4" height="18" fill="#ffffff"/>
+<text x="305.0" y="156" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#20211d">updatePos()</text>
+<line x1="380" y1="212" x2="530" y2="212" stroke="#20211d" stroke-width="1.5" marker-end="url(#solid)"/>
+<rect x="400.9" y="188" width="108.2" height="18" fill="#ffffff"/>
+<text x="455.0" y="202" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#20211d">checkBounds()</text>
+<line x1="530" y1="258" x2="680" y2="258" stroke="#20211d" stroke-width="1.5" marker-end="url(#solid)"/>
+<rect x="543.5" y="234" width="123.0" height="18" fill="#ffffff"/>
+<text x="605.0" y="248" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="13" fill="#20211d">triggerActive()</text>
+</svg>

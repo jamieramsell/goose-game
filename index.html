@@ -82,7 +82,7 @@
           <ul class="files">
             <li>
               <a class="file" id="Req1"
-                href="https://docs.google.com/document/d/1phRk189fUPi61ZNSXFr2WQPzISUlevG1spOOvh4f2wY/edit?usp=drive_link"
+                href="https://drive.google.com/file/d/1LFoqw4t6f1bVoCU_niqGAaOA9fqTH6BF/view?usp=share_link"
                 target="_blank" rel="noopener noreferrer">
                 <span class="file-code">REQ1</span>
                 <span class="file-title">Requirements</span>
@@ -102,7 +102,7 @@
 
             <li>
               <a class="file" id="Plan1"
-                href="https://docs.google.com/document/d/1puh3_AJq-r82lXPCsnDgdwmhLMY7n1aR6xjeLdv0jrE/edit?usp=drive_link"
+                href="https://drive.google.com/file/d/1pBZUFXJi3RrYdImYri_kHTCZpHPRdRsT/view?usp=share_link"
                 target="_blank" rel="noopener noreferrer">
                 <span class="file-code">PLAN1</span>
                 <span class="file-title">Method Selection & Planning</span>
@@ -112,7 +112,7 @@
 
             <li>
               <a class="file" id="Risk1"
-                href="https://docs.google.com/document/d/1NQVADGYzmCgeggsUJaKto-2T78JB_H-_n_Rzhl5ufyo/edit?usp=drive_link"
+                href="https://drive.google.com/file/d/1xM-0HFClr1spn0qDQQJ57n_NNzUsJaVo/view?usp=sharing"
                 target="_blank" rel="noopener noreferrer">
                 <span class="file-code">RISK1</span>
                 <span class="file-title">Risk Assessment</span>
@@ -149,15 +149,60 @@
                   <img class="chart" src="charts/chart-4.png" alt="Gantt Chart for week 4" width="1000">
                   <h3>2026-11-12</h3>
                   <img class="chart" src="charts/chart-5.png" alt="Gantt Chart for week 5" width="1000">
-                  <dialog id="photo-modal">
-                    <img id="modal-img" src="" alt="Enlarged">
-                  </dialog>
                 </div>
               </details>
             </div>
             <div class="resource">
-              <p>Diagrams & CRC cards</p>
-              <div id="evidence-list" class="resource-status">Not uploaded yet</div>
+              <details>
+                <summary>
+                <span class="file-code">ARCH1</span>
+                <span class="file-title">Interim designs</span>
+                </summary>
+                <div id="evidence-list" class="resource-status designs">
+                  <p>Our first architecture designs, drawn before implementation began. The game changed as we
+                    built it, so these differ from the final structure described in the handover guide.</p>
+                  <h3>Class diagram</h3>
+                  <img class="design" src="interim_designs/01-class-diagram.svg" width="980" height="588"
+                    alt="Interim UML class diagram. GooseGame is associated with GameScreen. GameScreen holds a player, a goose list, an event list, a HUD and a GameState, and is associated with the GameState enumeration and with Player, Item and HiddenEvent.">
+                  <h3>Sequence diagram: key press</h3>
+                  <img class="design" src="interim_designs/02-sequence-key-press.svg" width="760" height="324"
+                    alt="Interim UML sequence diagram. The person presses a key, GameScreen calls updatePos on Player, Player calls checkBounds on HiddenEvent, and HiddenEvent calls triggerActive on the HUD.">
+                  <h3>Sequence diagram: using an item</h3>
+                  <img class="design" src="interim_designs/03-sequence-item-use.svg" width="910" height="508"
+                    alt="Interim UML sequence diagram. The person presses a key, GameScreen calls useItem on Player, Player gets the selected item from Inventory, calls use on the Item, removes it from Inventory, and Inventory calls incrementCount on the HUD.">
+                  <h3>CRC cards</h3>
+                  <table class="crc">
+                    <thead>
+                      <tr>
+                        <th scope="col">Class</th>
+                        <th scope="col">Responsibilities</th>
+                        <th scope="col">Collaborators</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">GameTimer</th>
+                        <td>Accumulate 300 seconds of playtime and advance only in Playing state. Report time
+                          remaining.</td>
+                        <td>HUD, GameState, GameScreen</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Inventory</th>
+                        <td>Store player's items. Add picked up items and remove used items. Report if used.</td>
+                        <td>Player, Item, HUD</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">HiddenEvent</th>
+                        <td>Invisible trigger zone detected when player triggers and event takes place. Report if
+                          triggered.</td>
+                        <td>GameState, Player, HUD</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <p>PlantUML source for each diagram is in the <code>interim_designs</code> folder of the
+                    repository.</p>
+                </div>
+              </details>
             </div>
           </div>
         </div>

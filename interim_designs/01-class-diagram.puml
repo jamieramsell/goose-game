@@ -1,0 +1,56 @@
+@startuml
+' Interim class diagram, drawn before implementation began.
+skinparam classAttributeIconSize 0
+hide circle
+
+class GooseGame {
+  currentScreen: Screen
+  create(): void
+  render(): void
+}
+
+class GameScreen {
+  player: Player
+  gooseList: array<Goose>
+  eventList: array<HiddenEvent>
+  hud: Hud
+  state: GameState
+  render(delta: float)
+  handleInput(): void
+  checkCollisions(): void
+}
+
+enum GameState {
+  Start
+  Playing
+  Paused
+  Victory
+  GameOver
+}
+
+class Player {
+  x: float
+  y: float
+  inventory: list
+  move(): void
+  useItem()
+}
+
+class Item {
+  itemID: integer
+  name: string
+  use(): void
+}
+
+class HiddenEvent {
+  bounds: rect
+  isTriggered()
+  trigger()
+}
+
+GooseGame -right-> GameScreen
+GameScreen -right-> GameState
+GameScreen --> Player
+GameScreen --> Item
+GameScreen --> HiddenEvent
+@enduml
