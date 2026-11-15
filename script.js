@@ -87,3 +87,13 @@ document.querySelectorAll('[data-jump]').forEach(element => {
 reducedMotion.addEventListener('change', () => {
   document.querySelectorAll('.bounce').forEach(letter => letter.classList.remove('bounce'));
 });
+
+// CRC CARDS: open a card when the page is loaded or linked with its #crc-... anchor,
+// e.g. index.html#crc-player. The #crc-cards section itself is always visible.
+function openCrcFromHash() {
+  const target = document.getElementById(location.hash.slice(1));
+  if (target && target.id.startsWith('crc-') && target.tagName === 'DETAILS') target.open = true;
+}
+
+openCrcFromHash();
+window.addEventListener('hashchange', openCrcFromHash);

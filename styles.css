@@ -749,3 +749,52 @@ footer p {
     transition: none !important
   }
 }
+
+.crc-code {
+  color: var(--red)
+}
+
+.crc-table {
+  width: calc(100% - 138px);
+  margin: 0 35px 22px 103px;
+  border-collapse: collapse;
+  font-size: 14px
+}
+
+.crc-table th {
+  font: 12px "Courier New", monospace;
+  text-align: left;
+  padding: 0 14px 8px 0
+}
+
+.crc-table th:first-child,
+.crc-table td:first-child {
+  width: 62%
+}
+
+.crc-table td {
+  padding: 9px 14px 9px 0;
+  border-top: 1px solid var(--rule);
+  vertical-align: top
+}
+
+.crc-table td:last-child {
+  color: #626359
+}
+
+details[id^="crc-"]:target {
+  background: rgba(183, 205, 218, .35)
+}
+
+@media(max-width:600px) {
+  .crc-table {
+    width: calc(100% - 82px);
+    margin: 0 0 22px 82px;
+    font-size: 13px
+  }
+
+  .crc-table th:first-child,
+  .crc-table td:first-child {
+    width: auto
+  }
+}

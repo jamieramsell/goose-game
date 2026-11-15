@@ -22,6 +22,7 @@
 
       <nav aria-label="Main navigation">
         <a href="#reports" data-jump>Files</a>
+        <a href="#crc-cards" data-jump>CRC</a>
         <a href="#team" data-jump>Team</a>
         <a href="#handover" data-jump>Handover</a>
       </nav>
@@ -205,6 +206,204 @@
               </details>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="section" id="crc-cards" aria-labelledby="crc-title">
+        <div class="section-title">
+          <span class="mono">Design evidence</span>
+          <h2 id="crc-title">CRC cards</h2>
+          <p>Final cards for the main classes. Early cards are under Interim designs. Each card opens on click.</p>
+        </div>
+
+        <div>
+          <details id="crc-gamestatemanager">
+            <summary>
+              <span class="crc-code mono">CRC 01</span>
+              <span class="entry-title">GameStateManager</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Hold current game state</td><td>GameState</td></tr>
+            <tr><td>Validate each transition</td><td>GameStateGraph</td></tr>
+            <tr><td>Create and switch screens</td><td>Main, menu pages</td></tr>
+            <tr><td>Generate map off the main thread</td><td>MapGenerator</td></tr>
+            <tr><td>Keep the paused game</td><td>GameScreen</td></tr>
+            <tr><td>Trigger the tower defence event once per game</td><td>TileMapRenderer, GameStateGraph</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-gamescreen">
+            <summary>
+              <span class="crc-code mono">CRC 02</span>
+              <span class="entry-title">GameScreen</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Build and update the scene tree</td><td>Node, Player, EnemyManager</td></tr>
+            <tr><td>Run the 5 minute timer and score</td><td>Enemy</td></tr>
+            <tr><td>Trigger pause, win and loss</td><td>GameStateManager</td></tr>
+            <tr><td>Draw map and HUD</td><td>TileMapRenderer</td></tr>
+            <tr><td>Start the large goose and tower defence events</td><td>EnemyManager, GameStateManager</td></tr>
+            <tr><td>Show event messages and award the defence bonus</td><td>EnemyManager</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-node">
+            <summary>
+              <span class="crc-code mono">CRC 03</span>
+              <span class="entry-title">Node</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Hold position, bounds and sprite</td><td>Rectangle, Sprite</td></tr>
+            <tr><td>Own child nodes and propagate update/draw</td><td>Node</td></tr>
+            <tr><td>Detect overlap with another node</td><td>Node</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-player">
+            <summary>
+              <span class="crc-code mono">CRC 04</span>
+              <span class="entry-title">Player</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Read input and move</td><td>TileMap</td></tr>
+            <tr><td>Trigger stick and seed attacks</td><td>Weapon, SeedWeapon</td></tr>
+            <tr><td>Hold health, take damage, heal</td><td>Enemy, HeartPickup</td></tr>
+            <tr><td>Provide camera for aiming</td><td>Camera</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-enemy">
+            <summary>
+              <span class="crc-code mono">CRC 05</span>
+              <span class="entry-title">Enemy</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Chase player or nearest seed</td><td>Player, EnemyManager</td></tr>
+            <tr><td>Attack player on a cooldown</td><td>Player</td></tr>
+            <tr><td>Eat seeds</td><td>SeedProjectile</td></tr>
+            <tr><td>Flee when health reaches zero</td><td>Weapon</td></tr>
+            <tr><td>Be standard, large or angry (faster, red)</td><td>EnemyManager</td></tr>
+            <tr><td>Report dispersal, request pickup</td><td>GameScreen, EnemyManager</td></tr>
+            <tr><td>Work out its dispersal score</td><td>GameScreen</td></tr>
+            <tr><td>Avoid solid terrain</td><td>TileMap</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-enemymanager">
+            <summary>
+              <span class="crc-code mono">CRC 06</span>
+              <span class="entry-title">EnemyManager</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Spawn waves and the large goose</td><td>Enemy</td></tr>
+            <tr><td>Spawn the ten angry geese for the tower defence event</td><td>Enemy, GameScreen</td></tr>
+            <tr><td>Count angry geese still present</td><td>Enemy</td></tr>
+            <tr><td>Place geese near the player</td><td>Player, TileMap</td></tr>
+            <tr><td>Find the closest seed</td><td>SeedProjectile</td></tr>
+            <tr><td>Create dropped pickups</td><td>HeartPickup, SeedPickup</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-weapon-seedweapon">
+            <summary>
+              <span class="crc-code mono">CRC 07</span>
+              <span class="entry-title">Weapon and SeedWeapon</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Attack towards the cursor on a cooldown</td><td>Player</td></tr>
+            <tr><td>Damage and knock back geese (Weapon)</td><td>EnemyManager, Enemy, Effect</td></tr>
+            <tr><td>Throw seeds and manage ammo (SeedWeapon)</td><td>SeedProjectile, SeedPickup</td></tr>
+            <tr><td>Report swings and ammo for the HUD</td><td>GameScreen</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-pickup">
+            <summary>
+              <span class="crc-code mono">CRC 08</span>
+              <span class="entry-title">Pickup (HeartPickup, SeedPickup)</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Sit at a drop location</td><td>EnemyManager</td></tr>
+            <tr><td>Detect the player touching it</td><td>Player</td></tr>
+            <tr><td>Apply its effect via collect()</td><td>Player, SeedWeapon</td></tr>
+            <tr><td>Remove itself once collected</td><td>Node</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-mapgenerator">
+            <summary>
+              <span class="crc-code mono">CRC 09</span>
+              <span class="entry-title">MapGenerator</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Generate a deterministic map from a seed</td><td>TileMap</td></tr>
+            <tr><td>Sample terrain for each block</td><td>TileDistribution</td></tr>
+            <tr><td>Place spawn, escape and tower defence points</td><td>TileType</td></tr>
+            <tr><td>Retry until a path exists</td><td>TileMap</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-tilemap">
+            <summary>
+              <span class="crc-code mono">CRC 10</span>
+              <span class="entry-title">TileMap</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Store tiles and points of interest</td><td>TileType, TilePosition</td></tr>
+            <tr><td>Answer solidity queries for boundaries</td><td>Player, Enemy</td></tr>
+            <tr><td>Provide the spawn position</td><td>GameScreen</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-tilemaprenderer">
+            <summary>
+              <span class="crc-code mono">CRC 11</span>
+              <span class="entry-title">TileMapRenderer</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Draw visible tiles</td><td>TileMap, Camera, Batch</td></tr>
+            <tr><td>Draw the snack stand on the defence tile</td><td>TileType</td></tr>
+            <tr><td>Trigger the tower defence event when that tile is first drawn</td><td>GameStateManager</td></tr>
+              </tbody>
+            </table>
+          </details>
+          <details id="crc-menu-pages">
+            <summary>
+              <span class="crc-code mono">CRC 12</span>
+              <span class="entry-title">Menu pages</span>
+            </summary>
+            <table class="crc-table">
+              <thead><tr><th scope="col">Responsibilities</th><th scope="col">Collaborators</th></tr></thead>
+              <tbody>
+            <tr><td>Show buttons for their state</td><td>DefaultSkin</td></tr>
+            <tr><td>Forward choices as transitions</td><td>GameStateManager</td></tr>
+            <tr><td>Draw the frozen game behind overlays</td><td>GameScreen</td></tr>
+            <tr><td>Animate the menu background</td><td>MenuBackground</td></tr>
+              </tbody>
+            </table>
+          </details>
         </div>
       </section>
 
