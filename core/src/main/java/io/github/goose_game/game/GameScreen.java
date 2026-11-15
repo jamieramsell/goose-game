@@ -163,7 +163,7 @@ public class GameScreen extends ScreenAdapter {
 
     // Render map
     this.map = map;
-    this.renderer = new TileMapRenderer(this.map);
+    this.renderer = new TileMapRenderer(this.map, stateManager);
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
