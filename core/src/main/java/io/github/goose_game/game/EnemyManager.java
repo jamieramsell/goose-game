@@ -163,6 +163,13 @@ public class EnemyManager extends Node {
     add_child(String.valueOf(enemyCounter), enemy);
   }
 
+  /** Spawn a wave of angry geese around the player. */
+  public void spawnTowerAttackGeese() {
+    for (int i = 0; i < 10; i++) {
+      spawnEnemy(true);
+    }
+  }
+
   /**
    * Positions the enemy at a random angle and a distance of 360-370 units from the player.
    *

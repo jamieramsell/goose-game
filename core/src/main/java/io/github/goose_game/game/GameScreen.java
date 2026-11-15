@@ -85,6 +85,8 @@ public class GameScreen extends ScreenAdapter {
   // Game state
   private EnemyManager enemyManager;
   private boolean largeEnemySpawned;
+  private boolean towerDefenceEventSpawned = false;
+  private boolean showAttackLabel = true;
   private float remainingTime = GAME_DURATION_SECONDS;
   private float attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
   private float scoreRemainder;
@@ -324,39 +326,52 @@ public class GameScreen extends ScreenAdapter {
 
     // Updates which should only take place while game is in action should be placed within this
     // if statement:
-    if (stateManager.getGameState() == GameState.GAME) {
+    if (stateManager.getGameState() == GameState.GAME
+        || stateManager.getGameState() == GameState.TOWER_DEFENCE) {
       if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
         stateManager.pause(this);
       }
+      
+      updateScore(Math.min(delta, remainingTime));
+      updateScorePopups(delta);
+      remainingTime = Math.max(0, remainingTime - delta);
+      updateTimerLabel();
+      updateAttackMessage(delta);
 
-      if (stateManager.getGameState() == GameState.GAME) {
-        updateScore(Math.min(delta, remainingTime));
-        updateScorePopups(delta);
-        remainingTime = Math.max(0, remainingTime - delta);
-        updateTimerLabel();
-        updateAttackMessage(delta);
+      // Halfway through the game; trigger large goose attack event
+      if (remainingTime <= GAME_DURATION_SECONDS / 2 && !largeEnemySpawned) {
+        largeEnemySpawned = true;
+        enemyManager.spawnLargeEnemy();
+        attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+        attackTitle.setText("Large Goose Attack!");
+        attackTitle.setVisible(true);
+        showAttackLabel = false;
+      }
 
-        if (remainingTime <= GAME_DURATION_SECONDS / 2 && !largeEnemySpawned) {
-          largeEnemySpawned = true;
-          enemyManager.spawnLargeEnemy();
-          attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
-          attackTitle.setText("Large Goose Attack!");
-          attackTitle.setVisible(true);
-        }
+      // If the tower defence event has been triggered, initiate it
+      if (stateManager.getGameState() == GameState.TOWER_DEFENCE && !towerDefenceEventSpawned) {
+        enemyManager.spawnTowerAttackGeese();
+        attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+        attackTitle.setText("Defend the base!");
+        attackLabel.setText("Defend the snack stand against the swarm of angry geese");
+        attackTitle.setVisible(true);
+        attackLabel.setVisible(true);
+        showAttackLabel = true;
+        towerDefenceEventSpawned = true;
+      }
 
-        if (remainingTime == 0) { // Time has reached 0, you've escaped!
-          stateManager.victory(this);
+      if (remainingTime == 0) { // Time has reached 0, you've escaped!
+        stateManager.victory(this);
+      } else {
+        /* Only update nodes while game is active */
+        root.update(delta);
+        updateSwingLabel();
+        Player player = (Player) root.get_child("player");
+
+        if (player.getHealth() <= 0) { // Player dead, lose condition
+          stateManager.lose(this);
         } else {
-          /* Only update nodes while game is active */
-          root.update(delta);
-          updateSwingLabel();
-          Player player = (Player) root.get_child("player");
-
-          if (player.getHealth() <= 0) { // Player dead, lose condition
-            stateManager.lose(this);
-          } else {
-            camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
-          }
+          camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
         }
       }
     }
@@ -370,7 +385,7 @@ public class GameScreen extends ScreenAdapter {
   private void updateAttackMessage(float delta) {
     if (attackMessageTime > 0) {
       attackMessageTime = Math.max(0, attackMessageTime - delta);
-      attackLabel.setVisible(attackMessageTime > 0 && !largeEnemySpawned);
+      attackLabel.setVisible(attackMessageTime > 0 && showAttackLabel);
       attackTitle.setVisible(attackMessageTime > 0);
     }
   }
