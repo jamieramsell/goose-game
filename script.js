@@ -1,7 +1,25 @@
 // REPORT LINKS: the five Project files links open the team Google Docs.
 // For assessment submission, add links to final PDF snapshots alongside them.
 // Keep these live document links when updating the reports.
-const gameJar = null; // e.g. 'files/game.jar', after uploading a tested build
+// Hosted URLs of the submitted PDFs (Table 1 filenames). A PDF link appears beside each Google Doc once set.
+const pdfLinks = {
+  Req1: '',
+  Arch1: '',
+  Plan1: '',
+  Risk1: '',
+  Impl1: ''
+};
+
+document.querySelectorAll('[data-pdf]').forEach(a => {
+  const url = pdfLinks[a.dataset.pdf];
+  if (!url) return;
+  a.href = url;
+  a.textContent = `${a.dataset.pdf}.pdf ↗`;
+  a.hidden = false;
+});
+
+// The JAR is built and published by .github/workflows/release-jar.yml; the link is set in index.html.
+const gameJar = null;
 
 // Add actual files before listing them. Example:
 // {title:'Week 3 plan (PDF)', url:'progress/week-3.pdf'}
