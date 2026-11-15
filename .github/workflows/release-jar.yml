@@ -32,4 +32,5 @@ jobs:
               --notes "Runnable JAR of the current main branch. Run with: java -jar goose-game.jar (Java 17+)."
           else
             gh release upload latest goose-game.jar --clobber
+            gh release edit latest --target "$GITHUB_SHA"
           fi
