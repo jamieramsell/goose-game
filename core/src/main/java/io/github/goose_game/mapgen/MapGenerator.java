@@ -23,7 +23,7 @@ public class MapGenerator {
   public static final int BLOCK_SIZE = 128;
 
   /** The number of terrain blocks along each side of the map. */
-  public static final int BLOCKS_PER_SIDE = 64;
+  public static final int BLOCKS_PER_SIDE = 16;
 
   /**
    * The width and height of the (square) map, in pixels. Must be a multiple of {@link #TILE_SIZE}.
