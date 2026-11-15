@@ -1,5 +1,8 @@
 package io.github.goose_game.game;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -21,6 +24,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 import io.github.goose_game.Main;
 import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.mapgen.TileMapRenderer;
@@ -28,8 +32,6 @@ import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 import io.github.goose_game.utils.Node;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Main gameplay screen, which owns the scene graph (player, enemies, weapons), the world camera,
@@ -63,6 +65,7 @@ public class GameScreen extends ScreenAdapter {
   private final Label scoreLabel;
   private final Label seedsLabel;
   private final Label swingLabel;
+  private final Label eventsLabel;
   private final Label attackTitle;
   private final Label attackLabel;
 
@@ -93,6 +96,8 @@ public class GameScreen extends ScreenAdapter {
   private float scoreRemainder;
   private int score;
   private int displayedSwingCount;
+  private int eventsEncountered;
+  private int displayedEventsEncountered;
   private int displayedSeconds = -1;
 
   // Debug
@@ -123,6 +128,7 @@ public class GameScreen extends ScreenAdapter {
             "Seeds: 0",
             new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     swingLabel = new Label("Stick Swings: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    eventsLabel = new Label("Events Encountered: 0/2", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     attackTitle = new Label("Survive for 5 minutes!", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
     attackTitle.setAlignment(Align.center);
     attackLabel =
@@ -154,8 +160,14 @@ public class GameScreen extends ScreenAdapter {
     Table swingTable = new Table();
     swingTable.setFillParent(true);
     swingTable.top().left();
-    swingTable.add(swingLabel).padTop(50).padLeft(12);
+    swingTable.add(swingLabel).padTop(50).padLeft(12).row();
     hudStage.addActor(swingTable);
+
+    Table eventsTable = new Table();
+    eventsTable.setFillParent(true);
+    eventsTable.top().left();
+    eventsTable.add(eventsLabel).padTop(88).padLeft(12).row();
+    hudStage.addActor(eventsTable);
 
     Table attackTable = new Table();
     attackTable.setFillParent(true);
@@ -343,6 +355,7 @@ public class GameScreen extends ScreenAdapter {
       if (remainingTime <= GAME_DURATION_SECONDS / 2 && !largeEnemySpawned) {
         largeEnemySpawned = true;
         enemyManager.spawnLargeEnemy();
+        eventsEncountered++;
         attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
         attackTitle.setText("Large Goose Attack!");
         attackTitle.setVisible(true);
@@ -352,6 +365,7 @@ public class GameScreen extends ScreenAdapter {
       // If the tower defence event has been triggered, initiate it
       if (stateManager.getGameState() == GameState.TOWER_DEFENCE && !towerDefenceEventSpawned) {
         enemyManager.spawnTowerAttackGeese();
+        eventsEncountered++;
         attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
         attackTitle.setText("Defend the base!");
         attackLabel.setText("Defend the snack stand against the swarm of angry geese");
@@ -384,6 +398,7 @@ public class GameScreen extends ScreenAdapter {
         /* Only update nodes while game is active */
         root.update(delta);
         updateSwingLabel();
+        updateEventsLabel();
         Player player = (Player) root.get_child("player");
 
         if (player.getHealth() <= 0) { // Player dead, lose condition
@@ -423,6 +438,14 @@ public class GameScreen extends ScreenAdapter {
     if (swingCount != displayedSwingCount) {
       displayedSwingCount = swingCount;
       swingLabel.setText("Stick Swings: " + swingCount);
+    }
+  }
+
+  /** Refreshes the event label when an event is encountered. */
+  private void updateEventsLabel() {
+    if (eventsEncountered != displayedEventsEncountered) {
+      displayedEventsEncountered = eventsEncountered;
+      eventsLabel.setText("Events Encountered: " + eventsEncountered + "/2");
     }
   }
 
