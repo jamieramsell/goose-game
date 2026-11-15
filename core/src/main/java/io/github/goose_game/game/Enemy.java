@@ -1,6 +1,7 @@
 package io.github.goose_game.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -31,6 +32,7 @@ public class Enemy extends Node {
   float speed;
   Vector2 target_pos;
   Vector2 velocity = new Vector2(0, 0);
+  private final boolean angry;
 
   private Array<Animation<Sprite>> animations;
   private float frame;
@@ -59,6 +61,7 @@ public class Enemy extends Node {
    * @param map the map used for wall collision
    * @param speed movement acceleration applied each frame
    * @param damage damage dealt to the player per attack
+   * @param angry whether the goose is one of the 'angry' goose variant
    * @param attackDelay number of frames between attacks
    * @param health hit points before the enemy is dispersed
    * @param spriteScale scale applied to the sprite when drawn
@@ -75,6 +78,7 @@ public class Enemy extends Node {
       TileMap map,
       float speed,
       float damage,
+      boolean angry,
       int attackDelay,
       int health,
       float spriteScale,
@@ -89,6 +93,7 @@ public class Enemy extends Node {
     this.attackDelay = attackDelay;
     this.target_pos = target.position;
     this.health = health;
+    this.angry = angry;
     this.maxHealth = health;
     this.spriteScale = spriteScale;
     this.despawnOnDefeat = despawnOnDefeat;
@@ -291,7 +296,15 @@ public class Enemy extends Node {
     currentFrame.setPosition(
         position.x - currentFrame.getWidth() * spriteScale / 2,
         position.y - currentFrame.getHeight() * spriteScale / 2);
+
+    if (angry) { // Tint angry geese red
+      batch.setColor(Color.RED);
+    }
     currentFrame.draw(batch);
+    if (angry) {
+      batch.setColor(Color.WHITE);
+    }
+
     for (Node child : children.values()) {
       child.draw(batch);
     }

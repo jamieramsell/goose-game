@@ -72,6 +72,16 @@ public class EnemyManager extends Node {
 
   /** Spawns a single standard enemy (small, 100 health) near the player. */
   public void spawnEnemy() {
+    spawnEnemy(false);
+  }
+
+  /**
+   * Spawns a single enemy (small, 100 health) near the player.
+   * 
+   * @param angry whether or not the goose is 'angry'. Angry geese run slightly faster, and are red 
+   *     in colour. They are spawned by the tower defence event.
+   */
+  public void spawnEnemy(boolean angry) {
     // Positional values are assigned by teleportEnemyNearPlayer(), these are temporary
     float x = 1000;
     float y = 1000;
@@ -80,11 +90,11 @@ public class EnemyManager extends Node {
     float gooseHeight = 20;
     float spriteScale = 1;
 
-    float speed = 20;
+    float speed = angry ? 25 : 20;
     float damage = 20;
     int attackDelay = 270;
     int health = 100;
-    boolean despawnOnDefeat = false;
+    boolean despawnOnDefeat = angry; // Despawn if angry, respawn if standard
 
     Enemy enemy =
         new Enemy(
@@ -97,6 +107,7 @@ public class EnemyManager extends Node {
             map,
             speed,
             damage,
+            angry,
             attackDelay,
             health,
             spriteScale,
@@ -139,6 +150,7 @@ public class EnemyManager extends Node {
             map,
             speed,
             damage,
+            false,
             attackDelay,
             health,
             spriteScale,
