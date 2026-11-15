@@ -297,13 +297,8 @@ public class Enemy extends Node {
         position.x - currentFrame.getWidth() * spriteScale / 2,
         position.y - currentFrame.getHeight() * spriteScale / 2);
 
-    if (angry) { // Tint angry geese red
-      batch.setColor(Color.RED);
-    }
+    currentFrame.setColor(angry ? Color.RED : Color.WHITE);
     currentFrame.draw(batch);
-    if (angry) {
-      batch.setColor(Color.WHITE);
-    }
 
     for (Node child : children.values()) {
       child.draw(batch);
