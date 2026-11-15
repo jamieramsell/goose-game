@@ -3,6 +3,7 @@ package io.github.goose_game.mapgen;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -43,6 +44,7 @@ public class TileMapRenderer implements Disposable {
   private final GameStateManager stateManager;
 
   private final TextureAtlas atlas = new TextureAtlas("floorspritesheet/floorspritesheet.atlas");
+  private final Sprite snackstand = new Sprite(new Texture(Gdx.files.internal("snackstand.png")));
 
   /** A 1x1 white texture, which is tinted and stretched to draw each tile as a solid square. */
   private final Texture pixel;
@@ -124,14 +126,9 @@ public class TileMapRenderer implements Disposable {
           } case GRASS, SPAWN, ESCAPE -> {
             drawGrass(batch, x, y, mapSize);
           } case DEFENCE_EVENT_TILE -> {
-            batch.setColor(COLOURS.get(TileType.DEFENCE_EVENT_TILE));
-            batch.draw(
-                pixel,
-                x * MapGenerator.TILE_SIZE,
-                y * MapGenerator.TILE_SIZE,
-                MapGenerator.TILE_SIZE,
-                MapGenerator.TILE_SIZE);
-            batch.setColor(Color.WHITE);
+            drawGrass(batch, x, y, mapSize);
+            snackstand.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
+            snackstand.draw(batch);
             stateManager.towerDefenceEvent();
           }
         }
