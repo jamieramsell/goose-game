@@ -1,0 +1,13 @@
+@startuml
+' Interim sequence diagram for a key press, drawn before implementation began.
+actor Person
+participant GameScreen
+participant Player
+participant HiddenEvent
+participant HUD
+
+Person -> GameScreen: press key
+GameScreen -> Player: updatePos()
+Player -> HiddenEvent: checkBounds()
+HiddenEvent -> HUD: triggerActive()
+@enduml

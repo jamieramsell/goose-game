@@ -1,0 +1,12 @@
+@startuml TileMapRenderer
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title TileMapRenderer
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Draw visible tiles | TileMap, Camera, Batch |
+| Draw the snack stand on the defence tile | TileType |
+| Trigger the tower defence event when that tile is first drawn | GameStateManager |
+]
+@enduml

@@ -106,18 +106,12 @@ reducedMotion.addEventListener('change', () => {
   document.querySelectorAll('.bounce').forEach(letter => letter.classList.remove('bounce'));
 });
 
-const ganttChart = document.querySelectorAll('.chart');
-const modal = document.getElementById('photo-modal');
-const modalImg = document.getElementById('modal-img');
+// CRC CARDS: open a card when the page is loaded or linked with its #crc-... anchor,
+// e.g. index.html#crc-player. The #crc-cards section itself is always visible.
+function openCrcFromHash() {
+  const target = document.getElementById(location.hash.slice(1));
+  if (target && target.id.startsWith('crc-') && target.tagName === 'DETAILS') target.open = true;
+}
 
-ganttChart.forEach(photo => {
-	photo.addEventListener('click', () => {
-		modalImg.src = photo.src;
-		modalImg.alt = photo.alt;
-		modal.showModal();
-	});
-});
-
-modal.addEventListener('click', () => {
-	modal.close();
-});
+openCrcFromHash();
+window.addEventListener('hashchange', openCrcFromHash);

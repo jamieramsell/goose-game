@@ -1,0 +1,17 @@
+@startuml Enemy
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title Enemy
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Chase player or nearest seed | Player, EnemyManager |
+| Attack player on a cooldown | Player |
+| Eat seeds | SeedProjectile |
+| Flee when health reaches zero | Weapon |
+| Be standard, large or angry (faster, red) | EnemyManager |
+| Report dispersal, request pickup | GameScreen, EnemyManager |
+| Work out its dispersal score | GameScreen |
+| Avoid solid terrain | TileMap |
+]
+@enduml

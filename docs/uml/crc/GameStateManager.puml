@@ -1,0 +1,15 @@
+@startuml GameStateManager
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title GameStateManager
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Hold current game state | GameState |
+| Validate each transition | GameStateGraph |
+| Create and switch screens | Main, menu pages |
+| Generate map off the main thread | MapGenerator |
+| Keep the paused game | GameScreen |
+| Trigger the tower defence event once per game | TileMapRenderer, GameStateGraph |
+]
+@enduml

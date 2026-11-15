@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 588" width="980" height="588" role="img" aria-labelledby="t d">
+<title id="t">Interim class diagram</title>
+<desc id="d">Interim UML class diagram. GooseGame is associated with GameScreen. GameScreen is associated with the GameState enumeration and with Player, Item and HiddenEvent.</desc>
+<defs><marker id="open" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M1 1L11 6L1 11" fill="none" stroke="#20211d" stroke-width="1.5"/></marker><marker id="solid" viewBox="0 0 12 12" refX="11" refY="6" markerWidth="11" markerHeight="11" orient="auto-start-reverse"><path d="M1 1L11 6L1 11Z" fill="#20211d"/></marker></defs>
+<rect width="980" height="588" fill="#ffffff"/>
+<rect x="20" y="30" width="210" height="142" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="125.0" y="53" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#20211d">GooseGame</text>
+<line x1="20" y1="66" x2="230" y2="66" stroke="#20211d" stroke-width="1.5"/>
+<text x="32" y="92" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">currentScreen: Screen</text>
+<line x1="20" y1="108" x2="230" y2="108" stroke="#20211d" stroke-width="1.5"/>
+<text x="32" y="134" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">create(): void</text>
+<text x="32" y="156" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">render(): void</text>
+<rect x="330" y="30" width="300" height="252" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="480.0" y="53" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#20211d">GameScreen</text>
+<line x1="330" y1="66" x2="630" y2="66" stroke="#20211d" stroke-width="1.5"/>
+<text x="342" y="92" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">player: Player</text>
+<text x="342" y="114" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">gooseList: array&lt;Goose&gt;</text>
+<text x="342" y="136" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">eventList: array&lt;HiddenEvent&gt;</text>
+<text x="342" y="158" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">hud: Hud</text>
+<text x="342" y="180" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">state: GameState</text>
+<line x1="330" y1="196" x2="630" y2="196" stroke="#20211d" stroke-width="1.5"/>
+<text x="342" y="222" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">render(delta: float)</text>
+<text x="342" y="244" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">handleInput(): void</text>
+<text x="342" y="266" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">checkCollisions(): void</text>
+<rect x="750" y="30" width="210" height="192" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="855.0" y="48" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="12" fill="#20211d">«enumeration»</text>
+<text x="855.0" y="68" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#20211d">GameState</text>
+<line x1="750" y1="82" x2="960" y2="82" stroke="#20211d" stroke-width="1.5"/>
+<text x="762" y="108" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">Start</text>
+<text x="762" y="130" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">Playing</text>
+<text x="762" y="152" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">Paused</text>
+<text x="762" y="174" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">Victory</text>
+<text x="762" y="196" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">GameOver</text>
+<line x1="750" y1="212" x2="960" y2="212" stroke="#20211d" stroke-width="1.5"/>
+<rect x="60" y="372" width="220" height="186" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="170.0" y="395" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#20211d">Player</text>
+<line x1="60" y1="408" x2="280" y2="408" stroke="#20211d" stroke-width="1.5"/>
+<text x="72" y="434" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">x: float</text>
+<text x="72" y="456" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">y: float</text>
+<text x="72" y="478" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">inventory: list</text>
+<line x1="60" y1="494" x2="280" y2="494" stroke="#20211d" stroke-width="1.5"/>
+<text x="72" y="520" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">move(): void</text>
+<text x="72" y="542" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">useItem()</text>
+<rect x="370" y="372" width="220" height="142" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="480.0" y="395" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#20211d">Item</text>
+<line x1="370" y1="408" x2="590" y2="408" stroke="#20211d" stroke-width="1.5"/>
+<text x="382" y="434" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">itemID: integer</text>
+<text x="382" y="456" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">name: string</text>
+<line x1="370" y1="472" x2="590" y2="472" stroke="#20211d" stroke-width="1.5"/>
+<text x="382" y="498" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">use(): void</text>
+<rect x="680" y="372" width="220" height="142" fill="#ffffff" stroke="#20211d" stroke-width="1.5"/>
+<text x="790.0" y="395" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="bold" fill="#20211d">HiddenEvent</text>
+<line x1="680" y1="408" x2="900" y2="408" stroke="#20211d" stroke-width="1.5"/>
+<text x="692" y="434" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">bounds: rect</text>
+<line x1="680" y1="450" x2="900" y2="450" stroke="#20211d" stroke-width="1.5"/>
+<text x="692" y="476" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">isTriggered()</text>
+<text x="692" y="498" font-family="Arial, Helvetica, sans-serif" font-size="13.5" fill="#20211d">trigger()</text>
+<path d="M230 80 L330 80" fill="none" stroke="#20211d" stroke-width="1.5" marker-end="url(#open)"/>
+<path d="M630 80 L750 80" fill="none" stroke="#20211d" stroke-width="1.5" marker-end="url(#open)"/>
+<path d="M400 282 L400 327 L170 327 L170 372" fill="none" stroke="#20211d" stroke-width="1.5" marker-end="url(#open)"/>
+<path d="M480 282 L480 372" fill="none" stroke="#20211d" stroke-width="1.5" marker-end="url(#open)"/>
+<path d="M560 282 L560 327 L790 327 L790 372" fill="none" stroke="#20211d" stroke-width="1.5" marker-end="url(#open)"/>
+</svg>

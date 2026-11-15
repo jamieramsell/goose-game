@@ -1,0 +1,12 @@
+@startuml Node
+!theme plain
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+title Node
+rectangle c [
+|= Responsibilities |= Collaborators |
+| Hold position, bounds and sprite | Rectangle, Sprite |
+| Own child nodes and propagate update/draw | Node |
+| Detect overlap with another node | Node |
+]
+@enduml
