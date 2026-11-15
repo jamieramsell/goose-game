@@ -31,7 +31,8 @@ public class TileMapRenderer implements Disposable {
       TileType.BUILDING, Color.GRAY,
       TileType.BUSH, Color.FOREST,
       TileType.SPAWN, Color.GOLD,
-      TileType.ESCAPE, Color.RED
+      TileType.ESCAPE, Color.RED,
+      TileType.DEFENCE_EVENT_TILE, Color.ORANGE
   ));
 
   /** The map to draw. */
@@ -116,6 +117,15 @@ public class TileMapRenderer implements Disposable {
             drawWater(batch, x, y, mapSize);
           } case GRASS, SPAWN, ESCAPE -> {
             drawGrass(batch, x, y, mapSize);
+          } case DEFENCE_EVENT_TILE -> {
+            batch.setColor(COLOURS.get(TileType.DEFENCE_EVENT_TILE));
+            batch.draw(
+                pixel,
+                x * MapGenerator.TILE_SIZE,
+                y * MapGenerator.TILE_SIZE,
+                MapGenerator.TILE_SIZE,
+                MapGenerator.TILE_SIZE);
+            batch.setColor(Color.WHITE);
           }
         }
       }

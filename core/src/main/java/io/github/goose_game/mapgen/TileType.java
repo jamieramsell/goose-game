@@ -14,6 +14,9 @@ public enum TileType {
    */
   ESCAPE(true, true),
 
+  /** The POI which triggers the goose defence event. */
+  DEFENCE_EVENT_TILE(true, true),
+
   /** A plain, grassy tile. Passable by all. */
   GRASS(true, true),
 
