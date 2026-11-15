@@ -83,13 +83,13 @@ public class Player extends Node {
      * wall' effect, where the player cannot move as their velocity is still positive in the
      * direction of the wall.
      */
-    if (isTargetPosInBounds(targetX) && !map.isPixelSolidForPlayer((int) targetX, (int) position.y)) {
+    if (map.isTargetPosInBounds(targetX) && !map.isPixelSolidForPlayer((int) targetX, (int) position.y)) {
       position.x = targetX;
     } else {
       velocity.x = 0;
     }
 
-    if (isTargetPosInBounds(targetY) && !map.isPixelSolidForPlayer((int) position.x, (int) targetY)) {
+    if (map.isTargetPosInBounds(targetY) && !map.isPixelSolidForPlayer((int) position.x, (int) targetY)) {
       position.y = targetY;
     } else {
       velocity.y = 0;
@@ -98,13 +98,8 @@ public class Player extends Node {
     super.update(delta);
   }
 
-  private boolean isTargetPosInBounds(float target) {
-    int mapSize = MapGenerator.MAP_SIZE;
-    return !(target < 0 || target > mapSize - 1);
-  }
-
   boolean isWalkableForGeese(Vector2 targetPosition) {
-    if (!isTargetPosInBounds(targetPosition.x) || !isTargetPosInBounds(targetPosition.y)) {
+    if (!map.isTargetPosInBounds(targetPosition.x) || !map.isTargetPosInBounds(targetPosition.y)) {
       return false;
     }
 
