@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+
+import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 
 /**
@@ -23,15 +25,20 @@ public class SeedWeapon extends Node {
   private int projectileCounter;
   private int ammo = MAX_AMMO;
 
+  private final TileMap map;
+
   /**
    * Creates a seed weapon with full ammo that is ready to fire.
    *
    * @param seedSprite the sprite copied for each thrown seed
+   * @param map a copy of the map, used to determine which coordinates fall within the map's
+   *     playable area
    */
-  public SeedWeapon(Sprite seedSprite) {
+  public SeedWeapon(Sprite seedSprite, TileMap map) {
     this.bounds.set(0, 0, 0, 0);
     this.seedSprite = seedSprite;
     this.attackCounter = attackTime;
+    this.map = map;
   }
 
   /**
@@ -51,7 +58,7 @@ public class SeedWeapon extends Node {
       if (targetPosition.dst2(player.position) == 0) {
         return;
       }
-      if (!player.isWalkableForGeese(targetPosition)) {
+      if (!isWalkableForGeese(targetPosition)) {
         return;
       }
 
@@ -90,5 +97,15 @@ public class SeedWeapon extends Node {
       return true;
     }
     return false;
+  }
+
+  private boolean isWalkableForGeese(Vector2 targetPosition) {
+    if (!map.isTargetPosInBounds(targetPosition.x) || !map.isTargetPosInBounds(targetPosition.y)) {
+      return false;
+    }
+
+    int targetX = (int) targetPosition.x;
+    int targetY = (int) targetPosition.y;
+    return !map.isPixelSolidForGeese(targetX, targetY);
   }
 }

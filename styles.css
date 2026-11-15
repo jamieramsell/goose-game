@@ -797,4 +797,13 @@ details[id^="crc-"]:target {
   .crc-table td:first-child {
     width: auto
   }
+.pdf-link {
+  display: inline-block;
+  margin: 0.4rem 0 0.8rem;
+  font-family: var(--mono, monospace);
+  text-decoration: underline;
+}
+
+.pdf-link[hidden] {
+  display: none;
 }

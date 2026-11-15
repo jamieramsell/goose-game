@@ -287,4 +287,15 @@ public class TileMap {
   Map<TileType, TilePosition> getAllPointsOfInterest() {
     return pointsOfInterest;
   }
+
+  /**
+   * Determines whether or not a given x- or y-coordinate is inside the bounds of the map
+   *
+   * @param target the x- or y-coordinate to check
+   * @return {@code true} if the coordinate falls within the playable area, {@code false} otherwise
+   */
+  public boolean isTargetPosInBounds(float target) {
+    int mapSize = MapGenerator.MAP_SIZE;
+    return !(target < 0 || target > mapSize - 1);
+  }
 }
