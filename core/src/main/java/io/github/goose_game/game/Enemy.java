@@ -333,7 +333,15 @@ public class Enemy extends Node {
 
   /** @return the points awarded for dispersing this enemy */
   public int getDispersalScore() {
-    return despawnOnDefeat ? 50 : 10;
+    int score = 10;
+    if (angry) { // Angry goose XP boost
+      score *= 2;
+    }
+    if (spriteScale > 1) { // Large goose XP boost
+      score *= 5;
+    }
+
+    return score;
   }
 
 }
