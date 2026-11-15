@@ -98,16 +98,6 @@ public class Player extends Node {
     super.update(delta);
   }
 
-  boolean isWalkableForGeese(Vector2 targetPosition) {
-    if (!map.isTargetPosInBounds(targetPosition.x) || !map.isTargetPosInBounds(targetPosition.y)) {
-      return false;
-    }
-
-    int targetX = (int) targetPosition.x;
-    int targetY = (int) targetPosition.y;
-    return !map.isPixelSolidForGeese(targetX, targetY);
-  }
-
   private Vector2 get_input() {
     Vector2 dir = new Vector2();
     if (Gdx.input.isKeyPressed(Input.Keys.A)) {

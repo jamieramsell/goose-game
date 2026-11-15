@@ -200,7 +200,7 @@ public class GameScreen extends ScreenAdapter {
         .add_child(
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
 
-    this.seedWeapon = new SeedWeapon(new Sprite(seedTexture));
+    this.seedWeapon = new SeedWeapon(new Sprite(seedTexture), map);
     this.root.get_child("player").add_child("seed_weapon", seedWeapon);
     
     // Spawn enemies
