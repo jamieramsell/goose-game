@@ -24,6 +24,7 @@
         <a href="#reports" data-jump>Files</a>
         <a href="#progress" data-jump>Progress</a>
         <a href="#team" data-jump>Team</a>
+        <a href="#handover" data-jump>Handover</a>
       </nav>
     </header>
 
@@ -225,10 +226,378 @@
           <li>Cynthia Tam</li>
         </ul>
       </section>
+
+      <section class="section" id="handover" aria-labelledby="handover-title">
+        <div class="section-title">
+          <span class="mono">For the next team</span>
+          <h2 id="handover-title">Handover guide</h2>
+          <p>How to run, read and change Flock n' Load if you are picking the project up from us.</p>
+        </div>
+
+        <div class="guide">
+          <details open>
+            <summary>
+              <span class="guide-num">01</span>
+              <span class="entry-title">Get it running</span>
+            </summary>
+            <div class="guide-body">
+              <p>You need Git and a JDK, version 17 or newer. You do not need to install Gradle: the wrapper in the
+                repository downloads Gradle and libGDX the first time you run it, so that first run needs an internet
+                connection.</p>
+              <pre><code>git clone https://github.com/jamieramsell/goose-game.git
+cd goose-game
+./gradlew lwjgl3:run</code></pre>
+              <p>On Windows, use <code>gradlew.bat</code> in place of <code>./gradlew</code>.</p>
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">What it does</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>./gradlew lwjgl3:run</code></td>
+                    <td>Compiles and starts the game.</td>
+                  </tr>
+                  <tr>
+                    <td><code>./gradlew lwjgl3:jar</code></td>
+                    <td>Builds a runnable JAR at <code>lwjgl3/build/libs/goose-game-1.0.0.jar</code>. Start it with
+                      <code>java -jar</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>./gradlew core:spotlessApply</code></td>
+                    <td>Reformats the game code with Google Java Format.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>In IntelliJ IDEA or VS Code, open the repository root as a Gradle project. Java files use two-space
+                indentation, set in <code>.editorconfig</code>.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="guide-num">02</span>
+              <span class="entry-title">How the game plays</span>
+            </summary>
+            <div class="guide-body">
+              <p>The player survives on a generated campus map for five minutes. The round is won when the timer
+                reaches zero and lost when the player's health does.</p>
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Input</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd></td>
+                    <td>Move.</td>
+                  </tr>
+                  <tr>
+                    <td>Left click</td>
+                    <td>Swing the stick towards the cursor.</td>
+                  </tr>
+                  <tr>
+                    <td>Right click</td>
+                    <td>Throw a seed to the cursor. Geese walk to it and stop to eat.</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>Esc</kbd></td>
+                    <td>Pause and resume.</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>F1</kbd></td>
+                    <td>Show collision boxes, for debugging.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <ul>
+                <li><strong>Geese.</strong> Ten spawn around the player at the start. A goose with no health left is
+                  dispersed: it runs away, then comes back at full health. Half of dispersed geese drop a heart (heals
+                  a tenth of full health) or a seed bag (one seed; the player carries five at most).</li>
+                <li><strong>Terrain.</strong> Buildings and bushes block everyone. Water blocks the player but not the
+                  geese.</li>
+                <li><strong>Large goose event.</strong> Halfway through the round one large goose spawns, with double
+                  the health and harder hits. It does not come back once dispersed.</li>
+                <li><strong>Snack stand event.</strong> The first time the snack stand comes into view, ten red
+                  &ldquo;angry&rdquo; geese spawn. They are faster and do not come back. Dispersing all ten gives a
+                  bonus.</li>
+                <li><strong>Score.</strong> 1 point per second survived, 10 per goose, 20 per angry goose, 50 for the
+                  large goose and a 50 point bonus for clearing the snack stand event.</li>
+                <li><strong>Seeds.</strong> Typing a seed on the main menu gives the same map and the same goose spawn
+                  points every time. Leaving it blank picks a random one.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="guide-num">03</span>
+              <span class="entry-title">Where things live</span>
+            </summary>
+            <div class="guide-body">
+              <p>All game code is under <code>core/src/main/java/io/github/goose_game/</code>.</p>
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Path</th>
+                    <th scope="col">Contents</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>Main.java</code></td>
+                    <td>Entry point. Creates the shared sprite batch and the state manager.</td>
+                  </tr>
+                  <tr>
+                    <td><code>state/</code></td>
+                    <td>The list of game states, the allowed moves between them, and the manager that switches
+                      screens.</td>
+                  </tr>
+                  <tr>
+                    <td><code>menu/</code></td>
+                    <td>Main menu, credits, map loading screen, pause, victory and game over screens.</td>
+                  </tr>
+                  <tr>
+                    <td><code>game/</code></td>
+                    <td><code>GameScreen</code> runs the round and draws the HUD. Player, geese, the stick, seeds and
+                      pickups each have a class here.</td>
+                  </tr>
+                  <tr>
+                    <td><code>mapgen/</code></td>
+                    <td>Map generation, the tile types and the tile renderer.</td>
+                  </tr>
+                  <tr>
+                    <td><code>utils/</code></td>
+                    <td><code>Node</code>, the base class for everything in the scene, and <code>DefaultSkin</code>,
+                      the fonts and styles for menus.</td>
+                  </tr>
+                </tbody>
+              </table>
+              <p>Outside the game code:</p>
+              <table class="guide-table">
+                <tbody>
+                  <tr>
+                    <td><code>lwjgl3/</code></td>
+                    <td>Desktop launcher. Window title, size and icon are set in <code>Lwjgl3Launcher</code>.</td>
+                  </tr>
+                  <tr>
+                    <td><code>assets/</code></td>
+                    <td>Sprites, texture atlases and music. The game runs with this folder as its working
+                      directory.</td>
+                  </tr>
+                  <tr>
+                    <td><code>index.html</code>, <code>styles.css</code>, <code>script.js</code>,
+                      <code>charts/</code></td>
+                    <td>This website.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="guide-num">04</span>
+              <span class="entry-title">How it fits together</span>
+            </summary>
+            <div class="guide-body">
+              <h3>States and screens</h3>
+              <p>Every screen change goes through <code>GameStateManager</code>. It checks the move against
+                <code>GameStateGraph</code> and throws an <code>IllegalArgumentException</code> if the move is not
+                listed. The allowed moves are:</p>
+              <pre><code>MAIN_MENU      to  GENERATION, CREDITS
+CREDITS        to  MAIN_MENU
+GENERATION     to  GAME
+GAME           to  TOWER_DEFENCE, PAUSED, VICTORY, LOST
+TOWER_DEFENCE  to  GAME, PAUSED, VICTORY, LOST
+PAUSED         to  GAME, MAIN_MENU
+VICTORY, LOST  to  MAIN_MENU</code></pre>
+
+              <h3>The scene tree</h3>
+              <p>Everything in a round is a <code>Node</code> with a position, a bounding box and named children.
+                Calling <code>update</code> or <code>draw</code> on a node also calls it on its children, so
+                <code>GameScreen</code> only updates and draws the root.</p>
+              <pre><code>root
+  player
+    weapon_test     the stick
+    seed_weapon     thrown seeds are its children
+  enemyManager      geese and dropped pickups are its children</code></pre>
+              <p>Code finds other nodes by these names, for example
+                <code>root.get_child("player")</code>, so renaming one means updating every lookup.</p>
+
+              <h3>The map</h3>
+              <p>The map is 64 by 64 tiles of 32 pixels. <code>MapGenerator</code> fills it in blocks of 4 by 4 tiles,
+                picking each block's terrain from the weights in <code>TileDistribution</code>: 80 grass, 10 water,
+                5 bush, 5 building. Blocks beside water are more likely to be water. It then places three points of
+                interest, each on a 3 by 3 patch of grass: the spawn, the snack stand and an escape point. If the
+                player cannot walk between all three, it generates again. Generation runs on its own thread while the
+                loading screen shows.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="guide-num">05</span>
+              <span class="entry-title">Making common changes</span>
+            </summary>
+            <div class="guide-body">
+              <table class="guide-table">
+                <thead>
+                  <tr>
+                    <th scope="col">To change</th>
+                    <th scope="col">Edit</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Round length</td>
+                    <td><code>GAME_DURATION_SECONDS</code> in <code>GameScreen</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>Player speed and health, stick damage and cooldown</td>
+                    <td>The <code>Player</code> and <code>Weapon</code> constructor calls in
+                      <code>GameScreen</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>Goose speed, health and damage</td>
+                    <td><code>spawnEnemy</code> and <code>spawnLargeEnemy</code> in <code>EnemyManager</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>Seed capacity and throw cooldown</td>
+                    <td>The constants at the top of <code>SeedWeapon</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>Terrain mix</td>
+                    <td><code>DEFAULT_DISTRIBUTION</code> in <code>TileDistribution</code>.</td>
+                  </tr>
+                  <tr>
+                    <td>Map size</td>
+                    <td><code>BLOCKS_PER_SIDE</code> in <code>MapGenerator</code>.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <h3>Add a screen or state</h3>
+              <ol>
+                <li>Add the state to the <code>GameState</code> enum.</li>
+                <li>List the moves into and out of it in <code>GameStateGraph</code>.</li>
+                <li>Add a method to <code>GameStateManager</code> that checks the move, sets the state and shows the
+                  screen. Copy <code>credits()</code> as a starting point.</li>
+                <li>Write the screen in <code>menu/</code>.</li>
+              </ol>
+
+              <h3>Add a pickup</h3>
+              <ol>
+                <li>Extend <code>Pickup</code> and pass the image file name to its constructor.</li>
+                <li>Implement <code>collect()</code>. Return <code>true</code> if the player used the item; returning
+                  <code>false</code> leaves it on the ground.</li>
+                <li>Spawn it from <code>EnemyManager.update</code>, where hearts and seed bags are chosen.</li>
+              </ol>
+
+              <h3>Add a tile type</h3>
+              <ol>
+                <li>Add it to <code>TileType</code>, saying whether the player and the geese can cross it.</li>
+                <li>Give it a weight in <code>TileDistribution</code>. If there should be exactly one on the map,
+                  make it a point of interest instead; see section 06.</li>
+                <li>Add a case for it in <code>TileMapRenderer.render</code>. Without one the tile is not drawn.</li>
+              </ol>
+
+              <h3>Add an event</h3>
+              <p>Both events are started from <code>GameScreen.update</code>; the large goose block is the simpler one
+                to copy. The HUD total of two events is written into the label text in two places in
+                <code>GameScreen</code>, so update both.</p>
+
+              <h3>Add or change sprites</h3>
+              <p>Character and effect frames are packed into <code>assets/spritesheet.atlas</code> from the
+                TexturePacker project <code>assets/spritesheet.tps</code>, and loaded by region name, such as
+                <code>atlas.createSprites("GooseWalkLeft")</code>. Floor tiles are in a second atlas,
+                <code>assets/floorspritesheet/</code>, and are picked by number. If you add assets made by someone
+                else, add the credit and licence to <code>CreditsPage</code>.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="guide-num">06</span>
+              <span class="entry-title">Points of interest</span>
+            </summary>
+            <div class="guide-body">
+              <p>A point of interest, or POI, is a tile type that appears exactly once on every map. There are three
+                today: <code>SPAWN</code>, where the player starts; <code>DEFENCE_EVENT_TILE</code>, the snack
+                stand; and <code>ESCAPE</code>.</p>
+
+              <h3>What the generator does for every POI</h3>
+              <p>The full list of POIs is the set <code>POINTS_OF_INTEREST</code> in
+                <code>TileDistribution</code>. <code>MapGenerator</code> loops over that set, so anything in it gets
+                all of this without further code:</p>
+              <ul>
+                <li>A random position that is the same every time for a given seed.</li>
+                <li>A 3 by 3 patch of grass around it, so it is never boxed in by water or buildings.</li>
+                <li>Space from the other POIs, so their grass patches never overlap.</li>
+                <li>A walkable route for the player to every other POI. A map without one is thrown away and
+                  generated again.</li>
+                <li>A recorded position. <code>map.getPositionOfPoi(TileType.ESCAPE)</code> returns the centre of
+                  the tile in world pixels.</li>
+              </ul>
+
+              <h3>Add a POI</h3>
+              <ol>
+                <li>Add it to the <code>TileType</code> enum; note hat a POI has to be passable
+                  by the player, or generation stops with an <code>IllegalStateException</code>.</li>
+                <li>Add it to <code>POINTS_OF_INTEREST</code>. Do not give it a weight in
+                  <code>DEFAULT_DISTRIBUTION</code>; the constructor rejects a POI with a weight.</li>
+                <li>Draw it. Add a case to the switch in <code>TileMapRenderer.render</code>. The
+                  <code>DEFENCE_EVENT_TILE</code> case, which draws grass and then the snack stand image on top, is
+                  the one to copy.</li>
+              </ol>
+              <p>That is the whole change: two lines in <code>mapgen/</code> and a draw case. The new POI is then
+                on every map, reachable, and never on top of another one.</p>
+
+              <h3>Make it do something</h3>
+              <p>In <code>GameScreen.update</code>, compare the player's position with
+                <code>map.getPositionOfPoi(...)</code> and act when they are close enough. For a POI that should
+                change the game's state, add the state and its moves as in section 05, then call the new
+                <code>GameStateManager</code> method from that check.</p>
+              <p>The snack stand is the existing example, though it is triggered from the renderer when the tile
+                first comes into view, not by distance.</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>
+              <span class="guide-num">07</span>
+              <span class="entry-title">Left open for you</span>
+            </summary>
+            <div class="guide-body">
+              <p>We built the framework and left these parts open on purpose, so that you can shape them around the
+                Assessment 2 requirements. Each one has a starting point already in the code.</p>
+              <ul>
+                <li><strong>More waves of geese.</strong> <code>EnemyManager.spawnWave</code> spawns ten geese plus
+                  one for each wave so far. It is called once, at the start of the round. The <code>waves</code>
+                  and <code>wave_timer</code> fields are in place for calling it again on a schedule.</li>
+                <li><strong>An escape route.</strong> Every map has an <code>ESCAPE</code> tile that the player is
+                  guaranteed to be able to walk to. The round is currently won on the timer, so the tile is free
+                  to become a win condition or another objective.</li>
+                <li><strong>A snack stand worth defending.</strong> The stand is placed on every map, drawn, and
+                  starts the angry goose event the first time it comes into view. It has no health of its own
+                  yet, so what the geese do to it is yours to decide.</li>
+                <li><strong>Further events.</strong> The state graph and the HUD event counter already handle two
+                  events. Section 05 lists the steps for adding another.</li>
+                <li><strong>New items and terrain.</strong> <code>Pickup</code> and <code>TileType</code> are built
+                  to be extended. Section 05 has the steps for both.</li>
+              </ul>
+            </div>
+          </details>
+        </div>
+      </section>
     </main>
 
     <footer>
-      <p>Project status: 21 October 2026</p><a href="#main">Back to top ↑</a>
+      <p>Project status: 15 November 2026</p><a href="#main">Back to top ↑</a>
     </footer>
   </div>
 

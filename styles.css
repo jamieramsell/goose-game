@@ -357,6 +357,87 @@ details p {
   margin: 0 35px 20px 103px
 }
 
+.guide-num {
+  font: 12px "Courier New", monospace;
+  color: var(--red)
+}
+
+.guide-body {
+  margin: 0 35px 26px 103px;
+  max-width: 68ch;
+  font-size: 14px
+}
+
+.guide-body p {
+  margin: 0 0 14px;
+  max-width: none
+}
+
+.guide-body h3 {
+  font-size: 15px;
+  margin: 24px 0 8px
+}
+
+.guide-body ul,
+.guide-body ol {
+  margin: 0 0 14px;
+  padding-left: 20px
+}
+
+.guide-body li {
+  margin-bottom: 8px
+}
+
+.guide-body code,
+.guide-body kbd {
+  font: 13px "Courier New", monospace;
+  overflow-wrap: anywhere
+}
+
+.guide-body kbd {
+  border: 1px solid var(--ink);
+  padding: 0 5px;
+  background: #fff
+}
+
+.guide-body pre {
+  margin: 0 0 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--ink);
+  background: #fff;
+  box-shadow: 4px 4px 0 var(--ink);
+  overflow-x: auto;
+  line-height: 1.6
+}
+
+.guide-body pre code {
+  overflow-wrap: normal
+}
+
+.guide-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0 0 16px
+}
+
+.guide-table th {
+  font: 12px "Courier New", monospace;
+  text-transform: uppercase;
+  letter-spacing: .035em;
+  text-align: left
+}
+
+.guide-table th,
+.guide-table td {
+  padding: 9px 14px 9px 0;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top
+}
+
+.guide-table td:first-child {
+  width: 42%
+}
+
 .members {
   list-style: none;
   margin: 0;
@@ -611,6 +692,14 @@ footer p {
 
   details p {
     margin-left: 82px
+  }
+
+  .guide-body {
+    margin: 0 0 22px
+  }
+
+  .guide-table td:first-child {
+    width: 46%
   }
 
   .members {
