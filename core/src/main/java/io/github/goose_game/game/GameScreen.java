@@ -86,6 +86,7 @@ public class GameScreen extends ScreenAdapter {
   private EnemyManager enemyManager;
   private boolean largeEnemySpawned;
   private boolean towerDefenceEventSpawned = false;
+  private boolean towerDefenceXpAwarded = false;
   private boolean showAttackLabel = true;
   private float remainingTime = GAME_DURATION_SECONDS;
   private float attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
@@ -358,6 +359,23 @@ public class GameScreen extends ScreenAdapter {
         attackLabel.setVisible(true);
         showAttackLabel = true;
         towerDefenceEventSpawned = true;
+      }
+
+      // If the tower defence attack has been dealt with, award a bonus +200xp
+      if (towerDefenceEventSpawned
+          && !towerDefenceXpAwarded
+          && enemyManager.numAngryGeesePresent == 0
+      ) {
+        attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+        attackTitle.setText("Snack stand defended!");
+        attackLabel.setText("+50 bonus xp");
+        attackTitle.setVisible(true);
+        attackLabel.setVisible(true);
+        showAttackLabel = true;
+
+        score += 50;
+        updateScoreLabel();
+        towerDefenceXpAwarded = true;
       }
 
       if (remainingTime == 0) { // Time has reached 0, you've escaped!

@@ -39,6 +39,9 @@ public class EnemyManager extends Node {
   /** Running count of pickups spawned used to generate unique child names. */
   private int PickupCounter;
 
+  /** Running count of the number of angry geese present on the map at any given time. */
+  public int numAngryGeesePresent;
+
   /**
    * Creates the manager and immediately spawns the first wave of enemies.
    *
@@ -58,6 +61,7 @@ public class EnemyManager extends Node {
     this.map = map;
     this.rng = new Random(map.seed);
     this.onEnemyDispersed = onEnemyDispersed;
+    this.numAngryGeesePresent = 0;
     spawnWave();
   }
 
@@ -118,6 +122,10 @@ public class EnemyManager extends Node {
 
     enemyCounter += 1;
     add_child(String.valueOf(enemyCounter), enemy);
+
+    if (angry) { // Keep track of the number of angry geese on the map
+      numAngryGeesePresent += 1;
+    }
   }
 
   /**

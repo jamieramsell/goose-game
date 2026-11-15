@@ -325,8 +325,12 @@ public class Enemy extends Node {
   public void damage(int damage) {
     health -= damage;
     if (health <= 0 && !fleeing) {
+      EnemyManager enemyManager = (EnemyManager) getParent();
       fleeing = true;
-      ((EnemyManager) getParent()).queuePickup(position);
+      if (angry) {
+        enemyManager.numAngryGeesePresent -= 1;
+      }
+      enemyManager.queuePickup(position);
       onDispersed.accept(this);
     }
   }
