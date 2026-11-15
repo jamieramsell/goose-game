@@ -3,6 +3,7 @@ package io.github.goose_game.mapgen;
 import java.util.EnumMap;
 import java.util.Map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -11,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
+import io.github.goose_game.state.GameStateManager;
 
 /**
  * Draws a {@link TileMap} as flat coloured squares, one per tile, as a placeholder until real tile
@@ -31,13 +33,18 @@ public class TileMapRenderer implements Disposable {
       TileType.BUILDING, Color.GRAY,
       TileType.BUSH, Color.FOREST,
       TileType.SPAWN, Color.GOLD,
-      TileType.ESCAPE, Color.RED
+      TileType.ESCAPE, Color.RED,
+      TileType.DEFENCE_EVENT_TILE, Color.ORANGE
   ));
 
   /** The map to draw. */
   private final TileMap map;
 
+  /** The game's state manager instance, used to trigger the tower defence event. */
+  private final GameStateManager stateManager;
+
   private final TextureAtlas atlas = new TextureAtlas("floorspritesheet/floorspritesheet.atlas");
+  private final Sprite snackstand = new Sprite(new Texture(Gdx.files.internal("snackstand.png")));
 
   /** A 1x1 white texture, which is tinted and stretched to draw each tile as a solid square. */
   private final Texture pixel;
@@ -48,9 +55,11 @@ public class TileMapRenderer implements Disposable {
    * <p>Must be called after libGDX has started, as it creates a texture.
    *
    * @param map the map to draw
+   * @param stateManager the current {@link GameStateManager} instance
    */
-  public TileMapRenderer(TileMap map) {
+  public TileMapRenderer(TileMap map, GameStateManager stateManager) {
     this.map = map;
+    this.stateManager = stateManager;
 
     atlas.getTextures().forEach(texture -> texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest));
 
@@ -116,6 +125,11 @@ public class TileMapRenderer implements Disposable {
             drawWater(batch, x, y, mapSize);
           } case GRASS, SPAWN, ESCAPE -> {
             drawGrass(batch, x, y, mapSize);
+          } case DEFENCE_EVENT_TILE -> {
+            drawGrass(batch, x, y, mapSize);
+            snackstand.setPosition(x * MapGenerator.TILE_SIZE, y * MapGenerator.TILE_SIZE);
+            snackstand.draw(batch);
+            stateManager.towerDefenceEvent();
           }
         }
       }

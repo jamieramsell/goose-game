@@ -34,7 +34,8 @@ public final class TileDistribution {
    */
   public static final EnumSet<TileType> POINTS_OF_INTEREST = EnumSet.of(
       TileType.SPAWN,
-      TileType.ESCAPE
+      TileType.ESCAPE,
+      TileType.DEFENCE_EVENT_TILE
   );
 
   private static final TileType[] VALUES = TileType.values();

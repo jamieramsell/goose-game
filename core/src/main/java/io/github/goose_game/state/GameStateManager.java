@@ -32,6 +32,7 @@ public class GameStateManager {
   private GameState gameState;
   private final Main game;
   private GameScreen pausedGame = null;
+  private boolean towerDefenceEventBeenTriggered = false;
 
   /**
    * Creates the manager, enters {@link GameState#MAIN_MENU} and shows the main menu.
@@ -88,6 +89,7 @@ public class GameStateManager {
     game.setScreen(loadingScreen);
     gameState = GameState.GENERATION;
     currentScreen.dispose();
+    towerDefenceEventBeenTriggered = false;
 
     // Parse map seed
     long longSeed;
@@ -163,6 +165,30 @@ public class GameStateManager {
     currentScreen.dispose();
 
     pausedGameGarbageCollector();
+  }
+
+  /**
+   * Triggers the tower defence event, if one hasn't been triggered in this game already.
+   *
+   * @return whether or not the tower defence event was triggered
+   * @throws IllegalArgumentException if the tower defence event cannot legally be triggered from
+   *     the current state (note this is not thrown if in game and the event has simply already been
+   *     triggered once)
+   */
+  public boolean towerDefenceEvent() {
+    if (towerDefenceEventBeenTriggered) {
+      return false;
+    }
+
+    if (!GameStateGraph.canTransition(gameState, GameState.TOWER_DEFENCE)) {
+      throw new IllegalArgumentException(
+          "Illegal transition: GameState.TOWER_DEFENCE is not currently accessible");
+    }
+
+    towerDefenceEventBeenTriggered = true;
+    gameState = GameState.TOWER_DEFENCE;
+    pausedGameGarbageCollector();
+    return true;
   }
 
   /**

@@ -20,7 +20,11 @@ public class GameStateGraph {
     TRANSITIONS.put(GameState.CREDITS, EnumSet.of(GameState.MAIN_MENU));
     TRANSITIONS.put(GameState.GENERATION, EnumSet.of(GameState.GAME));
     TRANSITIONS.put(
-        GameState.GAME, EnumSet.of(GameState.PAUSED, GameState.VICTORY, GameState.LOST));
+        GameState.GAME,
+        EnumSet.of(GameState.TOWER_DEFENCE, GameState.PAUSED, GameState.VICTORY, GameState.LOST));
+    TRANSITIONS.put(
+        GameState.TOWER_DEFENCE,
+        EnumSet.of(GameState.GAME, GameState.PAUSED, GameState.VICTORY, GameState.LOST));
     TRANSITIONS.put(GameState.PAUSED, EnumSet.of(GameState.GAME, GameState.MAIN_MENU));
     TRANSITIONS.put(GameState.VICTORY, EnumSet.of(GameState.MAIN_MENU));
     TRANSITIONS.put(GameState.LOST, EnumSet.of(GameState.MAIN_MENU));

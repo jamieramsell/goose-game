@@ -1,5 +1,8 @@
 package io.github.goose_game.game;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
@@ -21,6 +24,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
 import io.github.goose_game.Main;
 import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.mapgen.TileMapRenderer;
@@ -28,8 +32,6 @@ import io.github.goose_game.state.GameState;
 import io.github.goose_game.state.GameStateManager;
 import io.github.goose_game.utils.DefaultSkin;
 import io.github.goose_game.utils.Node;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 /**
  * Main gameplay screen, which owns the scene graph (player, enemies, weapons), the world camera,
@@ -63,6 +65,7 @@ public class GameScreen extends ScreenAdapter {
   private final Label scoreLabel;
   private final Label seedsLabel;
   private final Label swingLabel;
+  private final Label eventsLabel;
   private final Label attackTitle;
   private final Label attackLabel;
 
@@ -85,11 +88,16 @@ public class GameScreen extends ScreenAdapter {
   // Game state
   private EnemyManager enemyManager;
   private boolean largeEnemySpawned;
+  private boolean towerDefenceEventSpawned = false;
+  private boolean towerDefenceXpAwarded = false;
+  private boolean showAttackLabel = true;
   private float remainingTime = GAME_DURATION_SECONDS;
   private float attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
   private float scoreRemainder;
   private int score;
   private int displayedSwingCount;
+  private int eventsEncountered;
+  private int displayedEventsEncountered;
   private int displayedSeconds = -1;
 
   // Debug
@@ -120,6 +128,7 @@ public class GameScreen extends ScreenAdapter {
             "Seeds: 0",
             new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     swingLabel = new Label("Stick Swings: 0", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
+    eventsLabel = new Label("Events Encountered: 0/2", new Label.LabelStyle(skin.getFont("default"), Color.WHITE));
     attackTitle = new Label("Survive for 5 minutes!", new Label.LabelStyle(skin.getFont("title"), Color.WHITE));
     attackTitle.setAlignment(Align.center);
     attackLabel =
@@ -151,8 +160,14 @@ public class GameScreen extends ScreenAdapter {
     Table swingTable = new Table();
     swingTable.setFillParent(true);
     swingTable.top().left();
-    swingTable.add(swingLabel).padTop(50).padLeft(12);
+    swingTable.add(swingLabel).padTop(50).padLeft(12).row();
     hudStage.addActor(swingTable);
+
+    Table eventsTable = new Table();
+    eventsTable.setFillParent(true);
+    eventsTable.top().left();
+    eventsTable.add(eventsLabel).padTop(88).padLeft(12).row();
+    hudStage.addActor(eventsTable);
 
     Table attackTable = new Table();
     attackTable.setFillParent(true);
@@ -163,7 +178,7 @@ public class GameScreen extends ScreenAdapter {
 
     // Render map
     this.map = map;
-    this.renderer = new TileMapRenderer(this.map);
+    this.renderer = new TileMapRenderer(this.map, stateManager);
 
     for (Texture texture : atlas.getTextures()) {
       texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
@@ -185,7 +200,7 @@ public class GameScreen extends ScreenAdapter {
         .add_child(
             "weapon_test", new Weapon(0, 0, 32, 32, stickAttackTexture, atlas, 1, 20, 5, 120));
 
-    this.seedWeapon = new SeedWeapon(new Sprite(seedTexture));
+    this.seedWeapon = new SeedWeapon(new Sprite(seedTexture), map);
     this.root.get_child("player").add_child("seed_weapon", seedWeapon);
     
     // Spawn enemies
@@ -324,39 +339,72 @@ public class GameScreen extends ScreenAdapter {
 
     // Updates which should only take place while game is in action should be placed within this
     // if statement:
-    if (stateManager.getGameState() == GameState.GAME) {
+    if (stateManager.getGameState() == GameState.GAME
+        || stateManager.getGameState() == GameState.TOWER_DEFENCE) {
       if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
         stateManager.pause(this);
       }
+      
+      updateScore(Math.min(delta, remainingTime));
+      updateScorePopups(delta);
+      remainingTime = Math.max(0, remainingTime - delta);
+      updateTimerLabel();
+      updateAttackMessage(delta);
 
-      if (stateManager.getGameState() == GameState.GAME) {
-        updateScore(Math.min(delta, remainingTime));
-        updateScorePopups(delta);
-        remainingTime = Math.max(0, remainingTime - delta);
-        updateTimerLabel();
-        updateAttackMessage(delta);
+      // Halfway through the game; trigger large goose attack event
+      if (remainingTime <= GAME_DURATION_SECONDS / 2 && !largeEnemySpawned) {
+        largeEnemySpawned = true;
+        enemyManager.spawnLargeEnemy();
+        eventsEncountered++;
+        attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+        attackTitle.setText("Large Goose Attack!");
+        attackTitle.setVisible(true);
+        showAttackLabel = false;
+      }
 
-        if (remainingTime <= GAME_DURATION_SECONDS / 2 && !largeEnemySpawned) {
-          largeEnemySpawned = true;
-          enemyManager.spawnLargeEnemy();
-          attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
-          attackTitle.setText("Large Goose Attack!");
-          attackTitle.setVisible(true);
-        }
+      // If the tower defence event has been triggered, initiate it
+      if (stateManager.getGameState() == GameState.TOWER_DEFENCE && !towerDefenceEventSpawned) {
+        enemyManager.spawnTowerAttackGeese();
+        eventsEncountered++;
+        attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+        attackTitle.setText("Defend the base!");
+        attackLabel.setText("Defend the snack stand against the swarm of angry geese");
+        attackTitle.setVisible(true);
+        attackLabel.setVisible(true);
+        showAttackLabel = true;
+        towerDefenceEventSpawned = true;
+      }
 
-        if (remainingTime == 0) { // Time has reached 0, you've escaped!
-          stateManager.victory(this);
+      // If the tower defence attack has been dealt with, award a bonus +200xp
+      if (towerDefenceEventSpawned
+          && !towerDefenceXpAwarded
+          && enemyManager.numAngryGeesePresent == 0
+      ) {
+        attackMessageTime = ATTACK_MESSAGE_DURATION_SECONDS;
+        attackTitle.setText("Snack stand defended!");
+        attackLabel.setText("+50 bonus xp");
+        attackTitle.setVisible(true);
+        attackLabel.setVisible(true);
+        showAttackLabel = true;
+
+        score += 50;
+        updateScoreLabel();
+        towerDefenceXpAwarded = true;
+      }
+
+      if (remainingTime == 0) { // Time has reached 0, you've escaped!
+        stateManager.victory(this);
+      } else {
+        /* Only update nodes while game is active */
+        root.update(delta);
+        updateSwingLabel();
+        updateEventsLabel();
+        Player player = (Player) root.get_child("player");
+
+        if (player.getHealth() <= 0) { // Player dead, lose condition
+          stateManager.lose(this);
         } else {
-          /* Only update nodes while game is active */
-          root.update(delta);
-          updateSwingLabel();
-          Player player = (Player) root.get_child("player");
-
-          if (player.getHealth() <= 0) { // Player dead, lose condition
-            stateManager.lose(this);
-          } else {
-            camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
-          }
+          camera.position.lerp(new Vector3(player.position.x, player.position.y, 0), 0.02f);
         }
       }
     }
@@ -370,7 +418,7 @@ public class GameScreen extends ScreenAdapter {
   private void updateAttackMessage(float delta) {
     if (attackMessageTime > 0) {
       attackMessageTime = Math.max(0, attackMessageTime - delta);
-      attackLabel.setVisible(attackMessageTime > 0 && !largeEnemySpawned);
+      attackLabel.setVisible(attackMessageTime > 0 && showAttackLabel);
       attackTitle.setVisible(attackMessageTime > 0);
     }
   }
@@ -390,6 +438,14 @@ public class GameScreen extends ScreenAdapter {
     if (swingCount != displayedSwingCount) {
       displayedSwingCount = swingCount;
       swingLabel.setText("Stick Swings: " + swingCount);
+    }
+  }
+
+  /** Refreshes the event label when an event is encountered. */
+  private void updateEventsLabel() {
+    if (eventsEncountered != displayedEventsEncountered) {
+      displayedEventsEncountered = eventsEncountered;
+      eventsLabel.setText("Events Encountered: " + eventsEncountered + "/2");
     }
   }
 

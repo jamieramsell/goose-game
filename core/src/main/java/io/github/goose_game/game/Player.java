@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-
-import io.github.goose_game.mapgen.MapGenerator;
 import io.github.goose_game.mapgen.TileMap;
 import io.github.goose_game.utils.Node;
 
@@ -83,24 +81,19 @@ public class Player extends Node {
      * wall' effect, where the player cannot move as their velocity is still positive in the
      * direction of the wall.
      */
-    if (isTargetPosInBounds(targetX) && !map.isPixelSolidForPlayer((int) targetX, (int) position.y)) {
+    if (map.isTargetPosInBounds(targetX) && !map.isPixelSolidForPlayer((int) targetX, (int) position.y)) {
       position.x = targetX;
     } else {
       velocity.x = 0;
     }
 
-    if (isTargetPosInBounds(targetY) && !map.isPixelSolidForPlayer((int) position.x, (int) targetY)) {
+    if (map.isTargetPosInBounds(targetY) && !map.isPixelSolidForPlayer((int) position.x, (int) targetY)) {
       position.y = targetY;
     } else {
       velocity.y = 0;
     }
 
     super.update(delta);
-  }
-
-  private boolean isTargetPosInBounds(float target) {
-    int mapSize = MapGenerator.MAP_SIZE;
-    return !(target < 0 || target > mapSize - 1);
   }
 
   private Vector2 get_input() {
