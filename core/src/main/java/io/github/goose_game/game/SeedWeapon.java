@@ -37,8 +37,8 @@ public class SeedWeapon extends Node {
   /**
    * Throws a seed from the player's position towards the mouse cursor.
    *
-   * <p>Does nothing if there is no ammo, the weapon is still on cooldown, or the cursor is exactly
-   * on the player.
+   * <p>Does nothing if there is no ammo, the weapon is still on cooldown, the cursor is exactly on
+   * the player, or the landing position is not walkable by geese.
    */
   public void attack() {
     if (ammo > 0 && attackCounter >= attackTime) {
@@ -49,6 +49,9 @@ public class SeedWeapon extends Node {
               .unproject(new Vector3(Gdx.input.getX(), Gdx.input.getY(), 0));
       Vector2 targetPosition = new Vector2(mouse.x, mouse.y);
       if (targetPosition.dst2(player.position) == 0) {
+        return;
+      }
+      if (!player.isWalkableForGeese(targetPosition)) {
         return;
       }
 
